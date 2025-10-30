@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 
 // const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/universities";
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht";
+const MONGODB_URI ="mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht";
 
 let isConnected = false;
 let connectionPromise = null;
