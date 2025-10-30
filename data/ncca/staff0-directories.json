@@ -1,0 +1,3921 @@
+[  
+  {
+    "baseUrl": "https://athletics.une.edu",
+    "staffDirectory": "https://athletics.une.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://auwolves.com",
+    "staffDirectory": "https://auwolves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://spufalcons.com",
+    "staffDirectory": "https://spufalcons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.stkatesathletics.com/",
+    "staffDirectory": "https://stkatesathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.uindy.edu",
+    "staffDirectory": "https://athletics.uindy.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://www.ancilla.edu/",
+    "staffDirectory": "https://www.ancillachargers.com/information/directory/index"
+  },
+  {
+    "baseUrl": "https://www.actx.edu/",
+    "staffDirectory": "https://amarillo.prestosports.com/information/Staff_Directory"
+  },
+  {
+    "baseUrl": "http://www.ukathletics.com",
+    "staffDirectory": "http://www.ukathletics.com/staff-directory"
+  },
+    {
+    "baseUrl": "http://www.fightingirish.com/",
+    "staffDirectory": "http://www.fightingirish.com/staff-directory"
+  },
+   
+    {
+    "baseUrl": "http://gamecocksonline.com",
+    "staffDirectory": "http://gamecocksonline.com/staff-directory"
+  },
+    {
+    "baseUrl": "http://www.ballstatesports.com",
+    "staffDirectory": "http://www.ballstatesports.com/staff-directory"
+  },
+    {
+    "baseUrl": "http://byucougars.com",
+    "staffDirectory": "http://byucougars.com/staff-directory"
+  },
+    {
+    "baseUrl": "http://www.broncosports.com",
+    "staffDirectory": "http://www.broncosports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.aamusports.com",
+    "staffDirectory": "http://www.aamusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.acusports.com",
+    "staffDirectory": "http://www.acusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bamastatesports.com",
+    "staffDirectory": "http://www.bamastatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.alcornsports.com",
+    "staffDirectory": "http://www.alcornsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.aueagles.com",
+    "staffDirectory": "http://www.aueagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://appstatesports.com",
+    "staffDirectory": "http://appstatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.astateredwolves.com",
+    "staffDirectory": "http://www.astateredwolves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.auburntigers.com",
+    "staffDirectory": "http://www.auburntigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.letsgopeay.com",
+    "staffDirectory": "http://www.letsgopeay.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.baylorbears.com",
+    "staffDirectory": "http://www.baylorbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.belmontbruins.com",
+    "staffDirectory": "http://www.belmontbruins.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bcuathletics.com",
+    "staffDirectory": "http://www.bcuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bubearcats.com",
+    "staffDirectory": "http://www.bubearcats.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.bceagles.com",
+    "staffDirectory": "http://www.bceagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goterriers.com",
+    "staffDirectory": "http://www.goterriers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bgsufalcons.com",
+    "staffDirectory": "http://www.bgsufalcons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bradleybraves.com",
+    "staffDirectory": "http://www.bradleybraves.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.brownbears.com",
+    "staffDirectory": "http://www.brownbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bryantbulldogs.com",
+    "staffDirectory": "http://www.bryantbulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://bucknellbison.com",
+    "staffDirectory": "http://bucknellbison.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.butlersports.com",
+    "staffDirectory": "http://www.butlersports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cbulancers.com",
+    "staffDirectory": "http://www.cbulancers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gopoly.com",
+    "staffDirectory": "http://gopoly.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gorunners.com",
+    "staffDirectory": "http://www.gorunners.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gobulldogs.com",
+    "staffDirectory": "http://www.gobulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fullertontitans.com",
+    "staffDirectory": "http://www.fullertontitans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.GoMatadors.com",
+    "staffDirectory": "http://www.GoMatadors.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hornetsports.com",
+    "staffDirectory": "http://www.hornetsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gocamels.com",
+    "staffDirectory": "http://www.gocamels.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gogriffs.com",
+    "staffDirectory": "http://www.gogriffs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cmuchippewas.com",
+    "staffDirectory": "http://www.cmuchippewas.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://csusports.com/",
+    "staffDirectory": "http://csusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gocsucougars.com",
+    "staffDirectory": "http://www.gocsucougars.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.csuvikings.com",
+    "staffDirectory": "http://www.csuvikings.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goccusports.com",
+    "staffDirectory": "http://www.goccusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gocolgateraiders.com",
+    "staffDirectory": "http://gocolgateraiders.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cofcsports.com",
+    "staffDirectory": "http://www.cofcsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goholycross.com/",
+    "staffDirectory": "http://goholycross.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.csurams.com",
+    "staffDirectory": "http://www.csurams.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gocolumbialions.com/",
+    "staffDirectory": "http://www.gocolumbialions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.coppinstatesports.com",
+    "staffDirectory": "http://www.coppinstatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cornellbigred.com",
+    "staffDirectory": "http://www.cornellbigred.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gocreighton.com/",
+    "staffDirectory": "http://gocreighton.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.dartmouthsports.com",
+    "staffDirectory": "http://www.dartmouthsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.davidsonwildcats.com",
+    "staffDirectory": "http://www.davidsonwildcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.dsuhornets.com/",
+    "staffDirectory": "http://www.dsuhornets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.depaulbluedemons.com",
+    "staffDirectory": "http://www.depaulbluedemons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://godrakebulldogs.com/",
+    "staffDirectory": "http://godrakebulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.drexeldragons.com",
+    "staffDirectory": "http://www.drexeldragons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goduke.com",
+    "staffDirectory": "http://www.goduke.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.GoDuquesne.com",
+    "staffDirectory": "http://www.GoDuquesne.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ecupirates.com",
+    "staffDirectory": "http://www.ecupirates.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.etsubucs.com",
+    "staffDirectory": "http://www.etsubucs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lionathletics.com",
+    "staffDirectory": "http://www.lionathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.eiupanthers.com",
+    "staffDirectory": "http://www.eiupanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ekusports.com",
+    "staffDirectory": "http://www.ekusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.emueagles.com",
+    "staffDirectory": "http://www.emueagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goeags.com",
+    "staffDirectory": "http://goeags.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.elonphoenix.com",
+    "staffDirectory": "http://www.elonphoenix.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://fairfieldstags.com",
+    "staffDirectory": "http://fairfieldstags.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fduknights.com",
+    "staffDirectory": "http://www.fduknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.famuathletics.com/",
+    "staffDirectory": "http://www.famuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fausports.com",
+    "staffDirectory": "http://www.fausports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://fgcuathletics.com/",
+    "staffDirectory": "http://fgcuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fiusports.com",
+    "staffDirectory": "http://www.fiusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.seminoles.com",
+    "staffDirectory": "http://www.seminoles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fordhamsports.com",
+    "staffDirectory": "http://www.fordhamsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.furmanpaladins.com",
+    "staffDirectory": "http://www.furmanpaladins.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gwusports.com/",
+    "staffDirectory": "http://gwusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomason.com",
+    "staffDirectory": "http://www.gomason.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://guhoyas.com",
+    "staffDirectory": "http://guhoyas.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://gseagles.com",
+    "staffDirectory": "http://gseagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://georgiastatesports.com",
+    "staffDirectory": "http://georgiastatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gozags.com",
+    "staffDirectory": "http://www.gozags.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gsutigers.com",
+    "staffDirectory": "http://www.gsutigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gculopes.com",
+    "staffDirectory": "http://www.gculopes.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://hamptonpirates.com",
+    "staffDirectory": "http://hamptonpirates.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.highpointpanthers.com",
+    "staffDirectory": "http://www.highpointpanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gohofstra.com",
+    "staffDirectory": "http://www.gohofstra.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hcuhuskies.com",
+    "staffDirectory": "http://www.hcuhuskies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hubison.com",
+    "staffDirectory": "http://www.hubison.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.isubengals.com",
+    "staffDirectory": "http://www.isubengals.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://GoRedbirds.com",
+    "staffDirectory": "http://GoRedbirds.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gosycamores.com",
+    "staffDirectory": "http://www.gosycamores.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://iuindyjags.com/",
+    "staffDirectory": "http://iuindyjags.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.iuhoosiers.com",
+    "staffDirectory": "http://www.iuhoosiers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cyclones.com",
+    "staffDirectory": "http://www.cyclones.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gojsutigers.com",
+    "staffDirectory": "http://www.gojsutigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.jaxstatesports.com",
+    "staffDirectory": "http://www.jaxstatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.judolphins.com",
+    "staffDirectory": "http://www.judolphins.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.jmusports.com",
+    "staffDirectory": "http://www.jmusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.kstatesports.com",
+    "staffDirectory": "http://www.kstatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ksuowls.com",
+    "staffDirectory": "http://www.ksuowls.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.kentstatesports.com",
+    "staffDirectory": "http://www.kentstatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goexplorers.com/",
+    "staffDirectory": "http://www.goexplorers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goleopards.com",
+    "staffDirectory": "http://www.goleopards.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lamarcardinals.com",
+    "staffDirectory": "http://www.lamarcardinals.com/staff-directory"
+  },
+ 
+  {
+    "baseUrl": "http://www.lehighsports.com",
+    "staffDirectory": "http://www.lehighsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.LibertyFlames.com",
+    "staffDirectory": "http://www.LibertyFlames.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://lindenwoodlions.com",
+    "staffDirectory": "http://lindenwoodlions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lipscombsports.com",
+    "staffDirectory": "http://www.lipscombsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://longbeachstate.com",
+    "staffDirectory": "http://longbeachstate.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.liuathletics.com",
+    "staffDirectory": "http://www.liuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://longwoodlancers.com",
+    "staffDirectory": "http://longwoodlancers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.latechsports.com/",
+    "staffDirectory": "http://www.latechsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.LMULions.com",
+    "staffDirectory": "http://www.LMULions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.loyolaramblers.com",
+    "staffDirectory": "http://www.loyolaramblers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.loyolagreyhounds.com",
+    "staffDirectory": "http://www.loyolagreyhounds.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gojaspers.com",
+    "staffDirectory": "http://www.gojaspers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goredfoxes.com",
+    "staffDirectory": "http://goredfoxes.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomarquette.com",
+    "staffDirectory": "http://www.gomarquette.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.GoBison.com",
+    "staffDirectory": "http://www.GoBison.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nuhuskies.com",
+    "staffDirectory": "http://www.nuhuskies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nauathletics.com",
+    "staffDirectory": "http://www.nauathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.niuhuskies.com",
+    "staffDirectory": "http://www.niuhuskies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nkunorse.com",
+    "staffDirectory": "http://www.nkunorse.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nsudemons.com",
+    "staffDirectory": "http://www.nsudemons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nusports.com",
+    "staffDirectory": "http://www.nusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goldengrizzlies.com",
+    "staffDirectory": "http://goldengrizzlies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ohiobobcats.com",
+    "staffDirectory": "http://www.ohiobobcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.okstate.com",
+    "staffDirectory": "http://www.okstate.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.odusports.com",
+    "staffDirectory": "http://www.odusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.oruathletics.com",
+    "staffDirectory": "http://www.oruathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://osubeavers.com/",
+    "staffDirectory": "http://osubeavers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goPSUsports.com",
+    "staffDirectory": "http://goPSUsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.pepperdinewaves.com",
+    "staffDirectory": "http://www.pepperdinewaves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goviks.com",
+    "staffDirectory": "http://goviks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.pvpanthers.com",
+    "staffDirectory": "http://www.pvpanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gobluehose.com",
+    "staffDirectory": "http://gobluehose.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goprincetontigers.com",
+    "staffDirectory": "http://www.goprincetontigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.friars.com",
+    "staffDirectory": "http://www.friars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://purduesports.com",
+    "staffDirectory": "http://purduesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomastodons.com/",
+    "staffDirectory": "http://www.gomastodons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.queensathletics.com",
+    "staffDirectory": "http://www.queensathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gobobcats.com",
+    "staffDirectory": "http://www.gobobcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.radfordathletics.com",
+    "staffDirectory": "http://www.radfordathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.herdzone.com",
+    "staffDirectory": "http://www.herdzone.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mcneesesports.com",
+    "staffDirectory": "http://www.mcneesesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mercerbears.com",
+    "staffDirectory": "http://www.mercerbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hurstathletics.com",
+    "staffDirectory": "http://www.hurstathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.merrimackathletics.com",
+    "staffDirectory": "http://www.merrimackathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.miamiredhawks.com",
+    "staffDirectory": "http://www.miamiredhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://msuspartans.com/",
+    "staffDirectory": "http://msuspartans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hailstate.com",
+    "staffDirectory": "http://www.hailstate.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mvsusports.com",
+    "staffDirectory": "http://www.mvsusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.missouristatebears.com",
+    "staffDirectory": "http://www.missouristatebears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.monmouthhawks.com",
+    "staffDirectory": "http://www.monmouthhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.msubobcats.com",
+    "staffDirectory": "http://www.msubobcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.msueagles.com",
+    "staffDirectory": "http://www.msueagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.morganstatebears.com",
+    "staffDirectory": "http://www.morganstatebears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mountathletics.com",
+    "staffDirectory": "http://www.mountathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goracers.com",
+    "staffDirectory": "http://www.goracers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.njithighlanders.com",
+    "staffDirectory": "http://www.njithighlanders.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nmstatesports.com",
+    "staffDirectory": "http://www.nmstatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.purpleeagles.com",
+    "staffDirectory": "http://www.purpleeagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.geauxcolonels.com",
+    "staffDirectory": "http://www.geauxcolonels.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nsuspartans.com",
+    "staffDirectory": "http://www.nsuspartans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ncataggies.com",
+    "staffDirectory": "http://www.ncataggies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nccueaglepride.com",
+    "staffDirectory": "http://www.nccueaglepride.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gopack.com",
+    "staffDirectory": "http://www.gopack.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.riceowls.com",
+    "staffDirectory": "http://www.riceowls.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gobroncs.com",
+    "staffDirectory": "http://www.gobroncs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rmucolonials.com",
+    "staffDirectory": "http://www.rmucolonials.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.scarletknights.com",
+    "staffDirectory": "http://www.scarletknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://sacredheartpioneers.com",
+    "staffDirectory": "http://sacredheartpioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.sfuathletics.com",
+    "staffDirectory": "http://www.sfuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://sjuhawks.com",
+    "staffDirectory": "http://sjuhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.slubillikens.com",
+    "staffDirectory": "http://www.slubillikens.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.SMCGaels.com",
+    "staffDirectory": "http://www.SMCGaels.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.saintpeterspeacocks.com",
+    "staffDirectory": "http://www.saintpeterspeacocks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gobearkats.com",
+    "staffDirectory": "http://www.gobearkats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://samfordsports.com",
+    "staffDirectory": "http://samfordsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goaztecs.com",
+    "staffDirectory": "http://goaztecs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.sjsuspartans.com",
+    "staffDirectory": "http://www.sjsuspartans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://santaclarabroncos.com",
+    "staffDirectory": "http://santaclarabroncos.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goseattleu.com",
+    "staffDirectory": "http://goseattleu.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.shupirates.com",
+    "staffDirectory": "http://www.shupirates.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.sienasaints.com",
+    "staffDirectory": "http://www.sienasaints.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.gojacks.com",
+    "staffDirectory": "http://www.gojacks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.semoredhawks.com",
+    "staffDirectory": "http://www.semoredhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.siusalukis.com/",
+    "staffDirectory": "http://www.siusalukis.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.siuecougars.com",
+    "staffDirectory": "http://www.siuecougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.smumustangs.com",
+    "staffDirectory": "http://www.smumustangs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gojagsports.com",
+    "staffDirectory": "http://www.gojagsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.suutbirds.com",
+    "staffDirectory": "http://www.suutbirds.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gobonnies.com",
+    "staffDirectory": "http://www.gobonnies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.redstormsports.com",
+    "staffDirectory": "http://www.redstormsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gostanford.com/",
+    "staffDirectory": "http://gostanford.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://SFAjacks.com",
+    "staffDirectory": "http://SFAjacks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gohatters.com",
+    "staffDirectory": "http://www.gohatters.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.stonehillskyhawks.com",
+    "staffDirectory": "http://www.stonehillskyhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://stonybrookathletics.com",
+    "staffDirectory": "http://stonybrookathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://cuse.com",
+    "staffDirectory": "http://cuse.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://tarletonsports.com",
+    "staffDirectory": "http://tarletonsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.owlsports.com",
+    "staffDirectory": "http://www.owlsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.tsutigers.com",
+    "staffDirectory": "http://www.tsutigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.12thman.com",
+    "staffDirectory": "http://www.12thman.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goislanders.com",
+    "staffDirectory": "http://www.goislanders.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gofrogs.com",
+    "staffDirectory": "http://www.gofrogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.tsusports.com",
+    "staffDirectory": "http://www.tsusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://txstatebobcats.com",
+    "staffDirectory": "http://txstatebobcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.texastech.com",
+    "staffDirectory": "http://www.texastech.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.citadelsports.com",
+    "staffDirectory": "http://www.citadelsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://ohiostatebuckeyes.com/",
+    "staffDirectory": "http://ohiostatebuckeyes.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.charlotte49ers.com",
+    "staffDirectory": "http://www.charlotte49ers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uncgspartans.com",
+    "staffDirectory": "http://www.uncgspartans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.southernmiss.com",
+    "staffDirectory": "http://www.southernmiss.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goutrgv.com",
+    "staffDirectory": "http://goutrgv.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.tulsahurricane.com",
+    "staffDirectory": "http://www.tulsahurricane.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.towsontigers.com",
+    "staffDirectory": "http://www.towsontigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://troytrojans.com",
+    "staffDirectory": "http://troytrojans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.tulanegreenwave.com",
+    "staffDirectory": "http://www.tulanegreenwave.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.navysports.com",
+    "staffDirectory": "http://www.navysports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ualbanysports.com",
+    "staffDirectory": "http://www.ualbanysports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ubbulls.com",
+    "staffDirectory": "http://www.ubbulls.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gozips.com",
+    "staffDirectory": "http://gozips.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rolltide.com",
+    "staffDirectory": "http://www.rolltide.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uabsports.com",
+    "staffDirectory": "http://www.uabsports.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http:////lrtrojans.com",
+    "staffDirectory": "http:////lrtrojans.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://uapblionsroar.com/",
+    "staffDirectory": "http://uapblionsroar.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.calbears.com",
+    "staffDirectory": "http://www.calbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ucdavisaggies.com",
+    "staffDirectory": "http://www.ucdavisaggies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uclabruins.com",
+    "staffDirectory": "http://www.uclabruins.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gohighlanders.com/",
+    "staffDirectory": "http://www.gohighlanders.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ucsdtritons.com",
+    "staffDirectory": "http://www.ucsdtritons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://ucsbgauchos.com",
+    "staffDirectory": "http://ucsbgauchos.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ucasports.com",
+    "staffDirectory": "http://www.ucasports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ucfknights.com/",
+    "staffDirectory": "http://www.ucfknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gobearcats.com/",
+    "staffDirectory": "http://gobearcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cubuffs.com/",
+    "staffDirectory": "http://www.cubuffs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uconnhuskies.com",
+    "staffDirectory": "http://www.uconnhuskies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.daytonflyers.com",
+    "staffDirectory": "http://www.daytonflyers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bluehens.com",
+    "staffDirectory": "http://www.bluehens.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://denverpioneers.com",
+    "staffDirectory": "http://denverpioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.detroittitans.com",
+    "staffDirectory": "http://www.detroittitans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gopurpleaces.com",
+    "staffDirectory": "http://www.gopurpleaces.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.floridagators.com",
+    "staffDirectory": "http://www.floridagators.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.georgiadogs.com",
+    "staffDirectory": "http://www.georgiadogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://hawaiiathletics.com",
+    "staffDirectory": "http://hawaiiathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uhcougars.com",
+    "staffDirectory": "http://www.uhcougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.govandals.com",
+    "staffDirectory": "http://www.govandals.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uicflames.com",
+    "staffDirectory": "http://www.uicflames.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fightingillini.com",
+    "staffDirectory": "http://www.fightingillini.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hawkeyesports.com",
+    "staffDirectory": "http://www.hawkeyesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://kuathletics.com",
+    "staffDirectory": "http://kuathletics.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.ragincajuns.com",
+    "staffDirectory": "http://www.ragincajuns.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ulmwarhawks.com",
+    "staffDirectory": "http://www.ulmwarhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gocards.com",
+    "staffDirectory": "http://www.gocards.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goblackbears.com",
+    "staffDirectory": "http://goblackbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://UMBCRetrievers.com",
+    "staffDirectory": "http://UMBCRetrievers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.umterps.com",
+    "staffDirectory": "http://www.umterps.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goriverhawks.com",
+    "staffDirectory": "http://www.goriverhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.umassathletics.com",
+    "staffDirectory": "http://www.umassathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gotigersgo.com",
+    "staffDirectory": "http://www.gotigersgo.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.mgoblue.com",
+    "staffDirectory": "http://www.mgoblue.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gophersports.com",
+    "staffDirectory": "http://www.gophersports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.olemisssports.com",
+    "staffDirectory": "http://www.olemisssports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mutigers.com",
+    "staffDirectory": "http://www.mutigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.kcroos.com",
+    "staffDirectory": "http://www.kcroos.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gogriz.com",
+    "staffDirectory": "http://www.gogriz.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.omavs.com",
+    "staffDirectory": "http://www.omavs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.huskers.com",
+    "staffDirectory": "http://www.huskers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://unlvrebels.com",
+    "staffDirectory": "http://unlvrebels.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://nevadawolfpack.com",
+    "staffDirectory": "http://nevadawolfpack.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.unhwildcats.com",
+    "staffDirectory": "http://www.unhwildcats.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.golobos.com",
+    "staffDirectory": "http://www.golobos.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.unoprivateers.com",
+    "staffDirectory": "http://www.unoprivateers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.roarlions.com",
+    "staffDirectory": "http://www.roarlions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uncabulldogs.com",
+    "staffDirectory": "http://www.uncabulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uncwsports.com",
+    "staffDirectory": "http://www.uncwsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goheels.com",
+    "staffDirectory": "http://www.goheels.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fightinghawks.com",
+    "staffDirectory": "http://www.fightinghawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.unfospreys.com",
+    "staffDirectory": "http://www.unfospreys.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.meangreensports.com",
+    "staffDirectory": "http://www.meangreensports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://uncbears.com",
+    "staffDirectory": "http://uncbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://unipanthers.com",
+    "staffDirectory": "http://unipanthers.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://soonersports.com",
+    "staffDirectory": "http://soonersports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goducks.com",
+    "staffDirectory": "http://www.goducks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.pennathletics.com",
+    "staffDirectory": "http://www.pennathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.pittsburghpanthers.com",
+    "staffDirectory": "http://www.pittsburghpanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.portlandpilots.com",
+    "staffDirectory": "http://www.portlandpilots.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gorhody.com",
+    "staffDirectory": "http://www.gorhody.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://richmondspiders.com/",
+    "staffDirectory": "http://richmondspiders.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.usdtoreros.com",
+    "staffDirectory": "http://www.usdtoreros.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.usajaguars.com",
+    "staffDirectory": "http://www.usajaguars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.upstatespartans.com",
+    "staffDirectory": "http://www.upstatespartans.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.goyotes.com",
+    "staffDirectory": "http://www.goyotes.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gousfbulls.com/",
+    "staffDirectory": "http://www.gousfbulls.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://usctrojans.com",
+    "staffDirectory": "http://usctrojans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.usiscreamingeagles.com/",
+    "staffDirectory": "http://www.usiscreamingeagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.Tommiesports.com",
+    "staffDirectory": "http://www.Tommiesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomocs.com",
+    "staffDirectory": "http://www.gomocs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.utmsports.com",
+    "staffDirectory": "http://www.utmsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.utsports.com",
+    "staffDirectory": "http://www.utsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.utamavs.com",
+    "staffDirectory": "http://www.utamavs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.TexasLonghorns.com",
+    "staffDirectory": "http://www.TexasLonghorns.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.utepminers.com",
+    "staffDirectory": "http://www.utepminers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goutsa.com",
+    "staffDirectory": "http://www.goutsa.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://uiwcardinals.com",
+    "staffDirectory": "http://uiwcardinals.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.pacifictigers.com",
+    "staffDirectory": "http://www.pacifictigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.utrockets.com",
+    "staffDirectory": "http://www.utrockets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://utahutes.com/",
+    "staffDirectory": "http://utahutes.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uvmathletics.com",
+    "staffDirectory": "http://www.uvmathletics.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.gohuskies.com",
+    "staffDirectory": "http://www.gohuskies.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://greenbayphoenix.com",
+    "staffDirectory": "http://greenbayphoenix.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uwbadgers.com",
+    "staffDirectory": "http://www.uwbadgers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mkepanthers.com",
+    "staffDirectory": "http://www.mkepanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gowyo.com",
+    "staffDirectory": "http://www.gowyo.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.utahstateaggies.com",
+    "staffDirectory": "http://www.utahstateaggies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://utahtechtrailblazers.com/",
+    "staffDirectory": "http://utahtechtrailblazers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gouvu.com",
+    "staffDirectory": "http://www.gouvu.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.valpoathletics.com",
+    "staffDirectory": "http://www.valpoathletics.com/staff-directory"
+  },
+  
+  {
+    "baseUrl": "http://www.villanova.com",
+    "staffDirectory": "http://www.villanova.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.vcuathletics.com",
+    "staffDirectory": "http://www.vcuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.vmikeydets.com",
+    "staffDirectory": "http://www.vmikeydets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hokiesports.com",
+    "staffDirectory": "http://www.hokiesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wagnerathletics.com",
+    "staffDirectory": "http://www.wagnerathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.godeacs.com",
+    "staffDirectory": "http://www.godeacs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wsucougars.com",
+    "staffDirectory": "http://www.wsucougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.weberstatesports.com/",
+    "staffDirectory": "http://www.weberstatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wvusports.com",
+    "staffDirectory": "http://www.wvusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goleathernecks.com",
+    "staffDirectory": "http://www.goleathernecks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wkusports.com",
+    "staffDirectory": "http://www.wkusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wmubroncos.com",
+    "staffDirectory": "http://www.wmubroncos.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goshockers.com",
+    "staffDirectory": "http://www.goshockers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.tribeathletics.com",
+    "staffDirectory": "http://www.tribeathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.winthropeagles.com",
+    "staffDirectory": "http://www.winthropeagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wsuraiders.com",
+    "staffDirectory": "http://www.wsuraiders.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goxavier.com",
+    "staffDirectory": "http://www.goxavier.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.yalebulldogs.com",
+    "staffDirectory": "http://www.yalebulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ysusports.com",
+    "staffDirectory": "http://www.ysusports.com/staff-directory"
+  }
+,
+
+{
+    "baseUrl": "http://www.dominicanathletics.com",
+    "staffDirectory": "http://www.dominicanathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.asugrizzlies.com",
+    "staffDirectory": "http://www.asugrizzlies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.aupanthers.com",
+    "staffDirectory": "http://www.aupanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.asugoldenrams.com",
+    "staffDirectory": "http://www.asugoldenrams.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://auyellowjackets.com",
+    "staffDirectory": "http://auyellowjackets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://aicyellowjackets.com",
+    "staffDirectory": "http://aicyellowjackets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.angelosports.com",
+    "staffDirectory": "http://www.angelosports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.arkansastechsports.com/",
+    "staffDirectory": "http://www.arkansastechsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goashlandeagles.com",
+    "staffDirectory": "http://www.goashlandeagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.assumptiongreyhounds.com",
+    "staffDirectory": "http://www.assumptiongreyhounds.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.aumathletics.com",
+    "staffDirectory": "http://www.aumathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.augustajags.com",
+    "staffDirectory": "http://www.augustajags.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goaugie.com",
+    "staffDirectory": "http://www.goaugie.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://Www.GoBarryBucs.com",
+    "staffDirectory": "http://Www.GoBarryBucs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bartonbulldogs.com",
+    "staffDirectory": "http://www.bartonbulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.abbeyathletics.com",
+    "staffDirectory": "http://www.abbeyathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://benedicttigers.com",
+    "staffDirectory": "http://benedicttigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://bhsuathletics.com",
+    "staffDirectory": "http://bhsuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.buhuskies.com",
+    "staffDirectory": "http://www.buhuskies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gobstate.com",
+    "staffDirectory": "http://gobstate.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bsubulldogs.com",
+    "staffDirectory": "http://www.bsubulldogs.com/staff-directory"
+  },
+   {
+    "baseUrl": "http://www.caldwellathletics.com",
+    "staffDirectory": "http://www.caldwellathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://humboldtathletics.com",
+    "staffDirectory": "http://humboldtathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.broncoathletics.com",
+    "staffDirectory": "http://www.broncoathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.chicowildcats.com",
+    "staffDirectory": "http://www.chicowildcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gotoros.com",
+    "staffDirectory": "http://www.gotoros.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.eastbaypioneers.com",
+    "staffDirectory": "http://www.eastbaypioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lagoldeneagles.com",
+    "staffDirectory": "http://www.lagoldeneagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.otterathletics.com",
+    "staffDirectory": "http://www.otterathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.csusbathletics.com",
+    "staffDirectory": "http://www.csusbathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://csusmcougars.com",
+    "staffDirectory": "http://csusmcougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.warriorathletics.com",
+    "staffDirectory": "http://www.warriorathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://cameronaggies.com",
+    "staffDirectory": "http://cameronaggies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.catawbaathletics.com",
+    "staffDirectory": "http://www.catawbaathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.maraudersports.com",
+    "staffDirectory": "http://www.maraudersports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://wildcatsports.com",
+    "staffDirectory": "http://wildcatsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.chadroneagles.com",
+    "staffDirectory": "http://www.chadroneagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://goswords.com/",
+    "staffDirectory": "http://goswords.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.griffinathletics.com",
+    "staffDirectory": "http://www.griffinathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gocuhawks.com",
+    "staffDirectory": "http://www.gocuhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cbubucs.com",
+    "staffDirectory": "http://www.cbubucs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.clarkatlantasports.com",
+    "staffDirectory": "http://www.clarkatlantasports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.claytonstatesports.com",
+    "staffDirectory": "http://www.claytonstatesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.csidolphins.com",
+    "staffDirectory": "http://www.csidolphins.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ccucougars.com",
+    "staffDirectory": "http://www.ccucougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://cmumavericks.com",
+    "staffDirectory": "http://cmumavericks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://minesathletics.com",
+    "staffDirectory": "http://minesathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gothunderwolves.com",
+    "staffDirectory": "http://www.gothunderwolves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://csucougars.com",
+    "staffDirectory": "http://csucougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cumountainlions.com",
+    "staffDirectory": "http://www.cumountainlions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cuigoldeneagles.com",
+    "staffDirectory": "http://www.cuigoldeneagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://govalkyries.com",
+    "staffDirectory": "http://govalkyries.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://daemenwildcats.com/",
+    "staffDirectory": "http://daemenwildcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.dbupatriots.com",
+    "staffDirectory": "http://www.dbupatriots.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://dupanthers.com",
+    "staffDirectory": "http://dupanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.senatornation.com",
+    "staffDirectory": "http://www.senatornation.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gostatesmen.com",
+    "staffDirectory": "http://www.gostatesmen.com/staff-directory"
+  },
+  
+  {
+    "baseUrl": "http://www.drurypanthers.com/",
+    "staffDirectory": "http://www.drurypanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://ecutigers.com",
+    "staffDirectory": "http://ecutigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://esuwarriors.com",
+    "staffDirectory": "http://esuwarriors.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goeasternathletics.com",
+    "staffDirectory": "http://www.goeasternathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.eckerdtritons.com",
+    "staffDirectory": "http://www.eckerdtritons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ewutigerpride.com",
+    "staffDirectory": "http://www.ewutigerpride.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ecsuvikings.com",
+    "staffDirectory": "http://www.ecsuvikings.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.erauathletics.com",
+    "staffDirectory": "http://www.erauathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goeclions.com",
+    "staffDirectory": "http://www.goeclions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.esuhornets.com",
+    "staffDirectory": "http://www.esuhornets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.erskinesports.com",
+    "staffDirectory": "http://www.erskinesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fightingfalcons.com",
+    "staffDirectory": "http://www.fightingfalcons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://fsubroncos.com",
+    "staffDirectory": "http://fsubroncos.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.felicianuathletics.com",
+    "staffDirectory": "http://www.felicianuathletics.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://www.flaglerathletics.com/",
+    "staffDirectory": "http://www.flaglerathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://floridatechsports.com/",
+    "staffDirectory": "http://floridatechsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fscmocs.com",
+    "staffDirectory": "http://www.fscmocs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fhsuathletics.com",
+    "staffDirectory": "http://www.fhsuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goskyhawks.com",
+    "staffDirectory": "http://www.goskyhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fmupatriots.com",
+    "staffDirectory": "http://www.fmupatriots.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://fpuathletics.com/",
+    "staffDirectory": "http://fpuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.frostburgsports.com",
+    "staffDirectory": "http://www.frostburgsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gannonsports.com",
+    "staffDirectory": "http://www.gannonsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gcsubobcats.com",
+    "staffDirectory": "http://www.gcsubobcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gculions.com",
+    "staffDirectory": "http://www.gculions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gscpioneers.com",
+    "staffDirectory": "http://www.gscpioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gbcathletics.com",
+    "staffDirectory": "http://www.gbcathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gvsulakers.com",
+    "staffDirectory": "http://gvsulakers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hardingsports.com",
+    "staffDirectory": "http://www.hardingsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hpusharks.com/",
+    "staffDirectory": "http://www.hpusharks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://hsusports.com",
+    "staffDirectory": "http://hsusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hillsdalechargers.com",
+    "staffDirectory": "http://www.hillsdalechargers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://iupathletics.com",
+    "staffDirectory": "http://iupathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://jessupathletics.com",
+    "staffDirectory": "http://jessupathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goldenbullsports.com",
+    "staffDirectory": "http://www.goldenbullsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://ksuthorobreds.com",
+    "staffDirectory": "http://ksuthorobreds.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://kwcpanthers.com",
+    "staffDirectory": "http://kwcpanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.kingtornado.com/",
+    "staffDirectory": "http://www.kingtornado.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.kubears.com",
+    "staffDirectory": "http://www.kubears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lakeeriestorm.com",
+    "staffDirectory": "http://www.lakeeriestorm.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://lssulakers.com",
+    "staffDirectory": "http://lssulakers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.landerbearcats.com",
+    "staffDirectory": "http://www.landerbearcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.golcdragons.com/",
+    "staffDirectory": "http://www.golcdragons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lemoynedolphins.com",
+    "staffDirectory": "http://www.lemoynedolphins.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.leeuflames.com",
+    "staffDirectory": "http://www.leeuflames.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://lmcbobcats.com",
+    "staffDirectory": "http://lmcbobcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lrbears.com",
+    "staffDirectory": "http://www.lrbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lewisflyers.com",
+    "staffDirectory": "http://www.lewisflyers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lmurailsplitters.com",
+    "staffDirectory": "http://www.lmurailsplitters.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lubluetigers.com",
+    "staffDirectory": "http://www.lubluetigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lulions.com",
+    "staffDirectory": "http://www.lulions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.golhu.com",
+    "staffDirectory": "http://www.golhu.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lcuchaps.com",
+    "staffDirectory": "http://www.lcuchaps.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lynnfightingknights.com",
+    "staffDirectory": "http://www.lynnfightingknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.malonepioneers.com",
+    "staffDirectory": "http://www.malonepioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomounties.com",
+    "staffDirectory": "http://www.gomounties.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.maryvillesaints.com",
+    "staffDirectory": "http://www.maryvillesaints.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mckbearcats.com",
+    "staffDirectory": "http://www.mckbearcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://menloathletics.com/",
+    "staffDirectory": "http://menloathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mercyathletics.com",
+    "staffDirectory": "http://www.mercyathletics.com/staff-directory"
+  },
+  
+  {
+    "baseUrl": "http://www.RoadrunnersAthletics.com",
+    "staffDirectory": "http://www.RoadrunnersAthletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.michigantechhuskies.com",
+    "staffDirectory": "http://www.michigantechhuskies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://msumustangs.com",
+    "staffDirectory": "http://msumustangs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://milesgoldenbears.com/",
+    "staffDirectory": "http://milesgoldenbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.millersvilleathletics.com",
+    "staffDirectory": "http://www.millersvilleathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://msumdragons.com/",
+    "staffDirectory": "http://msumdragons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.msumavericks.com",
+    "staffDirectory": "http://www.msumavericks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.msubeavers.com",
+    "staffDirectory": "http://www.msubeavers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gochoctaws.com",
+    "staffDirectory": "http://www.gochoctaws.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://mssulions.com",
+    "staffDirectory": "http://mssulions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.minerathletics.com",
+    "staffDirectory": "http://www.minerathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gogriffons.com",
+    "staffDirectory": "http://www.gogriffons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.molloylions.com",
+    "staffDirectory": "http://www.molloylions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.msubsports.com",
+    "staffDirectory": "http://www.msubsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.morehouseathletics.com",
+    "staffDirectory": "http://www.morehouseathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nmhuathletics.com",
+    "staffDirectory": "http://www.nmhuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.newberrywolves.com",
+    "staffDirectory": "http://www.newberrywolves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.newmanjets.com",
+    "staffDirectory": "http://www.newmanjets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nguathletics.com",
+    "staffDirectory": "http://www.nguathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goriverhawksgo.com",
+    "staffDirectory": "http://www.goriverhawksgo.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nmuwildcats.com",
+    "staffDirectory": "http://www.nmuwildcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://nsuwolves.com",
+    "staffDirectory": "http://nsuwolves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://bearcatsports.com",
+    "staffDirectory": "http://bearcatsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://nnusports.com",
+    "staffDirectory": "http://nnusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.riderangersride.com",
+    "staffDirectory": "http://www.riderangersride.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://nsusharks.com",
+    "staffDirectory": "http://nsusharks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ohiodominicanpanthers.com",
+    "staffDirectory": "http://www.ohiodominicanpanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.obubison.com",
+    "staffDirectory": "http://www.obubison.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.oceagles.com",
+    "staffDirectory": "http://www.oceagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.obutigers.com",
+    "staffDirectory": "http://www.obutigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.paceuathletics.com",
+    "staffDirectory": "http://www.paceuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.pbasailfish.com",
+    "staffDirectory": "http://www.pbasailfish.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.calvulcans.com",
+    "staffDirectory": "http://www.calvulcans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.clariongoldeneagles.com",
+    "staffDirectory": "http://www.clariongoldeneagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gofightingscots.com",
+    "staffDirectory": "http://www.gofightingscots.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.pittstategorillas.com",
+    "staffDirectory": "http://www.pittstategorillas.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.plnusealions.com",
+    "staffDirectory": "http://www.plnusealions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://pointparksports.com",
+    "staffDirectory": "http://pointparksports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.posteagles.com",
+    "staffDirectory": "http://www.posteagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.pnwathletics.com",
+    "staffDirectory": "http://www.pnwathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.queensknights.com",
+    "staffDirectory": "http://www.queensknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://quhawks.com",
+    "staffDirectory": "http://quhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.regisrangers.com",
+    "staffDirectory": "http://www.regisrangers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.robertsredhawks.com",
+    "staffDirectory": "http://www.robertsredhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rockhursthawks.com/",
+    "staffDirectory": "http://www.rockhursthawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rsuhillcats.com",
+    "staffDirectory": "http://www.rsuhillcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://RollinsSports.com",
+    "staffDirectory": "http://RollinsSports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rooseveltlakers.com",
+    "staffDirectory": "http://www.rooseveltlakers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.saintanselmhawks.com",
+    "staffDirectory": "http://www.saintanselmhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.saintleolions.com",
+    "staffDirectory": "http://www.saintleolions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.smusaints.com",
+    "staffDirectory": "http://www.smusaints.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.smcathletics.com",
+    "staffDirectory": "http://www.smcathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.salemtigers.com",
+    "staffDirectory": "http://www.salemtigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://sfstategators.com",
+    "staffDirectory": "http://sfstategators.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://ssuathletics.com/",
+    "staffDirectory": "http://ssuathletics.com/staff-directory"
+  },
+  
+  {
+    "baseUrl": "http://www.shawbears.com",
+    "staffDirectory": "http://www.shawbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://shepherdrams.com",
+    "staffDirectory": "http://shepherdrams.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.shipraiders.com",
+    "staffDirectory": "http://www.shipraiders.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goshorterhawks.com",
+    "staffDirectory": "http://www.goshorterhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rockathletics.com",
+    "staffDirectory": "http://www.rockathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.sonomaseawolves.com",
+    "staffDirectory": "http://www.sonomaseawolves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gorockers.com",
+    "staffDirectory": "http://gorockers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gosoutheastern.com",
+    "staffDirectory": "http://www.gosoutheastern.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.muleriderathletics.com",
+    "staffDirectory": "http://www.muleriderathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://scsuowls.com",
+    "staffDirectory": "http://scsuowls.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://snuathletics.com",
+    "staffDirectory": "http://snuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.snhupenmen.com",
+    "staffDirectory": "http://www.snhupenmen.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://swuathletics.com",
+    "staffDirectory": "http://swuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.sbubearcats.com",
+    "staffDirectory": "http://www.sbubearcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.smsumustangs.com",
+    "staffDirectory": "http://www.smsumustangs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.swosuathletics.com",
+    "staffDirectory": "http://www.swosuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.shcbadgers.com",
+    "staffDirectory": "http://www.shcbadgers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gohilltoppers.com",
+    "staffDirectory": "http://gohilltoppers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rattlerathletics.com",
+    "staffDirectory": "http://www.rattlerathletics.com/staff-directory"
+  },
+  
+  {
+    "baseUrl": "http://godustdevils.com",
+    "staffDirectory": "http://godustdevils.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.javelinaathletics.com",
+    "staffDirectory": "http://www.javelinaathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.twuathletics.com",
+    "staffDirectory": "http://www.twuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uttylerpatriots.com",
+    "staffDirectory": "http://www.uttylerpatriots.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.utpbfalcons.com",
+    "staffDirectory": "http://www.utpbfalcons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uvawisecavs.com",
+    "staffDirectory": "http://www.uvawisecavs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.jeffersonrams.com",
+    "staffDirectory": "http://www.jeffersonrams.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.thomasmoresaints.com",
+    "staffDirectory": "http://www.thomasmoresaints.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gotiffindragons.com",
+    "staffDirectory": "http://www.gotiffindragons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.tnutrojans.com",
+    "staffDirectory": "http://www.tnutrojans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.trumanbulldogs.com",
+    "staffDirectory": "http://www.trumanbulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goldentigersports.com/",
+    "staffDirectory": "http://www.goldentigersports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uuathletics.com",
+    "staffDirectory": "http://www.uuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://uahchargers.com",
+    "staffDirectory": "http://uahchargers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goseawolves.com",
+    "staffDirectory": "http://www.goseawolves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.AlaskaNanooks.com",
+    "staffDirectory": "http://www.AlaskaNanooks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uafortsmithlions.com",
+    "staffDirectory": "http://www.uafortsmithlions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uamsports.com",
+    "staffDirectory": "http://www.uamsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ucmercedbobcats.com",
+    "staffDirectory": "http://www.ucmercedbobcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://ucmathletics.com",
+    "staffDirectory": "http://ucmathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bronchosports.com",
+    "staffDirectory": "http://www.bronchosports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ucgoldeneagles.com",
+    "staffDirectory": "http://www.ucgoldeneagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomountainlions.com",
+    "staffDirectory": "http://www.gomountainlions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://findlayoilers.com",
+    "staffDirectory": "http://findlayoilers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://hiloathletics.com",
+    "staffDirectory": "http://hiloathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uisprairiestars.com",
+    "staffDirectory": "http://www.uisprairiestars.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://jimmiepride.com",
+    "staffDirectory": "http://jimmiepride.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goumary.com",
+    "staffDirectory": "http://www.goumary.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://umdbulldogs.com/",
+    "staffDirectory": "http://umdbulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goldeneaglesports.com/",
+    "staffDirectory": "http://www.goldeneaglesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://umsltritons.com",
+    "staffDirectory": "http://umsltritons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.montevallofalcons.com",
+    "staffDirectory": "http://www.montevallofalcons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.umotrojans.com",
+    "staffDirectory": "http://www.umotrojans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lopers.com",
+    "staffDirectory": "http://www.lopers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.newhavenchargers.com",
+    "staffDirectory": "http://www.newhavenchargers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uncpbraves.com",
+    "staffDirectory": "http://www.uncpbraves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ungathletics.com",
+    "staffDirectory": "http://www.ungathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://pittjohnstownathletics.com/",
+    "staffDirectory": "http://pittjohnstownathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.usfcougars.com",
+    "staffDirectory": "http://www.usfcougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.pacersports.com",
+    "staffDirectory": "http://www.pacersports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://uscbathletics.com",
+    "staffDirectory": "http://uscbathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://utdcomets.com",
+    "staffDirectory": "http://utdcomets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uwaathletics.com",
+    "staffDirectory": "http://www.uwaathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goargos.com",
+    "staffDirectory": "http://www.goargos.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uwgathletics.com",
+    "staffDirectory": "http://www.uwgathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.parksiderangers.com",
+    "staffDirectory": "http://www.parksiderangers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://uiupeacocks.com/",
+    "staffDirectory": "http://uiupeacocks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ursulinearrows.com",
+    "staffDirectory": "http://www.ursulinearrows.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.vstateblazers.com",
+    "staffDirectory": "http://www.vstateblazers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.vanguardlions.com",
+    "staffDirectory": "http://www.vanguardlions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.govsutrojans.com",
+    "staffDirectory": "http://www.govsutrojans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://vuusports.com/",
+    "staffDirectory": "http://vuusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wusports.com",
+    "staffDirectory": "http://www.wusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wscwildcats.com/",
+    "staffDirectory": "http://www.wscwildcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wsuathletics.com",
+    "staffDirectory": "http://www.wsuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wcupagoldenrams.com",
+    "staffDirectory": "http://www.wcupagoldenrams.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hilltoppersports.com",
+    "staffDirectory": "http://www.hilltoppersports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gobuffsgo.com",
+    "staffDirectory": "http://www.gobuffsgo.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wvsuyellowjackets.com",
+    "staffDirectory": "http://www.wvsuyellowjackets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://wesleyanbobcats.com",
+    "staffDirectory": "http://wesleyanbobcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomountaineers.com",
+    "staffDirectory": "http://www.gomountaineers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wnmumustangs.com",
+    "staffDirectory": "http://www.wnmumustangs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wouwolves.com",
+    "staffDirectory": "http://www.wouwolves.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wwuvikings.com",
+    "staffDirectory": "http://www.wwuvikings.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.westminstergriffins.com",
+    "staffDirectory": "http://www.westminstergriffins.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://wucardinals.com/",
+    "staffDirectory": "http://wucardinals.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.jewellcardinals.com",
+    "staffDirectory": "http://www.jewellcardinals.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://wingatebulldogs.com",
+    "staffDirectory": "http://wingatebulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.winonastatewarriors.com",
+    "staffDirectory": "http://www.winonastatewarriors.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://wssurams.com",
+    "staffDirectory": "http://wssurams.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.yhcathletics.com",
+    "staffDirectory": "http://www.yhcathletics.com/staff-directory"
+  }
+,
+  {
+    "baseUrl": "http://www.adrianbulldogs.com",
+    "staffDirectory": "http://www.adrianbulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ascscotties.com",
+    "staffDirectory": "http://www.ascscotties.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gobrits.com",
+    "staffDirectory": "http://www.gobrits.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.albrightathletics.com",
+    "staffDirectory": "http://www.albrightathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.alfredstateathletics.com",
+    "staffDirectory": "http://www.alfredstateathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gosaxons.com",
+    "staffDirectory": "http://www.gosaxons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.alleghenygators.com",
+    "staffDirectory": "http://www.alleghenygators.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.almascots.com",
+    "staffDirectory": "http://www.almascots.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.arcadiaknights.com/",
+    "staffDirectory": "http://www.arcadiaknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.asburyeagles.com",
+    "staffDirectory": "http://www.asburyeagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.averettcougars.com",
+    "staffDirectory": "http://www.averettcougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.babsonathletics.com",
+    "staffDirectory": "http://www.babsonathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bardathletics.com",
+    "staffDirectory": "http://www.bardathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.baruchathletics.com",
+    "staffDirectory": "http://www.baruchathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gobatesbobcats.com",
+    "staffDirectory": "http://www.gobatesbobcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.benueagles.com",
+    "staffDirectory": "http://www.benueagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bereaathletics.com",
+    "staffDirectory": "http://www.bereaathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.berryvikings.com",
+    "staffDirectory": "http://www.berryvikings.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://bethanybison.com",
+    "staffDirectory": "http://bethanybison.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.blcvikings.com",
+    "staffDirectory": "http://www.blcvikings.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.brandeisjudges.com",
+    "staffDirectory": "http://www.brandeisjudges.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bctornados.com",
+    "staffDirectory": "http://www.bctornados.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bridgewatereagles.com",
+    "staffDirectory": "http://www.bridgewatereagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://brooklyncollegeathletics.com",
+    "staffDirectory": "http://brooklyncollegeathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bvuathletics.com",
+    "staffDirectory": "http://www.bvuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.buffalostateathletics.com",
+    "staffDirectory": "http://www.buffalostateathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cairnhighlanders.com",
+    "staffDirectory": "http://www.cairnhighlanders.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gocaltech.com",
+    "staffDirectory": "http://www.gocaltech.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.clusports.com",
+    "staffDirectory": "http://www.clusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://calvinknights.com",
+    "staffDirectory": "http://calvinknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gopios.com",
+    "staffDirectory": "http://www.gopios.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.catholicathletics.com/",
+    "staffDirectory": "http://www.catholicathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cedarcrestathletics.com",
+    "staffDirectory": "http://www.cedarcrestathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.centenarycyclones.com",
+    "staffDirectory": "http://www.centenarycyclones.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.centrecolonels.com",
+    "staffDirectory": "http://www.centrecolonels.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.chapmanathletics.com",
+    "staffDirectory": "http://www.chapmanathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gochathamcougars.com",
+    "staffDirectory": "http://www.gochathamcougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://CNUsports.com",
+    "staffDirectory": "http://CNUsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://clarkathletics.com",
+    "staffDirectory": "http://clarkathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.clarksonathletics.com",
+    "staffDirectory": "http://www.clarksonathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.kohawkathletics.com",
+    "staffDirectory": "http://www.kohawkathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.colby-sawyerathletics.com/",
+    "staffDirectory": "http://www.colby-sawyerathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gobennies.com",
+    "staffDirectory": "http://www.gobennies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cctigers.com",
+    "staffDirectory": "http://www.cctigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.CUCougars.com",
+    "staffDirectory": "http://www.CUCougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cuwfalcons.com",
+    "staffDirectory": "http://www.cuwfalcons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://camelathletics.com/",
+    "staffDirectory": "http://camelathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.cornellrams.com",
+    "staffDirectory": "http://www.cornellrams.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.denisonbigred.com",
+    "staffDirectory": "http://www.denisonbigred.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.dickinsonathletics.com",
+    "staffDirectory": "http://www.dickinsonathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.dustars.com",
+    "staffDirectory": "http://www.dustars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.drewrangers.com",
+    "staffDirectory": "http://www.drewrangers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goearlham.com",
+    "staffDirectory": "http://www.goearlham.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goetbutigers.com",
+    "staffDirectory": "http://www.goetbutigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gowarriorathletics.com",
+    "staffDirectory": "http://gowarriorathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.emuroyals.com",
+    "staffDirectory": "http://www.emuroyals.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goeasterneagles.com",
+    "staffDirectory": "http://www.goeasterneagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.EdgewoodCollegeEagles.com",
+    "staffDirectory": "http://www.EdgewoodCollegeEagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.etownbluejays.com",
+    "staffDirectory": "http://www.etownbluejays.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://elmhurstbluejays.com/",
+    "staffDirectory": "http://elmhurstbluejays.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.emersonlions.com",
+    "staffDirectory": "http://www.emersonlions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goecsaints.com",
+    "staffDirectory": "http://www.goecsaints.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.emoryathletics.com",
+    "staffDirectory": "http://www.emoryathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fdudevils.com",
+    "staffDirectory": "http://www.fdudevils.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.farmingdalesports.com",
+    "staffDirectory": "http://www.farmingdalesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ferrumpanthers.com",
+    "staffDirectory": "http://www.ferrumpanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.franciscanathletics.com",
+    "staffDirectory": "http://www.franciscanathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.godiplomats.com",
+    "staffDirectory": "http://www.godiplomats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gallaudetbison.com",
+    "staffDirectory": "http://www.gallaudetbison.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gettysburgsports.com",
+    "staffDirectory": "http://www.gettysburgsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.greensborocollegesports.com",
+    "staffDirectory": "http://www.greensborocollegesports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gwyneddathletics.com/",
+    "staffDirectory": "http://gwyneddathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hamlineathletics.com",
+    "staffDirectory": "http://www.hamlineathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hscathletics.com",
+    "staffDirectory": "http://www.hscathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://hsuathletics.com",
+    "staffDirectory": "http://hsuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hartwickhawks.com",
+    "staffDirectory": "http://www.hartwickhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.haverfordathletics.com",
+    "staffDirectory": "http://www.haverfordathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://bergathletics.com",
+    "staffDirectory": "http://bergathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hendrixwarriors.com",
+    "staffDirectory": "http://www.hendrixwarriors.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hilberthawks.com",
+    "staffDirectory": "http://www.hilberthawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hiramterriers.com",
+    "staffDirectory": "http://www.hiramterriers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hwsathletics.com",
+    "staffDirectory": "http://www.hwsathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hollinssports.com",
+    "staffDirectory": "http://www.hollinssports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hoodathletics.com",
+    "staffDirectory": "http://www.hoodathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hpusports.com",
+    "staffDirectory": "http://www.hpusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hussoneagles.com",
+    "staffDirectory": "http://www.hussoneagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.illinoiscollegeathletics.com/",
+    "staffDirectory": "http://www.illinoiscollegeathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.illinoistechathletics.com",
+    "staffDirectory": "http://www.illinoistechathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.iwusports.com",
+    "staffDirectory": "http://www.iwusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomightymacs.com",
+    "staffDirectory": "http://www.gomightymacs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.jcusports.com",
+    "staffDirectory": "http://www.jcusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.johnjayathletics.com",
+    "staffDirectory": "http://www.johnjayathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.hopkinssports.com",
+    "staffDirectory": "http://www.hopkinssports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://providence.jwuathletics.com",
+    "staffDirectory": "http://providence.jwuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://charlotte.jwuathletics.com/",
+    "staffDirectory": "http://charlotte.jwuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.keanathletics.com",
+    "staffDirectory": "http://www.keanathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.keeneowls.com",
+    "staffDirectory": "http://www.keeneowls.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.keukaathletics.com",
+    "staffDirectory": "http://www.keukaathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gokcgiants.com",
+    "staffDirectory": "http://www.gokcgiants.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lagrangepanthers.com",
+    "staffDirectory": "http://www.lagrangepanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goforesters.com",
+    "staffDirectory": "http://www.goforesters.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://lakelandmuskies.com/",
+    "staffDirectory": "http://lakelandmuskies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lbcchargers.com",
+    "staffDirectory": "http://www.lbcchargers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.godutchmen.com",
+    "staffDirectory": "http://www.godutchmen.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lehmanathletics.com",
+    "staffDirectory": "http://www.lehmanathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.letuathletics.com",
+    "staffDirectory": "http://www.letuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lcpioneers.com",
+    "staffDirectory": "http://www.lcpioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://golinfieldwildcats.com/",
+    "staffDirectory": "http://golinfieldwildcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.duhawks.com",
+    "staffDirectory": "http://www.duhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://lycomingathletics.com",
+    "staffDirectory": "http://lycomingathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.muspartans.com",
+    "staffDirectory": "http://www.muspartans.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.govaliants.com",
+    "staffDirectory": "http://www.govaliants.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://mbusabercats.com",
+    "staffDirectory": "http://mbusabercats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.sabreathletics.com",
+    "staffDirectory": "http://www.sabreathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mlcknights.com",
+    "staffDirectory": "http://www.mlcknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.marybaldwinathletics.com",
+    "staffDirectory": "http://www.marybaldwinathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.marymountsaints.com",
+    "staffDirectory": "http://www.marymountsaints.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.marywoodpacers.com",
+    "staffDirectory": "http://www.marywoodpacers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mitathletics.com",
+    "staffDirectory": "http://www.mitathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mcmurrysports.com",
+    "staffDirectory": "http://www.mcmurrysports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mecathletics.com",
+    "staffDirectory": "http://www.mecathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goavengingangels.com",
+    "staffDirectory": "http://www.goavengingangels.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomessiah.com",
+    "staffDirectory": "http://www.gomessiah.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mumonarchs.com",
+    "staffDirectory": "http://www.mumonarchs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomajors.com",
+    "staffDirectory": "http://www.gomajors.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://go-raiders.com",
+    "staffDirectory": "http://go-raiders.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.owlsathletics.com",
+    "staffDirectory": "http://www.owlsathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://monmouthscots.com",
+    "staffDirectory": "http://monmouthscots.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.montclairathletics.com",
+    "staffDirectory": "http://www.montclairathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.mountieathletics.com",
+    "staffDirectory": "http://www.mountieathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.msmcknights.com/",
+    "staffDirectory": "http://www.msmcknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.msjlions.com",
+    "staffDirectory": "http://www.msjlions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.muhlenbergsports.com",
+    "staffDirectory": "http://www.muhlenbergsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nazathletics.com",
+    "staffDirectory": "http://www.nazathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nwusports.com/",
+    "staffDirectory": "http://www.nwusports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.neumannathletics.com",
+    "staffDirectory": "http://www.neumannathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.njcugothicknights.com",
+    "staffDirectory": "http://www.njcugothicknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gonyuathletics.com",
+    "staffDirectory": "http://www.gonyuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nicholsathletics.com",
+    "staffDirectory": "http://www.nicholsathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://northcentralcardinals.com",
+    "staffDirectory": "http://northcentralcardinals.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ncurams.com",
+    "staffDirectory": "http://www.ncurams.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.norwichathletics.com",
+    "staffDirectory": "http://www.norwichathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.notredamegators.com",
+    "staffDirectory": "http://www.notredamegators.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goyeo.com",
+    "staffDirectory": "http://www.goyeo.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.oxyathletics.com",
+    "staffDirectory": "http://www.oxyathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gopetrels.com",
+    "staffDirectory": "http://www.gopetrels.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://battlingbishops.com/",
+    "staffDirectory": "http://battlingbishops.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.otterbeincardinals.com",
+    "staffDirectory": "http://www.otterbeincardinals.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.golutes.com",
+    "staffDirectory": "http://www.golutes.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goboxers.com",
+    "staffDirectory": "http://www.goboxers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.psuberksathletics.com",
+    "staffDirectory": "http://www.psuberksathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.abingtonsports.com",
+    "staffDirectory": "http://www.abingtonsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gofalconsports.com",
+    "staffDirectory": "http://www.gofalconsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.piedmontlions.com",
+    "staffDirectory": "http://www.piedmontlions.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gocardinalsports.com/",
+    "staffDirectory": "http://www.gocardinalsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.sagehens.com",
+    "staffDirectory": "http://www.sagehens.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goprattgo.com",
+    "staffDirectory": "http://www.goprattgo.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.principiaathletics.com",
+    "staffDirectory": "http://www.principiaathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.purchasecollegeathletics.com",
+    "staffDirectory": "http://www.purchasecollegeathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ramapoathletics.com",
+    "staffDirectory": "http://www.ramapoathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.randolphwildcats.com",
+    "staffDirectory": "http://www.randolphwildcats.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rmcathletics.com",
+    "staffDirectory": "http://www.rmcathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rpiathletics.com",
+    "staffDirectory": "http://www.rpiathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goanchormen.com",
+    "staffDirectory": "http://www.goanchormen.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rhodeslynx.com",
+    "staffDirectory": "http://www.rhodeslynx.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://riponredhawks.com/",
+    "staffDirectory": "http://riponredhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rivierathletics.com",
+    "staffDirectory": "http://www.rivierathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ritathletics.com",
+    "staffDirectory": "http://www.ritathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rockfordregents.com",
+    "staffDirectory": "http://www.rockfordregents.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rwuhawks.com",
+    "staffDirectory": "http://www.rwuhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rosemont-ravens.com",
+    "staffDirectory": "http://www.rosemont-ravens.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rowanathletics.com",
+    "staffDirectory": "http://www.rowanathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.scarletraptors.com",
+    "staffDirectory": "http://www.scarletraptors.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rutgersnewarkathletics.com",
+    "staffDirectory": "http://www.rutgersnewarkathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://seueagles.com",
+    "staffDirectory": "http://seueagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gojohnnies.com",
+    "staffDirectory": "http://www.gojohnnies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomonks.com",
+    "staffDirectory": "http://www.gomonks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.saintmaryssports.com",
+    "staffDirectory": "http://www.saintmaryssports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.suseagulls.com",
+    "staffDirectory": "http://www.suseagulls.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.salveathletics.com",
+    "staffDirectory": "http://www.salveathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gogryphons.com",
+    "staffDirectory": "http://www.gogryphons.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.suhornets.com",
+    "staffDirectory": "http://www.suhornets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://skidmoreathletics.com/",
+    "staffDirectory": "http://skidmoreathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.smithpioneers.com",
+    "staffDirectory": "http://www.smithpioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://knightathletics.com",
+    "staffDirectory": "http://knightathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.southwesternpirates.com",
+    "staffDirectory": "http://www.southwesternpirates.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.spaldingathletics.com",
+    "staffDirectory": "http://www.spaldingathletics.com/staff-directory"
+  },
+  
+  {
+    "baseUrl": "http://www.sjfathletics.com",
+    "staffDirectory": "http://www.sjfathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.sjliathletics.com",
+    "staffDirectory": "http://www.sjliathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.saintsathletics.com",
+    "staffDirectory": "http://www.saintsathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.smcmathletics.com",
+    "staffDirectory": "http://www.smcmathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://gobrockport.com",
+    "staffDirectory": "http://gobrockport.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.rooathletics.com",
+    "staffDirectory": "http://www.rooathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.geneseoknights.com",
+    "staffDirectory": "http://www.geneseoknights.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://morrisvillemustangs.com/",
+    "staffDirectory": "http://morrisvillemustangs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.nphawks.com",
+    "staffDirectory": "http://www.nphawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.oldwestburypanthers.com",
+    "staffDirectory": "http://www.oldwestburypanthers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.oneontaathletics.com",
+    "staffDirectory": "http://www.oneontaathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://oswegolakers.com",
+    "staffDirectory": "http://oswegolakers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.potsdambears.com",
+    "staffDirectory": "http://www.potsdambears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.maritimeathletics.com",
+    "staffDirectory": "http://www.maritimeathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.stevensducks.com",
+    "staffDirectory": "http://www.stevensducks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gomustangsports.com",
+    "staffDirectory": "http://www.gomustangsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.stocktonathletics.com",
+    "staffDirectory": "http://www.stocktonathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.srlobos.com",
+    "staffDirectory": "http://www.srlobos.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gosusqu.com",
+    "staffDirectory": "http://www.gosusqu.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.vixenathletics.com",
+    "staffDirectory": "http://www.vixenathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://tlubulldogs.com",
+    "staffDirectory": "http://tlubulldogs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ccnyathletics.com",
+    "staffDirectory": "http://www.ccnyathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.tcnjathletics.com",
+    "staffDirectory": "http://www.tcnjathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.csssaints.com",
+    "staffDirectory": "http://www.csssaints.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.woosterathletics.com",
+    "staffDirectory": "http://www.woosterathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.fredoniabluedevils.com",
+    "staffDirectory": "http://www.fredoniabluedevils.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.thielathletics.com",
+    "staffDirectory": "http://www.thielathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.thomasathletics.com",
+    "staffDirectory": "http://www.thomasathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.transysports.com",
+    "staffDirectory": "http://www.transysports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.trinethunder.com",
+    "staffDirectory": "http://www.trinethunder.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.bantamsports.com",
+    "staffDirectory": "http://www.bantamsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.trinitytigers.com",
+    "staffDirectory": "http://www.trinitytigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://usmmasports.com",
+    "staffDirectory": "http://usmmasports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.unionathletics.com/",
+    "staffDirectory": "http://www.unionathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goslugs.com/",
+    "staffDirectory": "http://www.goslugs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.udallasathletics.com",
+    "staffDirectory": "http://www.udallasathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://hartfordhawks.com",
+    "staffDirectory": "http://hartfordhawks.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.leopardathletics.com",
+    "staffDirectory": "http://www.leopardathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goUMFbeavers.com",
+    "staffDirectory": "http://www.goUMFbeavers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.umweagles.com",
+    "staffDirectory": "http://www.umweagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.beaconsathletics.com",
+    "staffDirectory": "http://www.beaconsathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.corsairathletics.com",
+    "staffDirectory": "http://www.corsairathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.morriscougars.com",
+    "staffDirectory": "http://www.morriscougars.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://umsvathletics.com/",
+    "staffDirectory": "http://umsvathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://unweagles.com",
+    "staffDirectory": "http://unweagles.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://pittgreensburgathletics.com/",
+    "staffDirectory": "http://pittgreensburgathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.loggerathletics.com",
+    "staffDirectory": "http://www.loggerathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.goredlands.com",
+    "staffDirectory": "http://www.goredlands.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.southernmainehuskies.com",
+    "staffDirectory": "http://www.southernmainehuskies.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ustcelts.com",
+    "staffDirectory": "http://www.ustcelts.com/staff-directory"
+  },
+
+  {
+    "baseUrl": "http://sewaneetigers.com/",
+    "staffDirectory": "http://sewaneetigers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://uvfpatriots.com",
+    "staffDirectory": "http://uvfpatriots.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.blugolds.com",
+    "staffDirectory": "http://www.blugolds.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uwlathletics.com",
+    "staffDirectory": "http://www.uwlathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.letsgopioneers.com",
+    "staffDirectory": "http://www.letsgopioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uwrfsports.com",
+    "staffDirectory": "http://www.uwrfsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://stoutbluedevils.com",
+    "staffDirectory": "http://stoutbluedevils.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uwsyellowjackets.com",
+    "staffDirectory": "http://www.uwsyellowjackets.com/staff-directory"
+  },
+  
+  {
+    "baseUrl": "http://www.uwwsports.com",
+    "staffDirectory": "http://www.uwwsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ursinusathletics.com",
+    "staffDirectory": "http://www.ursinusathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.uticapioneers.com",
+    "staffDirectory": "http://www.uticapioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.vassarathletics.com/",
+    "staffDirectory": "http://www.vassarathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.lyndonhornets.com",
+    "staffDirectory": "http://www.lyndonhornets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://vwuathletics.com",
+    "staffDirectory": "http://vwuathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gopresidents.com",
+    "staffDirectory": "http://www.gopresidents.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://generalssports.com",
+    "staffDirectory": "http://generalssports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.WashingtonCollegeSports.com",
+    "staffDirectory": "http://www.WashingtonCollegeSports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://washubears.com",
+    "staffDirectory": "http://washubears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.waynesburgsports.com",
+    "staffDirectory": "http://www.waynesburgsports.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://websterathletics.com",
+    "staffDirectory": "http://websterathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wellesleyblue.com",
+    "staffDirectory": "http://www.wellesleyblue.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wesleyanathletics.com",
+    "staffDirectory": "http://www.wesleyanathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.westconnathletics.com",
+    "staffDirectory": "http://www.westconnathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wnegoldenbears.com",
+    "staffDirectory": "http://www.wnegoldenbears.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wcpoets.com",
+    "staffDirectory": "http://www.wcpoets.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.whitworthpirates.com",
+    "staffDirectory": "http://www.whitworthpirates.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.widenerpride.com",
+    "staffDirectory": "http://www.widenerpride.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gowilkesu.com",
+    "staffDirectory": "http://www.gowilkesu.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wpupioneers.com",
+    "staffDirectory": "http://www.wpupioneers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.gopeacepacers.com",
+    "staffDirectory": "http://www.gopeacepacers.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.wilsonphoenix.com",
+    "staffDirectory": "http://www.wilsonphoenix.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.yumacs.com",
+    "staffDirectory": "http://www.yumacs.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.yorkathletics.com",
+    "staffDirectory": "http://www.yorkathletics.com/staff-directory"
+  },
+  {
+    "baseUrl": "http://www.ycpspartans.com",
+    "staffDirectory": "http://www.ycpspartans.com/staff-directory"
+  },
+  {
+    "baseUrl": "https://www.albany.edu",
+    "staffDirectory": "https://www.albany.edu/recreation-wellness/staff-directory"
+  },  
+{
+    "baseUrl": "https://altoona.psu.edu",
+    "staffDirectory": "https://altoona.psu.edu/offices-divisions/recreation/staff-directory"
+  },
+  {
+    "baseUrl": "https://www.vvc.edu",
+    "staffDirectory": "https://www.vvc.edu/staff-directory"
+  },
+    {
+    "baseUrl": "https://bobcats.cofo.edu",
+    "staffDirectory": "https://bobcats.cofo.edu/Staff-Directory"
+  },
+  {
+    "baseUrl": "https://athletics.uchicago.edu",
+    "staffDirectory": "https://athletics.uchicago.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.carthage.edu",
+    "staffDirectory": "https://athletics.carthage.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.gordon.edu",
+    "staffDirectory": "https://athletics.gordon.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.thomas.edu",
+    "staffDirectory": "https://athletics.thomas.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.augsburg.edu",
+    "staffDirectory": "https://athletics.augsburg.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.elmira.edu",
+    "staffDirectory": "https://athletics.elmira.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.case.edu",
+    "staffDirectory": "https://athletics.case.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.houghton.edu",
+    "staffDirectory": "https://athletics.houghton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://ephsports.williams.edu",
+    "staffDirectory": "https://ephsports.williams.edu/staff-directory"
+  },
+  {
+    "baseUrl": "http://athletics.wju.edu",
+    "staffDirectory": "http://athletics.wju.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.whitman.edu",
+    "staffDirectory": "https://athletics.whitman.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.nec.edu",
+    "staffDirectory": "https://athletics.nec.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.bowdoin.edu",
+    "staffDirectory": "https://athletics.bowdoin.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.central.edu",
+    "staffDirectory": "https://athletics.central.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.holyfamily.edu",
+    "staffDirectory": "https://athletics.holyfamily.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.hanover.edu",
+    "staffDirectory": "https://athletics.hanover.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.amherst.edu",
+    "staffDirectory": "https://athletics.amherst.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.augustana.edu",
+    "staffDirectory": "https://athletics.augustana.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.baruch.cuny.edu",
+    "staffDirectory": "https://athletics.baruch.cuny.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.westmont.edu",
+    "staffDirectory": "https://athletics.westmont.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.middlebury.edu",
+    "staffDirectory": "https://athletics.middlebury.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.millikin.edu",
+    "staffDirectory": "https://athletics.millikin.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.setonhill.edu",
+    "staffDirectory": "https://athletics.setonhill.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://prairiefire.knox.edu",
+    "staffDirectory": "https://prairiefire.knox.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.chapman.edu",
+    "staffDirectory": "https://athletics.chapman.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.hamilton.edu",
+    "staffDirectory": "https://athletics.hamilton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.simmons.edu",
+    "staffDirectory": "https://athletics.simmons.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.crown.edu",
+    "staffDirectory": "https://athletics.crown.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.gcc.edu",
+    "staffDirectory": "https://athletics.gcc.edu/staff-directory"
+  },
+
+  {
+    "baseUrl": "https://athletics.westminster.edu",
+    "staffDirectory": "https://athletics.westminster.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.claflin.edu",
+    "staffDirectory": "https://athletics.claflin.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.misericordia.edu",
+    "staffDirectory": "https://athletics.misericordia.edu/staff-directory"
+  },
+
+  {
+    "baseUrl": "https://athletics.northpark.edu",
+    "staffDirectory": "https://athletics.northpark.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.bellarmine.edu",
+    "staffDirectory": "https://athletics.bellarmine.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://sports.wabash.edu",
+    "staffDirectory": "https://sports.wabash.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.parkland.edu",
+    "staffDirectory": "https://athletics.parkland.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://fire.seu.edu",
+    "staffDirectory": "https://fire.seu.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.wheaton.edu",
+    "staffDirectory": "https://athletics.wheaton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.capital.edu",
+    "staffDirectory": "https://athletics.capital.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.macalester.edu",
+    "staffDirectory": "https://athletics.macalester.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.ithaca.edu",
+    "staffDirectory": "https://athletics.ithaca.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.uwsp.edu",
+    "staffDirectory": "https://athletics.uwsp.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://pioneers.grinnell.edu",
+    "staffDirectory": "https://pioneers.grinnell.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://yellowjackets.cedarville.edu",
+    "staffDirectory": "https://yellowjackets.cedarville.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.plymouth.edu",
+    "staffDirectory": "https://athletics.plymouth.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.walsh.edu",
+    "staffDirectory": "https://athletics.walsh.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.delval.edu",
+    "staffDirectory": "https://athletics.delval.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.stvincent.edu",
+    "staffDirectory": "https://athletics.stvincent.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.wesleyan.edu",
+    "staffDirectory": "https://athletics.wesleyan.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.concordia.edu",
+    "staffDirectory": "https://athletics.concordia.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.rose-hulman.edu",
+    "staffDirectory": "https://athletics.rose-hulman.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.bethel.edu",
+    "staffDirectory": "https://athletics.bethel.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.carleton.edu",
+    "staffDirectory": "https://athletics.carleton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.stolaf.edu",
+    "staffDirectory": "https://athletics.stolaf.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.georgefox.edu",
+    "staffDirectory": "https://athletics.georgefox.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.snc.edu",
+    "staffDirectory": "https://athletics.snc.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.scranton.edu",
+    "staffDirectory": "https://athletics.scranton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://owls.umpi.edu",
+    "staffDirectory": "https://owls.umpi.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://sports.hindscc.edu",
+    "staffDirectory": "https://sports.hindscc.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.jacksonvillecollege.edu",
+    "staffDirectory": "https://athletics.jacksonvillecollege.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.desales.edu",
+    "staffDirectory": "https://athletics.desales.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://wcbluejays.wcmo.edu",
+    "staffDirectory": "https://wcbluejays.wcmo.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://fightingtigers.cobleskill.edu",
+    "staffDirectory": "https://fightingtigers.cobleskill.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://vikings.lawrence.edu",
+    "staffDirectory": "https://vikings.lawrence.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://pioneers.marietta.edu",
+    "staffDirectory": "https://pioneers.marietta.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://blazers.belhaven.edu",
+    "staffDirectory": "https://blazers.belhaven.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.alverno.edu",
+    "staffDirectory": "https://athletics.alverno.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.skagit.edu",
+    "staffDirectory": "https://athletics.skagit.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.loc.edu",
+    "staffDirectory": "https://athletics.loc.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.hope.edu",
+    "staffDirectory": "https://athletics.hope.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.covenant.edu",
+    "staffDirectory": "https://athletics.covenant.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.aurora.edu",
+    "staffDirectory": "https://athletics.aurora.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.lawsonstate.edu",
+    "staffDirectory": "https://athletics.lawsonstate.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://panthers.pcc.edu",
+    "staffDirectory": "https://panthers.pcc.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.mountunion.edu",
+    "staffDirectory": "https://athletics.mountunion.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://www.oxnardcollege.edu",
+    "staffDirectory": "https://www.oxnardcollege.edu/departments/student-services/athletics/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.wpi.edu",
+    "staffDirectory": "https://athletics.wpi.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.biola.edu",
+    "staffDirectory": "https://athletics.biola.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.csi.edu",
+    "staffDirectory": "https://athletics.csi.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.sps.edu",
+    "staffDirectory": "https://athletics.sps.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.mxschool.edu",
+    "staffDirectory": "https://athletics.mxschool.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://hornets.kzoo.edu",
+    "staffDirectory": "https://hornets.kzoo.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://wildcats.sunypoly.edu",
+    "staffDirectory": "https://wildcats.sunypoly.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.kenyon.edu",
+    "staffDirectory": "https://athletics.kenyon.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.abac.edu",
+    "staffDirectory": "https://athletics.abac.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://crimsonclub.utah.edu",
+    "staffDirectory": "https://crimsonclub.utah.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://belles.saintmarys.edu",
+    "staffDirectory": "https://belles.saintmarys.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://recreation.upenn.edu",
+    "staffDirectory": "https://recreation.upenn.edu/staff-directory"
+  },
+
+  {
+    "baseUrl": "https://athletics.case.edu",
+    "staffDirectory": "https://athletics.case.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://blazers.belhaven.edu",
+    "staffDirectory": "https://blazers.belhaven.edu/staff-directory"
+  }
+]

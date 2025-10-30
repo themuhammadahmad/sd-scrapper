@@ -1,0 +1,384 @@
+[ 
+  {
+    "baseUrl": "https://www.albany.edu",
+    "staffDirectory": "https://www.albany.edu/recreation-wellness/staff-directory"
+  },  
+{
+    "baseUrl": "https://altoona.psu.edu",
+    "staffDirectory": "https://altoona.psu.edu/offices-divisions/recreation/staff-directory"
+  },
+  {
+    "baseUrl": "https://www.vvc.edu",
+    "staffDirectory": "https://www.vvc.edu/staff-directory"
+  },
+    {
+    "baseUrl": "https://bobcats.cofo.edu",
+    "staffDirectory": "https://bobcats.cofo.edu/Staff-Directory"
+  },
+  {
+    "baseUrl": "https://athletics.uchicago.edu",
+    "staffDirectory": "https://athletics.uchicago.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.carthage.edu",
+    "staffDirectory": "https://athletics.carthage.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.gordon.edu",
+    "staffDirectory": "https://athletics.gordon.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.thomas.edu",
+    "staffDirectory": "https://athletics.thomas.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.augsburg.edu",
+    "staffDirectory": "https://athletics.augsburg.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.elmira.edu",
+    "staffDirectory": "https://athletics.elmira.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.case.edu",
+    "staffDirectory": "https://athletics.case.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.houghton.edu",
+    "staffDirectory": "https://athletics.houghton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://ephsports.williams.edu",
+    "staffDirectory": "https://ephsports.williams.edu/staff-directory"
+  },
+  {
+    "baseUrl": "http://athletics.wju.edu",
+    "staffDirectory": "http://athletics.wju.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.whitman.edu",
+    "staffDirectory": "https://athletics.whitman.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.nec.edu",
+    "staffDirectory": "https://athletics.nec.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.bowdoin.edu",
+    "staffDirectory": "https://athletics.bowdoin.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.central.edu",
+    "staffDirectory": "https://athletics.central.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.holyfamily.edu",
+    "staffDirectory": "https://athletics.holyfamily.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.hanover.edu",
+    "staffDirectory": "https://athletics.hanover.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.amherst.edu",
+    "staffDirectory": "https://athletics.amherst.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.augustana.edu",
+    "staffDirectory": "https://athletics.augustana.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.baruch.cuny.edu",
+    "staffDirectory": "https://athletics.baruch.cuny.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.westmont.edu",
+    "staffDirectory": "https://athletics.westmont.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.middlebury.edu",
+    "staffDirectory": "https://athletics.middlebury.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.millikin.edu",
+    "staffDirectory": "https://athletics.millikin.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.setonhill.edu",
+    "staffDirectory": "https://athletics.setonhill.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://prairiefire.knox.edu",
+    "staffDirectory": "https://prairiefire.knox.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.chapman.edu",
+    "staffDirectory": "https://athletics.chapman.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.hamilton.edu",
+    "staffDirectory": "https://athletics.hamilton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.simmons.edu",
+    "staffDirectory": "https://athletics.simmons.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.crown.edu",
+    "staffDirectory": "https://athletics.crown.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.gcc.edu",
+    "staffDirectory": "https://athletics.gcc.edu/staff-directory"
+  },
+
+  {
+    "baseUrl": "https://athletics.westminster.edu",
+    "staffDirectory": "https://athletics.westminster.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.claflin.edu",
+    "staffDirectory": "https://athletics.claflin.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.misericordia.edu",
+    "staffDirectory": "https://athletics.misericordia.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.uindy.edu",
+    "staffDirectory": "https://athletics.uindy.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.northpark.edu",
+    "staffDirectory": "https://athletics.northpark.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.bellarmine.edu",
+    "staffDirectory": "https://athletics.bellarmine.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://sports.wabash.edu",
+    "staffDirectory": "https://sports.wabash.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.parkland.edu",
+    "staffDirectory": "https://athletics.parkland.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://fire.seu.edu",
+    "staffDirectory": "https://fire.seu.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.wheaton.edu",
+    "staffDirectory": "https://athletics.wheaton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.capital.edu",
+    "staffDirectory": "https://athletics.capital.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.macalester.edu",
+    "staffDirectory": "https://athletics.macalester.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.ithaca.edu",
+    "staffDirectory": "https://athletics.ithaca.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.uwsp.edu",
+    "staffDirectory": "https://athletics.uwsp.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://pioneers.grinnell.edu",
+    "staffDirectory": "https://pioneers.grinnell.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://yellowjackets.cedarville.edu",
+    "staffDirectory": "https://yellowjackets.cedarville.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.plymouth.edu",
+    "staffDirectory": "https://athletics.plymouth.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.walsh.edu",
+    "staffDirectory": "https://athletics.walsh.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.delval.edu",
+    "staffDirectory": "https://athletics.delval.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.stvincent.edu",
+    "staffDirectory": "https://athletics.stvincent.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.wesleyan.edu",
+    "staffDirectory": "https://athletics.wesleyan.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.concordia.edu",
+    "staffDirectory": "https://athletics.concordia.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.rose-hulman.edu",
+    "staffDirectory": "https://athletics.rose-hulman.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.bethel.edu",
+    "staffDirectory": "https://athletics.bethel.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.carleton.edu",
+    "staffDirectory": "https://athletics.carleton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.stolaf.edu",
+    "staffDirectory": "https://athletics.stolaf.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.georgefox.edu",
+    "staffDirectory": "https://athletics.georgefox.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.snc.edu",
+    "staffDirectory": "https://athletics.snc.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.scranton.edu",
+    "staffDirectory": "https://athletics.scranton.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://owls.umpi.edu",
+    "staffDirectory": "https://owls.umpi.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://sports.hindscc.edu",
+    "staffDirectory": "https://sports.hindscc.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.jacksonvillecollege.edu",
+    "staffDirectory": "https://athletics.jacksonvillecollege.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.desales.edu",
+    "staffDirectory": "https://athletics.desales.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://wcbluejays.wcmo.edu",
+    "staffDirectory": "https://wcbluejays.wcmo.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://fightingtigers.cobleskill.edu",
+    "staffDirectory": "https://fightingtigers.cobleskill.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://vikings.lawrence.edu",
+    "staffDirectory": "https://vikings.lawrence.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://pioneers.marietta.edu",
+    "staffDirectory": "https://pioneers.marietta.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://blazers.belhaven.edu",
+    "staffDirectory": "https://blazers.belhaven.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.alverno.edu",
+    "staffDirectory": "https://athletics.alverno.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.skagit.edu",
+    "staffDirectory": "https://athletics.skagit.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.loc.edu",
+    "staffDirectory": "https://athletics.loc.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.hope.edu",
+    "staffDirectory": "https://athletics.hope.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.covenant.edu",
+    "staffDirectory": "https://athletics.covenant.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.aurora.edu",
+    "staffDirectory": "https://athletics.aurora.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.lawsonstate.edu",
+    "staffDirectory": "https://athletics.lawsonstate.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://panthers.pcc.edu",
+    "staffDirectory": "https://panthers.pcc.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.mountunion.edu",
+    "staffDirectory": "https://athletics.mountunion.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://www.oxnardcollege.edu",
+    "staffDirectory": "https://www.oxnardcollege.edu/departments/student-services/athletics/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.wpi.edu",
+    "staffDirectory": "https://athletics.wpi.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.biola.edu",
+    "staffDirectory": "https://athletics.biola.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.csi.edu",
+    "staffDirectory": "https://athletics.csi.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.sps.edu",
+    "staffDirectory": "https://athletics.sps.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.mxschool.edu",
+    "staffDirectory": "https://athletics.mxschool.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://hornets.kzoo.edu",
+    "staffDirectory": "https://hornets.kzoo.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://wildcats.sunypoly.edu",
+    "staffDirectory": "https://wildcats.sunypoly.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.kenyon.edu",
+    "staffDirectory": "https://athletics.kenyon.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://athletics.abac.edu",
+    "staffDirectory": "https://athletics.abac.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://crimsonclub.utah.edu",
+    "staffDirectory": "https://crimsonclub.utah.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://belles.saintmarys.edu",
+    "staffDirectory": "https://belles.saintmarys.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://recreation.upenn.edu",
+    "staffDirectory": "https://recreation.upenn.edu/staff-directory"
+  },
+
+  {
+    "baseUrl": "https://athletics.case.edu",
+    "staffDirectory": "https://athletics.case.edu/staff-directory"
+  },
+  {
+    "baseUrl": "https://blazers.belhaven.edu",
+    "staffDirectory": "https://blazers.belhaven.edu/staff-directory"
+  }
+]
