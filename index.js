@@ -2,7 +2,8 @@
 import express from "express";
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-
+import dotenv from "dotenv";
+dotenv.config();
 // Import database connection
 import { connectDB, getConnectionStatus } from "./config/database.js";
 
