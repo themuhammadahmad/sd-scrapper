@@ -26,6 +26,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.json());
 app.use(express.static('public'));
 
+// Serve the main HTML file on root route
+app.get("/", (req, res) => {
+  res.sendFile(join(__dirname, "public", "index.html"));
+});
 
 
 // Health check endpoint
