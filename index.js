@@ -117,6 +117,30 @@ app.get("/sites", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+app.get("/db-status", async (req, res) => {
+  try {
+    const status = getConnectionStatus();
+    
+    // Test the connection with a simple query
+    const testCount = await Site.countDocuments().maxTimeMS(5000);
+    
+    res.json({
+      database: status,
+      testQuery: "✅ Working",
+      totalSites: testCount,
+      message: "✅ Database connected and responsive"
+    });
+  } catch (error) {
+    res.json({
+      database: getConnectionStatus(),
+      testQuery: "❌ Failed",
+      error: error.message,
+      message: "❌ Database connection issue"
+    });
+  }
+});
+
 app.get("/failed-directories", async (req, res) => {
   try {
     const failedDirs = await FailedDirectory.find().sort({ lastAttempt: -1 });
