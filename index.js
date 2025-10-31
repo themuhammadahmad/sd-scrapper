@@ -306,12 +306,28 @@ app.get('/test-change-detection', async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, async () => {
-  try {
-    await connectDB();
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
-  } catch (error) {
-    console.error('❌ Failed to start server:', error);
-    process.exit(1);
-  }
+// app.listen(PORT, async () => {
+//   try {
+//     await connectDB();
+//     console.log(`🚀 Server running at http://localhost:${PORT}`);
+//   } catch (error) {
+//     console.error('❌ Failed to start server:', error);
+//     process.exit(1);
+//   }
+// });
+// MongoDB Connection
+import mongoose from "mongoose";
+
+mongoose.connect("mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log("✅ Connected to MongoDB");
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+})
+.catch((err) => {
+  console.error("❌ MongoDB connection error:", err);
 });

@@ -2,6 +2,7 @@
 import cron from 'node-cron';
 import fs from 'fs';
 import processStaffDirectory from "../utils/processStaffDirectory.js";
+import path from 'path';
 
 class SchedulerService {
   constructor() {
@@ -29,10 +30,11 @@ class SchedulerService {
     }
 
     this.isRunning = true;
-
+     
     try {
+      const filePath = path.join(process.cwd(), 'public', 'data', 'ncca', 'staff0-directories.json');
       const directories = JSON.parse(
-        fs.readFileSync("./data/ncca/staff0-directories.json", "utf-8")
+        fs.readFileSync(filePath, "utf-8")
       );
 
       console.log(`📋 Found ${directories.length} directories to process`);
