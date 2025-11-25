@@ -45,8 +45,8 @@ class SchedulerService {
       // Process each directory with a 30-second delay between them
       let end = directories.length;
       let start = 0;
-      end = 1;
-      let delay = 1000;
+      // end = 1;
+      let delay = 600;
       for (let i = start; i < end; i++) {
         const { baseUrl, staffDirectory } = directories[i];
 
