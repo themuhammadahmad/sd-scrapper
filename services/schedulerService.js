@@ -8,6 +8,12 @@ class SchedulerService {
   constructor() {
     this.isRunning = false;
     this.currentJob = null;
+    this.shouldStop = false;
+    this.currentProcess = null;
+    this.lastProcessedIndex = 0; // Track last processed index
+    this.directories = []; // Store directories in memory
+    this.successCount = 0;
+    this.errorCount = 0;
   }
 
   startMonthlyScraping() {
@@ -30,57 +36,93 @@ class SchedulerService {
     }
 
     this.isRunning = true;
+    this.shouldStop = false;
+    this.successCount = 0;
+    this.errorCount = 0;
      
     try {
       const filePath = path.join(process.cwd(), 'public', 'data', 'ncca', 'staff0-directories.json');
-      const directories = JSON.parse(
-        fs.readFileSync(filePath, "utf-8")
-      );
+      this.directories = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
-      console.log(`📋 Found ${directories.length} directories to process`);
+      console.log(`📋 Found ${this.directories.length} directories to process`);
+      console.log(`🔄 Resuming from index: ${this.lastProcessedIndex}`);
 
-      let successCount = 0;
-      let errorCount = 0;
-
-      // Process each directory with a 30-second delay between them
-      let end = directories.length;
-      let start = 0;
-      // end = 1;
       let delay = 600;
-      for (let i = start; i < end; i++) {
-        const { baseUrl, staffDirectory } = directories[i];
+      
+      // Process each directory starting from last processed index
+      for (let i = this.lastProcessedIndex; i < this.directories.length; i++) {
+        // Check if stop was requested
+        if (this.shouldStop) {
+          console.log(`🛑 Scraping stopped by user request at index ${i}`);
+          console.log(`📊 Progress: ${i}/${this.directories.length} sites processed`);
+          break;
+        }
 
-        console.log(`\n🔍 Processing ${i + 1}/${directories.length}: ${baseUrl}`);
+        const { baseUrl, staffDirectory } = this.directories[i];
+
+        console.log(`\n🔍 Processing ${i + 1}/${this.directories.length}: ${baseUrl}`);
 
         try {
           const result = await processStaffDirectory(baseUrl, staffDirectory);
 
           if (result.success) {
-            successCount++;
+            this.successCount++;
             console.log(`✅ Successfully processed: ${baseUrl} (${result.staffCount} staff)`);
           } else {
-            errorCount++;
+            this.errorCount++;
             console.log(`❌ No data extracted from: ${baseUrl}`);
           }
+          
+          // Update last processed index ONLY after successful attempt
+          this.lastProcessedIndex = i + 1;
+          
         } catch (error) {
-          errorCount++;
+          this.errorCount++;
           console.error(`❌ Failed to process ${baseUrl}:`, error.message);
+          // Don't update index on error - retry next time
         }
 
-        // Wait 30 seconds before processing next directory (unless it's the last one)
-        if (i < directories.length - 1) {
+        // Wait before processing next directory (unless stopped or last one)
+        if (i < this.directories.length - 1 && !this.shouldStop) {
           console.log(`⏳ Waiting ${delay / 1000} seconds before next directory...`);
           await this.delay(delay);
         }
       }
 
-      console.log(`\n🎉 Monthly scraping cycle completed!`);
-      console.log(`📊 Results: ${successCount} successful, ${errorCount} failed`);
+      if (!this.shouldStop) {
+        console.log(`\n🎉 Scraping cycle completed!`);
+        console.log(`📊 Results: ${this.successCount} successful, ${this.errorCount} failed`);
+        this.lastProcessedIndex = 0; // Reset when fully completed
+      } else {
+        console.log(`\n⏹️ Scraping stopped.`);
+        console.log(`📊 Partial results: ${this.successCount} successful, ${this.errorCount} failed`);
+        console.log(`🔄 Next run will resume from index: ${this.lastProcessedIndex}`);
+      }
 
     } catch (error) {
       console.error('❌ Error in scraping cycle:', error);
     } finally {
       this.isRunning = false;
+      this.shouldStop = false;
+    }
+  }
+
+  // Add this method to stop scraping
+  stopScraping() {
+    if (this.isRunning) {
+      this.shouldStop = true;
+      console.log('🛑 Stop signal sent to scraping process...');
+      return { 
+        success: true, 
+        message: 'Scraping stop signal sent',
+        currentProgress: this.getProgress()
+      };
+    } else {
+      return { 
+        success: false, 
+        message: 'No scraping process is currently running',
+        currentProgress: this.getProgress()
+      };
     }
   }
 
@@ -88,6 +130,66 @@ class SchedulerService {
   async triggerManualScraping() {
     console.log('🔧 Manual scraping triggered');
     await this.runScrapingCycle();
+  }
+
+  // Get current status with progress
+  getStatus() {
+    const progress = this.getProgress();
+    return {
+      isRunning: this.isRunning,
+      shouldStop: this.shouldStop,
+      progress: progress,
+      nextScheduled: "1st of every month at 2:00 AM"
+    };
+  }
+
+  // Get progress information
+  getProgress() {
+    const total = this.directories.length;
+    const current = this.lastProcessedIndex;
+    const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
+    
+    return {
+      currentIndex: current,
+      totalDirectories: total,
+      progressPercentage: percentage,
+      successCount: this.successCount,
+      errorCount: this.errorCount,
+      status: this.isRunning ? 
+        (this.shouldStop ? 'stopping' : 'running') : 
+        (current > 0 && current < total ? 'paused' : 'idle')
+    };
+  }
+
+  // Reset progress to start from beginning
+  resetProgress() {
+    this.lastProcessedIndex = 0;
+    this.successCount = 0;
+    this.errorCount = 0;
+    console.log('🔄 Progress reset to beginning');
+    return { 
+      success: true, 
+      message: 'Progress reset to beginning',
+      progress: this.getProgress()
+    };
+  }
+
+  // Jump to specific index (for testing/debugging)
+  setProgressIndex(index) {
+    if (index >= 0 && index <= this.directories.length) {
+      this.lastProcessedIndex = index;
+      console.log(`🔄 Progress set to index: ${index}`);
+      return { 
+        success: true, 
+        message: `Progress set to index ${index}`,
+        progress: this.getProgress()
+      };
+    } else {
+      return { 
+        success: false, 
+        message: `Invalid index. Must be between 0 and ${this.directories.length}` 
+      };
+    }
   }
 
   delay(ms) {
@@ -103,5 +205,3 @@ class SchedulerService {
 }
 
 export default new SchedulerService();
-
-

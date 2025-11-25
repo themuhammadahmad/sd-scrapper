@@ -63,11 +63,18 @@ app.post("/scrape-now", async (req, res) => {
   }
 });
 
+app.post("/stop-scraping", async (req, res) => {
+  try {
+    const result = schedulerService.stopScraping();
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+// Enhanced status endpoint
 app.get("/scrape-status", (req, res) => {
-  res.json({ 
-    isRunning: schedulerService.isRunning,
-    nextScheduled: "1st of every month at 2:00 AM"
-  });
+  const status = schedulerService.getStatus();
+  res.json(status);
 });
 
 

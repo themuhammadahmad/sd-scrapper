@@ -609,12 +609,13 @@
     <!-- <a href="snapshots.html" class="nav-link">📸 View Snapshots</a> -->
     <h1 class="main-title">Staff Directory Scraper</h1>
     
-    <div class="button-group">
-        <button class="btn btn-primary" onclick="triggerScraping()">🚀 Start Scraping Now</button>
-        <button class="btn btn-secondary" onclick="fetchSites(1)">📋 Fetch Available Sites</button>
-        <button class="btn btn-warning" onclick="fetchFailedDirectories()">⚠️ View Failed Directories</button>
-        <button class="btn btn-danger" onclick="clearFailedDirectories()">🗑️ Clear Failed List</button>
-    </div>
+<div class="button-group">
+  <button class="btn btn-primary" onclick="triggerScraping()" id="startBtn">🚀 Start Scraping Now</button>
+  <button class="btn btn-danger" onclick="stopScraping()" id="stopBtn" disabled>⏹️ Stop Scraping</button>
+  <button class="btn btn-secondary" onclick="fetchSites(1)">📋 Fetch Available Sites</button>
+  <button class="btn btn-warning" onclick="fetchFailedDirectories()">⚠️ View Failed Directories</button>
+  <button class="btn btn-danger" onclick="clearFailedDirectories()">🗑️ Clear Failed List</button>
+</div>
     
 <!-- Update the search container in your header -->
 <div class="search-container">
@@ -635,30 +636,150 @@
   <div id="changeHistory" style="margin: 20px 0;"></div>
 
   <script>
-    // Your existing JavaScript remains exactly the same
-    async function triggerScraping() {
-      const button = document.querySelector('.btn-primary');
-      const status = document.getElementById('status');
+let scrapingStatusInterval = null;
 
-      button.disabled = true;
-      button.textContent = '⏳ Scraping...';
-      status.innerHTML = '🔄 Scraping started... This may take a while.';
+async function triggerScraping() {
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const status = document.getElementById('status');
 
-      try {
+    startBtn.disabled = true;
+    startBtn.textContent = '⏳ Starting...';
+    stopBtn.disabled = false;
+    status.innerHTML = '🔄 Starting scraping process...';
+
+    try {
         const response = await fetch('/scrape-now', {
-          method: 'POST'
+            method: 'POST'
         });
 
         const result = await response.json();
         status.innerHTML = `✅ ${result.message}`;
-      } catch (error) {
+        
+        // Start polling for status updates
+        startStatusPolling();
+        
+    } catch (error) {
         status.innerHTML = `❌ Error: ${error.message}`;
-      } finally {
-        button.disabled = false;
-        button.textContent = '🚀 Start Scraping Now';
-      }
+        resetScrapingButtons();
     }
+}
 
+async function stopScraping() {
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const status = document.getElementById('status');
+
+    stopBtn.disabled = true;
+    stopBtn.textContent = '⏹️ Stopping...';
+    status.innerHTML = '🛑 Stopping scraping process...';
+
+    try {
+        const response = await fetch('/stop-scraping', {
+            method: 'POST'
+        });
+
+        const result = await response.json();
+        status.innerHTML = `✅ ${result.message}`;
+        
+        // Stop status polling
+        stopStatusPolling();
+        
+        // Reset buttons after a short delay
+        setTimeout(() => {
+            resetScrapingButtons();
+        }, 2000);
+        
+    } catch (error) {
+        status.innerHTML = `❌ Error stopping: ${error.message}`;
+        resetScrapingButtons();
+    }
+}
+
+function startStatusPolling() {
+    // Clear existing interval
+    stopStatusPolling();
+    
+    // Poll every 3 seconds
+    scrapingStatusInterval = setInterval(async () => {
+        try {
+            const response = await fetch('/scrape-status');
+            const status = await response.json();
+            
+            updateScrapingStatus(status);
+            
+            // If scraping stopped, stop polling
+            if (!status.isRunning) {
+                stopStatusPolling();
+                resetScrapingButtons();
+            }
+        } catch (error) {
+            console.error('Error polling status:', error);
+        }
+    }, 3000);
+}
+
+function stopStatusPolling() {
+    if (scrapingStatusInterval) {
+        clearInterval(scrapingStatusInterval);
+        scrapingStatusInterval = null;
+    }
+}
+
+function updateScrapingStatus(status) {
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const statusElement = document.getElementById('status');
+
+    if (status.isRunning) {
+        startBtn.disabled = true;
+        startBtn.textContent = '⏳ Scraping...';
+        stopBtn.disabled = false;
+        statusElement.innerHTML = '🔄 Scraping in progress... (Auto-refreshing every 3s)';
+        
+        if (status.shouldStop) {
+            statusElement.innerHTML = '🛑 Stopping scraping... Please wait.';
+        }
+    } else {
+        resetScrapingButtons();
+        statusElement.innerHTML = '✅ Scraping stopped or completed.';
+    }
+}
+
+function resetScrapingButtons() {
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    
+    startBtn.disabled = false;
+    startBtn.textContent = '🚀 Start Scraping Now';
+    stopBtn.disabled = true;
+    stopBtn.textContent = '⏹️ Stop Scraping';
+    
+    stopStatusPolling();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Check initial status
+    checkInitialStatus();
+});
+
+async function checkInitialStatus() {
+    try {
+        const response = await fetch('/scrape-status');
+        const status = await response.json();
+        
+        if (status.isRunning) {
+            // If scraping is already running, enable stop button and start polling
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('startBtn').textContent = '⏳ Scraping...';
+            document.getElementById('stopBtn').disabled = false;
+            startStatusPolling();
+        }
+    } catch (error) {
+        console.error('Error checking initial status:', error);
+    }
+}
     let currentPage = 1;
 const sitesPerPage = 20;
 let currentSearch = '';
