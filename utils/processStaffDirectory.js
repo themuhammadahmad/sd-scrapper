@@ -35,9 +35,9 @@ export default async function processStaffDirectory(baseUrl, staffDirectory) {
     fetchFailed = true;
     try {
       console.log("🔄 Using puppeteer due to fetch failure...");
-      html = await fetch(staffDirectory);
-      fetchFailed = false;
-      usedPuppeteer = false;
+      html = await puppeteerParser(staffDirectory);
+    
+      usedPuppeteer = true;
     } catch (puppeteerError) {
       // Both fetch and puppeteer failed
       await FailedDirectory.findOneAndUpdate(
