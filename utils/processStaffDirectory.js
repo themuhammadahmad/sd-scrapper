@@ -39,6 +39,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory) {
     
       usedPuppeteer = true;
     } catch (puppeteerError) {
+      console.log("PUPPETEER-DID-NOT-WORK ❌")
       // Both fetch and puppeteer failed
       await FailedDirectory.findOneAndUpdate(
         { staffDirectory },

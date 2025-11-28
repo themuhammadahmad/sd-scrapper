@@ -23,7 +23,7 @@ function getChromePath() {
   if (platform === "linux") {
     // Try to find chromium or google-chrome
     try {
-      return execSync("which google-chrome").toString().trim();
+      return execSync("which chromium-browser").toString().trim();
     } catch {
       try {
         return execSync("which chromium-browser").toString().trim();

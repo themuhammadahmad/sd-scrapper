@@ -1,4 +1,28 @@
 [  
+    {
+    "baseUrl": "https://www.vvc.edu",
+    "staffDirectory": "https://www.vvc.edu/staff-directory"
+  },
+    {
+    "baseUrl": "https://www.ancilla.edu/",
+    "staffDirectory": "https://www.ancillachargers.com/information/directory/index"
+  },
+    {
+    "baseUrl": "http://www.nusports.com",
+    "staffDirectory": "http://www.nusports.com/staff-directory"
+  },
+    {
+    "baseUrl": "http://www.govandals.com",
+    "staffDirectory": "http://www.govandals.com/staff-directory"
+  },
+    {
+    "baseUrl": "http://www.dbupatriots.com",
+    "staffDirectory": "http://www.dbupatriots.com/staff-directory"
+  },
+    {
+    "baseUrl": "http://www.sonomaseawolves.com",
+    "staffDirectory": "http://www.sonomaseawolves.com/staff-directory"
+  },
   {
     "baseUrl": "https://athletics.une.edu",
     "staffDirectory": "https://athletics.une.edu/staff-directory"
@@ -19,10 +43,7 @@
     "baseUrl": "https://athletics.uindy.edu",
     "staffDirectory": "https://athletics.uindy.edu/staff-directory"
   },
-  {
-    "baseUrl": "https://www.ancilla.edu/",
-    "staffDirectory": "https://www.ancillachargers.com/information/directory/index"
-  },
+
   {
     "baseUrl": "https://www.actx.edu/",
     "staffDirectory": "https://amarillo.prestosports.com/information/Staff_Directory"
@@ -526,10 +547,7 @@
     "baseUrl": "http://www.nsudemons.com",
     "staffDirectory": "http://www.nsudemons.com/staff-directory"
   },
-  {
-    "baseUrl": "http://www.nusports.com",
-    "staffDirectory": "http://www.nusports.com/staff-directory"
-  },
+
   {
     "baseUrl": "http://goldengrizzlies.com",
     "staffDirectory": "http://goldengrizzlies.com/staff-directory"
@@ -1022,10 +1040,7 @@
     "baseUrl": "http://www.uhcougars.com",
     "staffDirectory": "http://www.uhcougars.com/staff-directory"
   },
-  {
-    "baseUrl": "http://www.govandals.com",
-    "staffDirectory": "http://www.govandals.com/staff-directory"
-  },
+
   {
     "baseUrl": "http://www.uicflames.com",
     "staffDirectory": "http://www.uicflames.com/staff-directory"
@@ -1609,10 +1624,7 @@
     "baseUrl": "http://daemenwildcats.com/",
     "staffDirectory": "http://daemenwildcats.com/staff-directory"
   },
-  {
-    "baseUrl": "http://www.dbupatriots.com",
-    "staffDirectory": "http://www.dbupatriots.com/staff-directory"
-  },
+
   {
     "baseUrl": "http://dupanthers.com",
     "staffDirectory": "http://dupanthers.com/staff-directory"
@@ -2109,10 +2121,7 @@
     "baseUrl": "http://www.rockathletics.com",
     "staffDirectory": "http://www.rockathletics.com/staff-directory"
   },
-  {
-    "baseUrl": "http://www.sonomaseawolves.com",
-    "staffDirectory": "http://www.sonomaseawolves.com/staff-directory"
-  },
+
   {
     "baseUrl": "http://gorockers.com",
     "staffDirectory": "http://gorockers.com/staff-directory"
@@ -3547,10 +3556,7 @@
     "baseUrl": "https://altoona.psu.edu",
     "staffDirectory": "https://altoona.psu.edu/offices-divisions/recreation/staff-directory"
   },
-  {
-    "baseUrl": "https://www.vvc.edu",
-    "staffDirectory": "https://www.vvc.edu/staff-directory"
-  },
+
     {
     "baseUrl": "https://bobcats.cofo.edu",
     "staffDirectory": "https://bobcats.cofo.edu/Staff-Directory"
