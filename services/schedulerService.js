@@ -2,7 +2,7 @@
 import cron from 'node-cron';
 import fs from 'fs';
 import processStaffDirectory from "../utils/processStaffDirectory.js";
-
+import StaffDirectory from '../models/StaffDirectory.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { dirname } from 'path';
@@ -16,8 +16,8 @@ class SchedulerService {
     this.currentJob = null;
     this.shouldStop = false;
     this.currentProcess = null;
-    this.lastProcessedIndex = 0; // Track last processed index
-    this.directories = []; // Store directories in memory
+    this.lastProcessedIndex = 0;
+    this.directories = [];
     this.successCount = 0;
     this.errorCount = 0;
   }
@@ -47,48 +47,113 @@ class SchedulerService {
     this.errorCount = 0;
      
     try {
-           const filePath = path.join(__dirname, '..', 'public', 'data', 'ncca', 'staff0-directories.json');
-      this.directories = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      // Fetch active directories from database
+      this.directories = await StaffDirectory.find({ isActive: true })
+        .sort({ lastProcessedAt: 1 })
+        .select('baseUrl staffDirectory successfulParser parserFailedLastTime')
+        .lean();
 
-      console.log(`📋 Found ${this.directories.length} directories to process`);
+      console.log(`📋 Found ${this.directories.length} directories to process from database`);
       console.log(`🔄 Resuming from index: ${this.lastProcessedIndex}`);
 
       let delay = 600;
       
-      // Process each directory starting from last processed index
       for (let i = this.lastProcessedIndex; i < this.directories.length; i++) {
-        // Check if stop was requested
         if (this.shouldStop) {
           console.log(`🛑 Scraping stopped by user request at index ${i}`);
           console.log(`📊 Progress: ${i}/${this.directories.length} sites processed`);
           break;
         }
 
-        const { baseUrl, staffDirectory } = this.directories[i];
+        const directory = this.directories[i];
+        const { baseUrl, staffDirectory, successfulParser, parserFailedLastTime } = directory;
 
         console.log(`\n🔍 Processing ${i + 1}/${this.directories.length}: ${baseUrl}`);
+        
+        // If parser failed last time, don't use it
+        const parserToUse = parserFailedLastTime ? null : successfulParser;
+        
+        if (parserToUse) {
+          console.log(`🎯 Using known parser: ${parserToUse}`);
+        } else if (successfulParser && parserFailedLastTime) {
+          console.log(`🔄 Known parser ${successfulParser} failed last time, trying all parsers...`);
+        }
 
         try {
-          const result = await processStaffDirectory(baseUrl, staffDirectory);
+          const result = await processStaffDirectory(baseUrl, staffDirectory, parserToUse);
 
           if (result.success) {
             this.successCount++;
             console.log(`✅ Successfully processed: ${baseUrl} (${result.staffCount} staff)`);
+            
+            // Update the directory with parser info and reset failure flag
+            await StaffDirectory.findOneAndUpdate(
+              { staffDirectory },
+              { 
+                successfulParser: result.usedParser,
+                parserFailedLastTime: false, // Reset failure flag
+                lastProcessedAt: new Date(),
+                lastStaffCount: result.staffCount,
+                $inc: { processCount: 1 }
+              }
+            );
+            
+            if (result.usedParser && result.usedParser !== parserToUse) {
+              console.log(`💾 Saved new parser ${result.usedParser} for future use`);
+            }
           } else {
             this.errorCount++;
             console.log(`❌ No data extracted from: ${baseUrl}`);
+            
+            // If we were using a known parser and it failed, mark it as failed
+            if (parserToUse) {
+              await StaffDirectory.findOneAndUpdate(
+                { staffDirectory },
+                { 
+                  parserFailedLastTime: true,
+                  lastProcessedAt: new Date(),
+                  $inc: { processCount: 1 }
+                }
+              );
+              console.log(`⚠️ Marked parser ${parserToUse} as failed for this site`);
+            } else {
+              await StaffDirectory.findOneAndUpdate(
+                { staffDirectory },
+                { 
+                  lastProcessedAt: new Date(),
+                  $inc: { processCount: 1 }
+                }
+              );
+            }
           }
           
-          // Update last processed index ONLY after successful attempt
           this.lastProcessedIndex = i + 1;
           
         } catch (error) {
           this.errorCount++;
           console.error(`❌ Failed to process ${baseUrl}:`, error.message);
-          // Don't update index on error - retry next time
+          
+          // Mark parser as failed if we were using a known one
+          if (parserToUse) {
+            await StaffDirectory.findOneAndUpdate(
+              { staffDirectory },
+              { 
+                parserFailedLastTime: true,
+                lastProcessedAt: new Date(),
+                $inc: { processCount: 1 }
+              }
+            );
+          } else {
+            await StaffDirectory.findOneAndUpdate(
+              { staffDirectory },
+              { 
+                lastProcessedAt: new Date(),
+                $inc: { processCount: 1 }
+              }
+            );
+          }
         }
 
-        // Wait before processing next directory (unless stopped or last one)
         if (i < this.directories.length - 1 && !this.shouldStop) {
           console.log(`⏳ Waiting ${delay / 1000} seconds before next directory...`);
           await this.delay(delay);
@@ -98,7 +163,7 @@ class SchedulerService {
       if (!this.shouldStop) {
         console.log(`\n🎉 Scraping cycle completed!`);
         console.log(`📊 Results: ${this.successCount} successful, ${this.errorCount} failed`);
-        this.lastProcessedIndex = 0; // Reset when fully completed
+        this.lastProcessedIndex = 0;
       } else {
         console.log(`\n⏹️ Scraping stopped.`);
         console.log(`📊 Partial results: ${this.successCount} successful, ${this.errorCount} failed`);
@@ -110,6 +175,55 @@ class SchedulerService {
     } finally {
       this.isRunning = false;
       this.shouldStop = false;
+    }
+  }
+    // Import directories from uploaded file
+  async importDirectories(urls) {
+    try {
+      let importedCount = 0;
+      let skippedCount = 0;
+
+      for (const urlObj of urls) {
+        try {
+          const result = await StaffDirectory.findOneAndUpdate(
+            { staffDirectory: urlObj.staffDirectory },
+            {
+              $setOnInsert: {
+                baseUrl: urlObj.baseUrl,
+                staffDirectory: urlObj.staffDirectory,
+                isActive: true
+              }
+            },
+            {
+              upsert: true,
+              new: true,
+              runValidators: true
+            }
+          );
+
+          if (result.isNew) {
+            importedCount++;
+          } else {
+            skippedCount++;
+          }
+        } catch (error) {
+          console.error(`❌ Error importing ${urlObj.staffDirectory}:`, error.message);
+          skippedCount++;
+        }
+      }
+
+      return {
+        success: true,
+        importedCount,
+        skippedCount,
+        message: `Imported ${importedCount} new directories, ${skippedCount} already existed or failed`
+      };
+    } catch (error) {
+      console.error('❌ Error importing directories:', error);
+      return {
+        success: false,
+        error: error.message
+      };
     }
   }
 

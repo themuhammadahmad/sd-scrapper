@@ -3,7 +3,7 @@
  */
 
 // Parsers
-import { runParsers } from "../parsers/registry.js";
+// import { runParsers } from "../parsers/registry.js";
 import puppeteerParser from "../fallback/puppeteerParser.js";
 import fetch from "node-fetch";
 
@@ -14,11 +14,12 @@ import StaffProfile from "../models/StaffProfile.js";
 import ChangeLog from "../models/ChangeLog.js";
 import crypto from "crypto";
 let sadf = "with pupeteer ✅";
-export default async function processStaffDirectory(baseUrl, staffDirectory) {
+export default async function processStaffDirectory(baseUrl, staffDirectory, knownParser = null) {
   let html = null;
   let fetchFailed = false;
   let usedPuppeteer = false;
   let hasData = false;
+  let usedParser = knownParser; // Track which parser was actually used
 
   try {
     const res = await fetch(staffDirectory);
@@ -57,8 +58,37 @@ export default async function processStaffDirectory(baseUrl, staffDirectory) {
     }
   }
 
-  // First attempt with the HTML we have
-  let parsedStaff = await runParsers(html, staffDirectory);
+  // ========== UPDATED PARSER LOGIC STARTS HERE ==========
+  let parsedStaff = { staff: [] };
+
+  // If we have a known parser that worked before, try it first
+  if (knownParser) {
+    try {
+      console.log(`🎯 Trying known parser: ${knownParser}`);
+      // Dynamically import the parser
+      const parserModule = await import(`../parsers/${knownParser}.js`);
+      parsedStaff = await parserModule.default(html, staffDirectory);
+      
+      if (parsedStaff.staff && parsedStaff.staff.length > 0) {
+        console.log(`✅ Known parser ${knownParser} worked! Found ${parsedStaff.staff.length} staff`);
+        usedParser = knownParser;
+      } else {
+        console.log(`⚠️ Known parser ${knownParser} found no data, trying all parsers...`);
+        // Continue to try all parsers
+        parsedStaff = await runParsersWithNames(html, staffDirectory);
+        usedParser = parsedStaff.parserName;
+      }
+    } catch (error) {
+      console.log(`⚠️ Known parser ${knownParser} failed, trying all parsers:`, error.message);
+      // Continue to try all parsers
+      parsedStaff = await runParsersWithNames(html, staffDirectory);
+      usedParser = parsedStaff.parserName;
+    }
+  } else {
+    // No known parser, try all parsers
+    parsedStaff = await runParsersWithNames(html, staffDirectory);
+    usedParser = parsedStaff.parserName;
+  }
 
   // If fetch succeeded but no data was extracted, try with puppeteer
   if (!fetchFailed && (!parsedStaff.staff || parsedStaff.staff.length === 0)) {
@@ -69,7 +99,25 @@ export default async function processStaffDirectory(baseUrl, staffDirectory) {
       usedPuppeteer = true;
       
       // Try parsing again with puppeteer HTML
-      parsedStaff = await runParsers(puppeteerHtml, staffDirectory);
+      if (knownParser) {
+        // Try known parser first with puppeteer HTML
+        try {
+          const parserModule = await import(`../parsers/${knownParser}.js`);
+          parsedStaff = await parserModule.default(puppeteerHtml, staffDirectory);
+          if (parsedStaff.staff && parsedStaff.staff.length > 0) {
+            usedParser = knownParser;
+          }
+        } catch (error) {
+          // Known parser failed, try all parsers
+          parsedStaff = await runParsersWithNames(puppeteerHtml, staffDirectory);
+          usedParser = parsedStaff.parserName;
+        }
+      } else {
+        // No known parser, try all parsers
+        parsedStaff = await runParsersWithNames(puppeteerHtml, staffDirectory);
+        usedParser = parsedStaff.parserName;
+      }
+      
       html = puppeteerHtml; // Update html for snapshot creation
       
       if (parsedStaff.staff && parsedStaff.staff.length > 0) {
@@ -82,6 +130,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory) {
       // Continue with original parsedStaff (empty data)
     }
   }
+  // ========== UPDATED PARSER LOGIC ENDS HERE ==========
 
   // Check if we got any staff data after all attempts
   if (!parsedStaff.staff || parsedStaff.staff.length === 0) {
@@ -107,7 +156,8 @@ export default async function processStaffDirectory(baseUrl, staffDirectory) {
       snapshot: null,
       success: false,
       staffCount: 0,
-      usedPuppeteer
+      usedPuppeteer,
+      usedParser: null
     };
   }
 
@@ -236,9 +286,55 @@ export default async function processStaffDirectory(baseUrl, staffDirectory) {
     snapshot,
     success: true,
     staffCount: parsedStaff.staff.length,
-    usedPuppeteer
+    usedPuppeteer,
+    usedParser // Return which parser was used
   };
 }
+
+// ========== ADD THIS NEW FUNCTION AT THE BOTTOM OF THE FILE ==========
+async function runParsersWithNames(html, url) {
+  const parsers = [
+    { name: 'sidearmParser', fn: (await import('../parsers/sidearmParser.js')).default },
+    { name: 'genericTableParser', fn: (await import('../parsers/genericTableParser.js')).default },
+    { name: 'heuristicsParser', fn: (await import('../parsers/heuristicsParser.js')).default },
+    { name: 'separateTableParser', fn: (await import('../parsers/separateTableParser.js')).default },
+    { name: 'multiTbodyParser', fn: (await import('../parsers/multiTbodyParser.js')).default },
+    { name: 'cardBasedParser', fn: (await import('../parsers/cardBasedParser.js')).default },
+    { name: 'tableSeparatorParser', fn: (await import('../parsers/tableSeparatorParser.js')).default },
+    { name: 'subtitleCategoryParse', fn: (await import('../parsers/subtitleCategoryParse.js')).default },
+    { name: 'h2TableCategoryParser', fn: (await import('../parsers/h2TableCategoryParser.js')).default },
+    { name: 'sectionStaffDirectoryParser', fn: (await import('../parsers/sectionStaffDirectoryParser.js')).default },
+    { name: 'bobcatsTableParser', fn: (await import('../parsers/bobcatsTableParser.js')).default },
+    { name: 'vvcTableParser', fn: (await import('../parsers/vvcTableParser.js')).default },
+    { name: 'drupalPersonParser', fn: (await import('../parsers/drupalPersonParser.js')).default },
+    { name: 'albanyDirectoryParser', fn: (await import('../parsers/albanyDirectoryParser.js')).default }
+  ];
+
+  for (const parser of parsers) {
+    try {
+      const result = await parser.fn(html, url);
+      if (result && result.staff && result.staff.length > 0) {
+        console.log(`✅ Parser ${parser.name} worked! Found ${result.staff.length} staff`);
+        return {
+          ...result,
+          parserName: parser.name
+        };
+      }
+    } catch (err) {
+      // ignore and move to next parser
+      console.log(`❌ Parser ${parser.name} failed:`, err.message);
+    }
+  }
+  
+  return { staff: [], parserName: null };
+}
+
+// Keep your existing runParsers function for backward compatibility
+export async function runParsers(html, url) {
+  const result = await runParsersWithNames(html, url);
+  return result;
+}
+// ========== END OF NEW FUNCTION ==========
 sadf = "no pupeteer ❌";
 // export default async function processStaffDirectory(baseUrl, staffDirectory) {
 //   let html = null;
