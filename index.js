@@ -50,6 +50,7 @@ app.use(session({
 
 // Auth middleware
 const requireAuth = (req, res, next) => {
+    console.log("requireAuth", req.session.user)
     if (!req.session.user) {
       console.log("not logged in")
         return res.redirect('/login');
@@ -70,9 +71,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api', searchRoutes);
 app.use('/css', express.static(join(__dirname, 'public/css')));
 app.use('/js', express.static(join(__dirname, 'public/js')));
+
+// Serve the main HTML file on root route - PROTECTED
+app.get("/", requireAuth, (req, res) => {
+    res.sendFile(join(__dirname, "public", "index.html"));
+});
 // Serve HTML pages
 app.get('/login', (req, res) => {
-    // If already logged in, redirect to home
     if (req.session.user) {
         return res.redirect('/');
     }
@@ -92,10 +97,7 @@ app.get('/api/protected', requireAuthAPI, (req, res) => {
     res.json({ message: 'This is protected data', user: req.session.user });
 });
 
-// Serve the main HTML file on root route - PROTECTED
-app.get("/", requireAuth, (req, res) => {
-    res.sendFile(join(__dirname, "public", "index.html"));
-});
+
 
 app.get("/search", requireAuth, (req, res) => {
     res.sendFile(join(__dirname, "public", "search.html"));
