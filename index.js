@@ -68,7 +68,8 @@ const requireAuthAPI = (req, res, next) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api', searchRoutes);
-
+app.use('/css', express.static(join(__dirname, 'public/css')));
+app.use('/js', express.static(join(__dirname, 'public/js')));
 // Serve HTML pages
 app.get('/login', (req, res) => {
     // If already logged in, redirect to home
