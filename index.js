@@ -15,17 +15,17 @@ import Snapshot from "./models/Snapshot.js";
 import FailedDirectory from "./models/FailedDirectory.js";
 import ChangeLog from "./models/ChangeLog.js";
 import StaffDirectory from "./models/StaffDirectory.js";
+import StaffProfile from './models/StaffProfile.js'; // Make sure to import
 
 // Services
 import processStaffDirectory from "./utils/processStaffDirectory.js";
 import schedulerService from "./services/schedulerService.js";
 import { createTestSnapshots } from './utils/test-snapshots.js';
 
-
-
 // Routes
 import searchRoutes from './routes/search.js';
 import authRoutes from './routes/auth.js';
+import exportRoutes from './routes/exportRoutes.js';
 // ... your imports remain the same ...
 
 const app = express();
@@ -68,6 +68,7 @@ const requireAuthAPI = (req, res, next) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/exports', exportRoutes);
 app.use('/api', searchRoutes);
 app.use('/css', express.static(join(__dirname, 'public/css')));
 app.use('/js', express.static(join(__dirname, 'public/js')));
@@ -91,6 +92,7 @@ app.get('/signup', (req, res) => {
     }
     res.sendFile(join(__dirname, "public", 'signup.html'));
 });
+
 
 // Protected route example
 app.get('/api/protected', requireAuthAPI, (req, res) => {
@@ -391,6 +393,13 @@ app.get('/test-change-detection', requireAuthAPI, async (req, res) => {
         });
     }
 });
+
+// Serve download page
+app.get('/download', (req, res) => {
+    res.sendFile(join(__dirname, 'public', 'download.html'));
+});
+
+
 
 // 404 Handler
 app.use((req, res) => {
