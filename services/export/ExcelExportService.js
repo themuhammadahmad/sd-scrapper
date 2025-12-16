@@ -1,6 +1,8 @@
 // services/export/ExcelExportService.js
 import ExcelJS from 'exceljs';
 import StaffProfile from '../../models/StaffProfile.js';
+import StaffDirectory from '../../models/StaffDirectory.js';
+
 import Site from '../../models/Site.js';
 import fs from 'fs-extra';
 import path from 'path';
@@ -52,6 +54,16 @@ export class ExcelExportService {
    * Generate Excel file matching the template format
    */
   async generateFullExport() {
+    const directories = await StaffDirectory.find().lean();
+
+// Create quick lookup: baseUrl → ipeds
+const ipedsMap = new Map();
+directories.forEach(dir => {
+  if (dir.baseUrl) {
+    ipedsMap.set(dir.baseUrl, dir.ipeds || '');
+  }
+});
+
 
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const filename = `staff-profiles-${timestamp}.xlsx`;  // Includes time for uniqueness
@@ -131,12 +143,20 @@ export class ExcelExportService {
                           profile.title || 
                           '(General Contact)';
 
+          // Get IPEDS using baseUrl
+const ipedsId = ipedsMap.get(university.baseUrl) || '';
+
+// Join categories for sport code
+const sportCode = Array.isArray(profile.categories)
+  ? profile.categories.join(', ')
+  : '';                
+
           // Add row matching template format
           worksheet.addRow({
-            ipedsId: '', // Leave blank as we don't have this data
+            ipedsId: ipedsId || '', // Leave blank as we don't have this data
             school: this.extractSchoolName(university),
             uniqueId: profile.fingerprint || '',
-            sportCode: '', // Leave blank for now
+            sportCode: sportCode ||'', // Leave blank for now
             firstName: firstName,
             lastName: lastName,
             position: position,
@@ -205,129 +225,136 @@ export class ExcelExportService {
   /**
    * Generate export for single university (simple, not batched)
    */
-  async generateUniversityExport(siteId) {
-    const site = await Site.findById(siteId);
-    if (!site) {
-      throw new Error('University not found');
-    }
+async generateUniversityExport(siteId) {
+  const site = await Site.findById(siteId).lean();
 
-    const schoolName = this.extractSchoolName(site);
-    const safeSchoolName = schoolName.replace(/[^a-z0-9]/gi, '-').toLowerCase();
-    const timestamp = new Date().toISOString().split('T')[0];
-    const filename = `staff-profiles-${safeSchoolName}-${timestamp}.xlsx`;
-    const filePath = path.join(this.exportDir, filename);
-    
-    console.log(`🎓 Generating export for ${schoolName}: ${filename}`);
+  if (!site) {
+    throw new Error('University not found');
+  }
 
-    try {
-      const workbook = new ExcelJS.Workbook();
-      workbook.creator = 'University Directory System';
-      
-      const worksheet = workbook.addWorksheet('Sheet1');
+  // Fetch StaffDirectory to get IPEDS
+  const directory = await StaffDirectory.findOne({ baseUrl: site.baseUrl }).lean();
+  const ipedsId = directory?.ipeds || '';
 
-      // Set column headers matching template
-      worksheet.columns = [
-        { header: 'IPEDS/NCES ID', key: 'ipedsId', width: 15 },
-        { header: 'School', key: 'school', width: 30 },
-        { header: 'Unique ID', key: 'uniqueId', width: 15 },
-        { header: 'Sport code', key: 'sportCode', width: 15 },
-        { header: 'First name', key: 'firstName', width: 20 },
-        { header: 'Last name', key: 'lastName', width: 20 },
-        { header: 'Position', key: 'position', width: 25 },
-        { header: 'Email address', key: 'email', width: 30 },
-        { header: 'Phone number', key: 'phone', width: 20 },
-        { header: 'Last Updated:', key: 'lastUpdated', width: 20 }
-      ];
+  const schoolName = this.extractSchoolName(site);
+  const safeSchoolName = schoolName.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+  const timestamp = new Date().toISOString().split('T')[0];
+  const filename = `staff-profiles-${safeSchoolName}-${timestamp}.xlsx`;
+  const filePath = path.join(this.exportDir, filename);
 
-      // Style header
-      const headerRow = worksheet.getRow(1);
-      headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
-      headerRow.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FF667EEA' }
-      };
+  console.log(`🎓 Generating export for ${schoolName}: ${filename}`);
 
-      // Get all profiles for this university
-      const profiles = await StaffProfile.find({ site: siteId })
-        .select('canonicalName emails phones fingerprint lastSeenAt updatedAt profileUrl raw title')
-        .lean();
+  try {
+    const workbook = new ExcelJS.Workbook();
+    workbook.creator = 'University Directory System';
 
-      console.log(`   Found ${profiles.length} profiles`);
+    const worksheet = workbook.addWorksheet('Sheet1');
 
-      for (let i = 0; i < profiles.length; i++) {
-        const profile = profiles[i];
-        
-        // Split name
-        let firstName = '';
-        let lastName = '';
-        if (profile.canonicalName) {
-          const nameParts = profile.canonicalName.trim().split(' ');
-          firstName = nameParts[0] || '';
-          lastName = nameParts.slice(1).join(' ') || '';
-        }
+    // Columns (template-aligned)
+    worksheet.columns = [
+      { header: 'IPEDS/NCES ID', key: 'ipedsId', width: 15 },
+      { header: 'School', key: 'school', width: 30 },
+      { header: 'Unique ID', key: 'uniqueId', width: 15 },
+      { header: 'Sport code', key: 'sportCode', width: 20 },
+      { header: 'First name', key: 'firstName', width: 20 },
+      { header: 'Last name', key: 'lastName', width: 20 },
+      { header: 'Position', key: 'position', width: 25 },
+      { header: 'Email address', key: 'email', width: 30 },
+      { header: 'Phone number', key: 'phone', width: 20 },
+      { header: 'Last Updated:', key: 'lastUpdated', width: 20 }
+    ];
 
-        // Get contact info
-        const primaryEmail = profile.emails?.[0] || '';
-        const primaryPhone = profile.phones?.[0] || '';
-        const position = profile.raw?.title || profile.title || '(General Contact)';
+    // Header styling
+    const headerRow = worksheet.getRow(1);
+    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerRow.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF667EEA' }
+    };
 
-        worksheet.addRow({
-          ipedsId: '',
-          school: schoolName,
-          uniqueId: profile.fingerprint || '',
-          sportCode: '',
-          firstName,
-          lastName,
-          position,
-          email: primaryEmail,
-          phone: primaryPhone,
-          lastUpdated: profile.updatedAt || profile.lastSeenAt || new Date()
-        });
+    // Fetch profiles
+    const profiles = await StaffProfile.find({ site: siteId })
+      .select('canonicalName emails phones fingerprint lastSeenAt updatedAt raw title categories')
+      .lean();
 
-        // Alternate row colors
-        if (i % 2 === 0) {
-          const row = worksheet.getRow(i + 2); // +2 for header row
-          row.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FFF5F7FA' }
-          };
-        }
+    console.log(`   Found ${profiles.length} profiles`);
+
+    for (let i = 0; i < profiles.length; i++) {
+      const profile = profiles[i];
+
+      // Name split
+      let firstName = '';
+      let lastName = '';
+      if (profile.canonicalName) {
+        const parts = profile.canonicalName.trim().split(' ');
+        firstName = parts[0] || '';
+        lastName = parts.slice(1).join(' ') || '';
       }
 
-      // Format date column
-      worksheet.getColumn('lastUpdated').numFmt = 'yyyy-mm-dd hh:mm:ss';
+      // Contact info
+      const primaryEmail = profile.emails?.[0] || '';
+      const primaryPhone = profile.phones?.[0] || '';
+      const position = profile.raw?.title || profile.title || '(General Contact)';
 
-      // Auto-fit columns
-      worksheet.columns.forEach(column => {
-        if (column.width) {
-          column.width = Math.max(column.width, column.header.length + 2);
-        }
+      // Categories → Sport code
+      const sportCode = Array.isArray(profile.categories)
+        ? profile.categories.join(', ')
+        : '';
+
+      worksheet.addRow({
+        ipedsId,
+        school: schoolName,
+        uniqueId: profile.fingerprint || '',
+        sportCode,
+        firstName,
+        lastName,
+        position,
+        email: primaryEmail,
+        phone: primaryPhone,
+        lastUpdated: profile.updatedAt || profile.lastSeenAt || new Date()
       });
 
-      await workbook.xlsx.writeFile(filePath);
-      
-      // Get file stats
-      const stats = await fs.stat(filePath);
-      
-      console.log(`✅ University export created: ${filename} (${profiles.length} records)`);
-      
-      return {
-        filename,
-        filePath,
-        universityId: site._id,
-        universityName: schoolName,
-        recordCount: profiles.length,
-        fileSize: stats.size,
-        generatedAt: new Date()
-      };
-
-    } catch (error) {
-      console.error(`❌ Error generating export for ${siteId}:`, error);
-      throw error;
+      // Alternate row color
+      if (i % 2 === 0) {
+        worksheet.getRow(i + 2).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFF5F7FA' }
+        };
+      }
     }
+
+    // Date format
+    worksheet.getColumn('lastUpdated').numFmt = 'yyyy-mm-dd hh:mm:ss';
+
+    // Auto-fit
+    worksheet.columns.forEach(col => {
+      col.width = Math.max(col.width, col.header.length + 2);
+    });
+
+    await workbook.xlsx.writeFile(filePath);
+
+    const stats = await fs.stat(filePath);
+
+    console.log(`✅ University export created: ${filename} (${profiles.length} records)`);
+
+    return {
+      filename,
+      filePath,
+      universityId: site._id,
+      universityName: schoolName,
+      recordCount: profiles.length,
+      fileSize: stats.size,
+      generatedAt: new Date()
+    };
+
+  } catch (error) {
+    console.error(`❌ Error generating export for ${siteId}:`, error);
+    throw error;
   }
+}
+
 
   /**
    * Format file size for display

@@ -6,6 +6,75 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/navbar.css">
   <style>
+    /* Scrap button styles */
+.btn-scrap-site {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn-scrap-site:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-scrap-site:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-scrap-site.loading {
+    background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+}
+
+.btn-small {
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+}
+
+/* Prevent site item click when clicking scrap button */
+.site-item > div > button {
+    pointer-events: auto;
+}
+
+.site-item > div > button:hover {
+    z-index: 10;
+}
+/* Add to your existing CSS */
+.failed-item .btn-scrap-site {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.failed-item .btn-scrap-site:hover:not(:disabled) {
+    background: linear-gradient(135deg, #43A047 0%, #1B5E20 100%);
+}
+
+.failed-item .btn-scrap-site:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.failed-item .btn {
+    padding: 4px 8px;
+    font-size: 11px;
+}
+  </style>
+  <style>
 
   </style>
 

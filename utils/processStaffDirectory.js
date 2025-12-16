@@ -218,30 +218,37 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
     usedPuppeteer // Track if puppeteer was used for this snapshot
   });
 
-  // 4. Upsert StaffProfiles
-  for (const category of categories) {
-    for (const member of category.members) {
-      await StaffProfile.findOneAndUpdate(
-        { fingerprint: member.fingerprint },
-        {
-          site: site._id,
-          profileUrl: member.profileUrl,
-          canonicalName: member.name,
-          emails: member.emails,
-          phones: member.phones,
-          lastSeenAt: new Date(),
-          lastSnapshot: snapshot._id,
-          raw: member.raw,
-          ...(member.firstSeenAt ? {} : { firstSeenAt: new Date() }),
-        },
-        {
-          upsert: true,
-          new: true,
-          setDefaultsOnInsert: true
-        }
-      );
-    }
+// 4. Upsert StaffProfiles
+for (const category of categories) {
+  for (const member of category.members) {
+    // Get all categories this person belongs to
+    const personCategories = categories
+      .filter(cat => cat.members.some(m => m.fingerprint === member.fingerprint))
+      .map(cat => cat.name);
+    
+    await StaffProfile.findOneAndUpdate(
+      { fingerprint: member.fingerprint },
+      {
+        site: site._id,
+        profileUrl: member.profileUrl,
+        canonicalName: member.name,
+        emails: member.emails,
+        phones: member.phones,
+        // NEW: Add categories field
+        categories: personCategories,
+        lastSeenAt: new Date(),
+        lastSnapshot: snapshot._id,
+        raw: member.raw,
+        ...(member.firstSeenAt ? {} : { firstSeenAt: new Date() }),
+      },
+      {
+        upsert: true,
+        new: true,
+        setDefaultsOnInsert: true
+      }
+    );
   }
+}
 
   // 5. Compare with last snapshot → log changes
   let previousSnapshot = null;

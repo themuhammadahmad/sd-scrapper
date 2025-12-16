@@ -135,6 +135,63 @@ app.post("/scrape-now", requireAuthAPI, async (req, res) => {
     }
 });
 
+// Route to scrape a single site by ID
+app.post("/scrape-site/:siteId", requireAuthAPI, async (req, res) => {
+    try {
+        const siteId = req.params.siteId;
+        
+        // Find the site by ID
+        const site = await Site.findById(siteId);
+        if (!site) {
+            return res.status(404).json({ error: "Site not found" });
+        }
+
+        // Get staff directory info for this site
+        const staffDirectory = await StaffDirectory.findOne({ 
+            baseUrl: site.baseUrl 
+        });
+
+        if (!staffDirectory) {
+            return res.status(404).json({ 
+                error: "Staff directory not found for this site" 
+            });
+        }
+
+        // Trigger scraping for this single site
+        console.log(`🔧 Manual scraping triggered for: ${site.baseUrl}`);
+        
+        // Call the processStaffDirectory function directly
+        const result = await processStaffDirectory(
+            site.baseUrl,
+            site.staffDirectory,
+            staffDirectory.successfulParser || null
+        );
+
+        if (result.success) {
+            res.json({ 
+                success: true, 
+                message: `Successfully scraped ${site.baseUrl}`,
+                staffCount: result.staffCount,
+                siteId: site._id
+            });
+        } else {
+            res.status(500).json({ 
+                success: false, 
+                error: `Failed to scrape ${site.baseUrl}: No data extracted` 
+            });
+        }
+
+    } catch (error) {
+        console.error('Error scraping single site:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
+
+
+
 app.get('/check-directories', requireAuthAPI, async (req, res) => {
     const count = await StaffDirectory.countDocuments();
     res.json({ totalCount: count });
@@ -249,6 +306,122 @@ app.get("/failed-directories", requireAuthAPI, async (req, res) => {
                 htmlSnippet: dir.htmlContent ? dir.htmlContent.substring(0, 200) + '...' : null
             }))
         });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route to get a site by URL
+app.get("/site-by-url", requireAuthAPI, async (req, res) => {
+    try {
+        const url = req.query.url;
+        if (!url) {
+            return res.status(400).json({ error: "URL parameter is required" });
+        }
+
+        const site = await Site.findOne({ baseUrl: url });
+        
+        if (site) {
+            res.json({ success: true, site });
+        } else {
+            res.json({ success: false, message: "Site not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route to scrape a single directory (for failed sites)
+app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
+    try {
+        const { baseUrl, staffDirectory } = req.body;
+        
+        if (!baseUrl || !staffDirectory) {
+            return res.status(400).json({ 
+                success: false, 
+                error: "baseUrl and staffDirectory are required" 
+            });
+        }
+
+        console.log(`🔧 Retrying failed site: ${baseUrl}`);
+        
+        // First, remove from failed directories if it exists
+        await FailedDirectory.findOneAndDelete({ staffDirectory });
+        
+        // Try scraping with no known parser (null)
+        const result = await processStaffDirectory(baseUrl, staffDirectory, null);
+
+        if (result.success) {
+            res.json({ 
+                success: true, 
+                message: `Successfully scraped ${baseUrl}`,
+                staffCount: result.staffCount,
+                baseUrl: baseUrl
+            });
+        } else {
+            // Add back to failed directories
+            await FailedDirectory.create({
+                baseUrl,
+                staffDirectory,
+                failureType: 'no_data',
+                errorMessage: 'Retry failed: No data extracted',
+                lastAttempt: new Date(),
+                attemptCount: 1
+            });
+            
+            res.status(500).json({ 
+                success: false, 
+                error: `Failed to scrape ${baseUrl}: No data extracted` 
+            });
+        }
+
+    } catch (error) {
+        console.error('Error scraping failed site:', error);
+        
+        // Add to failed directories with error
+        try {
+            await FailedDirectory.findOneAndUpdate(
+                { staffDirectory: req.body.staffDirectory },
+                {
+                    baseUrl: req.body.baseUrl,
+                    staffDirectory: req.body.staffDirectory,
+                    failureType: 'fetch_failed',
+                    errorMessage: error.message,
+                    lastAttempt: new Date(),
+                    $inc: { attemptCount: 1 }
+                },
+                { upsert: true }
+            );
+        } catch (dbError) {
+            console.error('Error updating failed directory:', dbError);
+        }
+        
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
+
+// Route to delete a specific failed directory
+app.delete("/failed-directories/:id", requireAuthAPI, async (req, res) => {
+    try {
+        const failedId = req.params.id;
+        
+        const result = await FailedDirectory.findByIdAndDelete(failedId);
+        
+        if (result) {
+            res.json({ 
+                success: true, 
+                message: "Failed directory removed",
+                deletedId: failedId
+            });
+        } else {
+            res.status(404).json({ 
+                success: false, 
+                error: "Failed directory not found" 
+            });
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -406,13 +579,16 @@ app.use((req, res) => {
     res.status(404).sendFile(join(__dirname, "public", '404.html'));
 });
 
+
 // MongoDB Connection
-mongoose.connect("mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht", {
+let isDevelopment = false;
+let mongoStr = isDevelopment ? "mongodb://127.0.0.1:27017/universities" : "mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht";
+mongoose.connect(mongoStr, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
 .then(() => {
-    console.log("✅ Connected to MongoDB");
+    console.log("✅ Connected to MongoDB", mongoStr);
     app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
     });

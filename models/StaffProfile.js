@@ -12,7 +12,12 @@ phones: [String],
 lastSeenAt: Date,
 firstSeenAt: Date,
 lastSnapshot: { type: Schema.Types.ObjectId, ref: "Snapshot" },
-raw: Schema.Types.Mixed
+raw: Schema.Types.Mixed,
+ // NEW: Add categories array
+  categories: [{
+    type: String,
+    index: true
+  }]
 }, { timestamps: true });
 
 

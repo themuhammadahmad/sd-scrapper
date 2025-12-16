@@ -1,4 +1,3 @@
-// models/StaffDirectory.js
 import mongoose from 'mongoose';
 
 const staffDirectorySchema = new mongoose.Schema({
@@ -12,6 +11,17 @@ const staffDirectorySchema = new mongoose.Schema({
     required: true,
     unique: true,
     index: true
+  },
+  // NEW: IPEDS identifier
+  ipeds: {
+    type: String,
+    default: '',
+    index: true
+  },
+  // NEW: School name
+  schoolName: {
+    type: String,
+    default: ''
   },
   // Store which parser worked for this site (no enum - flexible)
   successfulParser: {

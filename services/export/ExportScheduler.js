@@ -33,7 +33,7 @@ export class ExportScheduler {
     // Trigger first export immediately when server starts
     setTimeout(async () => {
       console.log('🚀 Triggering initial export on server start...');
-      await this.runFullExport();
+      // await this.runFullExport();
     }, 10000); // Wait 10 seconds after server starts
   }
 

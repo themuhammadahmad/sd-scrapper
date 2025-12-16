@@ -1,5 +1,59 @@
 let scrapingStatusInterval = null;
 
+async function scrapSingleSite(siteId, siteUrl, event) {
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    const button = event?.target;
+    const originalText = button?.textContent;
+    
+    if (button) {
+        button.disabled = true;
+        button.textContent = '⏳ Scraping...';
+        button.classList.add('loading');
+    }
+
+    const status = document.getElementById('status');
+    status.innerHTML = `🔄 Scraping ${siteUrl}...`;
+
+    try {
+        const response = await fetch(`/scrape-site/${siteId}`, {
+            method: 'POST'
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            status.innerHTML = `✅ Successfully scraped ${siteUrl} (${result.staffCount} staff members found)`;
+            
+            // Optional: Automatically refresh the site data after scraping
+            setTimeout(() => {
+                // Find the site element and trigger a click to refresh its data
+                const siteElements = document.querySelectorAll('.site-item');
+                siteElements.forEach(element => {
+                    if (element.textContent.includes(siteUrl)) {
+                        element.click();
+                    }
+                });
+            }, 1500);
+            
+        } else {
+            status.innerHTML = `❌ Failed to scrape ${siteUrl}: ${result.error}`;
+        }
+
+    } catch (error) {
+        status.innerHTML = `❌ Error scraping ${siteUrl}: ${error.message}`;
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText || '🔄 Scrap Now';
+            button.classList.remove('loading');
+        }
+    }
+}
+
 async function triggerScraping() {
     const startBtn = document.getElementById('startBtn');
     const stopBtn = document.getElementById('stopBtn');
@@ -34,7 +88,7 @@ async function stopScraping() {
 
     stopBtn.disabled = true;
     stopBtn.textContent = '⏹️ Stopping...';
-    status.innerHTML = '🛑 Stopping scraping process...';
+    status.innerHTML = '🛑 Stopping scraping process... Please wait.';
 
     try {
         const response = await fetch('/stop-scraping', {
@@ -42,20 +96,55 @@ async function stopScraping() {
         });
 
         const result = await response.json();
-        status.innerHTML = `✅ ${result.message}`;
         
-        // Stop status polling
-        stopStatusPolling();
-        
-        // Reset buttons after a short delay
-        setTimeout(() => {
+        if (result.success) {
+            status.innerHTML = `✅ ${result.message}`;
+            
+            // Poll until scraping is fully stopped
+            await waitForScrapingToStop();
+            
+            // Stop status polling
+            stopStatusPolling();
+            
+            // Reset buttons
             resetScrapingButtons();
-        }, 2000);
+            
+        } else {
+            status.innerHTML = `⚠️ ${result.message}`;
+            resetScrapingButtons();
+        }
         
     } catch (error) {
         status.innerHTML = `❌ Error stopping: ${error.message}`;
         resetScrapingButtons();
     }
+}
+
+// Helper function to wait until scraping is fully stopped
+async function waitForScrapingToStop() {
+    let attempts = 0;
+    const maxAttempts = 30; // 30 seconds max
+    
+    while (attempts < maxAttempts) {
+        try {
+            const response = await fetch('/scrape-status');
+            const status = await response.json();
+            
+            if (!status.isRunning) {
+                console.log('✅ Scraping fully stopped');
+                return;
+            }
+            
+            attempts++;
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+            
+        } catch (error) {
+            console.error('Error checking status:', error);
+            break;
+        }
+    }
+    
+    console.log('⚠️ Timeout waiting for scraping to stop');
 }
 
 function startStatusPolling() {
@@ -137,6 +226,13 @@ async function checkInitialStatus() {
             document.getElementById('startBtn').textContent = '⏳ Scraping...';
             document.getElementById('stopBtn').disabled = false;
             startStatusPolling();
+            
+            // Update status message
+            if (status.shouldStop) {
+                document.getElementById('status').innerHTML = '🛑 Scraping is stopping...';
+            } else {
+                document.getElementById('status').innerHTML = '🔄 Scraping in progress...';
+            }
         }
     } catch (error) {
         console.error('Error checking initial status:', error);
@@ -242,17 +338,24 @@ async function fetchSites(page = 1, search = '') {
                 const highlightedUrl = result.search ? highlightText(site.baseUrl, result.search) : site.baseUrl;
                 const highlightedDir = result.search ? highlightText(site.staffDirectory, result.search) : site.staffDirectory;
                 
-                siteDiv.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <strong style="flex: 1;">${highlightedUrl}</strong>
-                        <span style="font-size: 12px; color: #666;">
-                            Last scraped: ${new Date(site.lastScrapedAt).toLocaleString()}
-                        </span>
-                    </div>
-                    <div style="margin-top: 8px; font-size: 13px; color: #555;">
-                        Directory: ${highlightedDir}
-                    </div>
-                `;
+// In the fetchSites function, update the siteDiv.innerHTML:
+siteDiv.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong style="flex: 1;">${highlightedUrl}</strong>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="btn-scrap-site btn-small btn-primary" 
+                    onclick="scrapSingleSite('${site._id}', '${site.baseUrl}', event)">
+                🔄 Scrap Now
+            </button>
+            <span style="font-size: 12px; color: #666;">
+                Last scraped: ${site.lastScrapedAt ? new Date(site.lastScrapedAt).toLocaleString() : 'Never'}
+            </span>
+        </div>
+    </div>
+    <div style="margin-top: 8px; font-size: 13px; color: #555;">
+        Directory: ${highlightedDir}
+    </div>
+`;
                // In the fetchSites function, update the onclick handler:
 siteDiv.onclick = (event) => fetchSiteSnapshot(site._id, site.baseUrl, event.currentTarget);
                 sitesWrapper.appendChild(siteDiv);
@@ -642,7 +745,7 @@ async function fetchSiteSnapshot(siteId, siteName, element) {
       }
     }
  
-   async function fetchFailedDirectories() {
+async function fetchFailedDirectories() {
     const status = document.getElementById('status');
     const failedList = document.getElementById('failedList');
     const sitesList = document.getElementById('sitesList');
@@ -676,9 +779,21 @@ async function fetchSiteSnapshot(siteId, siteName, element) {
                 const failedDiv = document.createElement('div');
                 failedDiv.className = 'failed-item';
                 failedDiv.innerHTML = `
-                    <div>
-                        <span class="failure-badge ${failureBadgeClass}">${failureLabel}</span>
-                        <strong>${failed.baseUrl}</strong>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <span class="failure-badge ${failureBadgeClass}">${failureLabel}</span>
+                            <strong>${failed.baseUrl}</strong>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn-scrap-site btn-small btn-primary" 
+                                    onclick="scrapFailedSite('${failed._id}', '${failed.baseUrl}', '${failed.staffDirectory}', event)">
+                                🔄 Retry
+                            </button>
+                            <button class="btn btn-small btn-secondary" 
+                                    onclick="removeFailedSite('${failed._id}', '${failed.baseUrl}', event)">
+                                ❌ Remove
+                            </button>
+                        </div>
                     </div>
                     <div style="margin: 5px 0; font-size: 12px;">
                         <strong>Directory:</strong> <a href='${failed.staffDirectory}' target="_blank">${failed.staffDirectory}</a>
@@ -715,5 +830,201 @@ async function fetchSiteSnapshot(siteId, siteName, element) {
         }
     } catch (error) {
         status.innerHTML = `❌ Error fetching failed directories: ${error.message}`;
+    }
+}
+
+// Function to scrap a failed site
+async function scrapFailedSite(failedId, baseUrl, staffDirectory, event) {
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    const button = event?.target;
+    const originalText = button?.textContent;
+    
+    if (button) {
+        button.disabled = true;
+        button.textContent = '⏳ Retrying...';
+        button.classList.add('loading');
+    }
+
+    const status = document.getElementById('status');
+    status.innerHTML = `🔄 Retrying failed site: ${baseUrl}...`;
+
+    try {
+        // First, remove from failed list
+        const removeResponse = await fetch(`/failed-directories/${failedId}`, {
+            method: 'DELETE'
+        });
+
+        if (!removeResponse.ok) {
+            throw new Error('Failed to remove from failed list');
+        }
+
+        // Now try to scrape the site
+        const response = await fetch('/scrape-failed-site', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                baseUrl: baseUrl,
+                staffDirectory: staffDirectory
+            })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            status.innerHTML = `✅ Successfully retried ${baseUrl} (${result.staffCount} staff members found)`;
+            
+            // Update the failed list after a short delay
+            setTimeout(() => {
+                fetchFailedDirectories();
+            }, 1500);
+            
+        } else {
+            status.innerHTML = `❌ Failed to scrape ${baseUrl}: ${result.error}`;
+            
+            // Refresh failed list to show updated attempt count
+            setTimeout(() => {
+                fetchFailedDirectories();
+            }, 1500);
+        }
+
+    } catch (error) {
+        status.innerHTML = `❌ Error scraping failed site: ${error.message}`;
+        
+        // Refresh failed list
+        setTimeout(() => {
+            fetchFailedDirectories();
+        }, 1500);
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText || '🔄 Retry';
+            button.classList.remove('loading');
+        }
+    }
+}
+
+// Function to remove a failed site without retrying
+async function removeFailedSite(failedId, baseUrl, event) {
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    if (!confirm(`Are you sure you want to remove "${baseUrl}" from failed directories?`)) {
+        return;
+    }
+
+    const button = event?.target;
+    if (button) {
+        button.disabled = true;
+        button.textContent = '⏳ Removing...';
+        button.classList.add('loading');
+    }
+
+    const status = document.getElementById('status');
+    status.innerHTML = `🗑️ Removing ${baseUrl} from failed list...`;
+
+    try {
+        const response = await fetch(`/failed-directories/${failedId}`, {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            status.innerHTML = `✅ Removed ${baseUrl} from failed list`;
+            
+            // Refresh the failed list
+            setTimeout(() => {
+                fetchFailedDirectories();
+            }, 1000);
+        } else {
+            status.innerHTML = `❌ Error removing: ${result.error}`;
+        }
+
+    } catch (error) {
+        status.innerHTML = `❌ Error: ${error.message}`;
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = '❌ Remove';
+            button.classList.remove('loading');
+        }
+    }
+}
+
+// Alternative: Use the same scrapSingleSite function but for failed sites
+async function scrapFailedSiteAlternative(baseUrl, staffDirectory, event) {
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    const button = event?.target;
+    const originalText = button?.textContent;
+    
+    if (button) {
+        button.disabled = true;
+        button.textContent = '⏳ Retrying...';
+        button.classList.add('loading');
+    }
+
+    const status = document.getElementById('status');
+    status.innerHTML = `🔄 Retrying failed site: ${baseUrl}...`;
+
+    try {
+        // Try to find the site ID first
+        const siteResponse = await fetch(`/site-by-url?url=${encodeURIComponent(baseUrl)}`);
+        const siteResult = await siteResponse.json();
+        
+        if (siteResult.site) {
+            // Use the existing scrapSingleSite function
+            await scrapSingleSite(siteResult.site._id, baseUrl, event);
+            
+            // Remove from failed list if successful
+            setTimeout(() => {
+                fetchFailedDirectories();
+            }, 2000);
+        } else {
+            // If site doesn't exist, create it and try scraping
+            const response = await fetch('/scrape-directory', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    baseUrl: baseUrl,
+                    staffDirectory: staffDirectory
+                })
+            });
+
+            const result = await response.json();
+            
+            if (result.success) {
+                status.innerHTML = `✅ Successfully retried ${baseUrl}`;
+                
+                // Remove from failed list
+                setTimeout(() => {
+                    fetchFailedDirectories();
+                }, 1500);
+            } else {
+                status.innerHTML = `❌ Failed: ${result.error}`;
+            }
+        }
+
+    } catch (error) {
+        status.innerHTML = `❌ Error: ${error.message}`;
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText || '🔄 Retry';
+            button.classList.remove('loading');
+        }
     }
 }

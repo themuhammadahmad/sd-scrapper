@@ -35,10 +35,11 @@ class SchedulerService {
     console.log('✅ Monthly scraping scheduler started (will run on 1st of every month at 2:00 AM)');
   }
 
-  async runScrapingCycle() {
+async runScrapingCycle() {
+    // IMPORTANT: Check if already running at the very beginning
     if (this.isRunning) {
-      console.log('⚠️ Scraping cycle already running, skipping...');
-      return;
+        console.log('⚠️ Scraping cycle already running, skipping...');
+        return Promise.resolve(); // Return a resolved promise instead
     }
 
     this.isRunning = true;
@@ -47,136 +48,145 @@ class SchedulerService {
     this.errorCount = 0;
      
     try {
-      // Fetch active directories from database
-      this.directories = await StaffDirectory.find({ isActive: true })
-        .sort({ lastProcessedAt: 1 })
-        .select('baseUrl staffDirectory successfulParser parserFailedLastTime')
-        .lean();
+        // Fetch active directories from database
+        this.directories = await StaffDirectory.find({ isActive: true })
+            .sort({ lastProcessedAt: 1 })
+            .select('baseUrl staffDirectory successfulParser parserFailedLastTime')
+            .lean();
 
-      console.log(`📋 Found ${this.directories.length} directories to process from database`);
-      console.log(`🔄 Resuming from index: ${this.lastProcessedIndex}`);
+        console.log(`📋 Found ${this.directories.length} directories to process from database`);
+        console.log(`🔄 Resuming from index: ${this.lastProcessedIndex}`);
 
-      let delay = 600;
-      
-      for (let i = this.lastProcessedIndex; i < this.directories.length; i++) {
-        if (this.shouldStop) {
-          console.log(`🛑 Scraping stopped by user request at index ${i}`);
-          console.log(`📊 Progress: ${i}/${this.directories.length} sites processed`);
-          break;
-        }
-
-        const directory = this.directories[i];
-        const { baseUrl, staffDirectory, successfulParser, parserFailedLastTime } = directory;
-
-        console.log(`\n🔍 Processing ${i + 1}/${this.directories.length}: ${baseUrl}`);
+        let delay = 600;
         
-        // If parser failed last time, don't use it
-        const parserToUse = parserFailedLastTime ? null : successfulParser;
-        
-        if (parserToUse) {
-          console.log(`🎯 Using known parser: ${parserToUse}`);
-        } else if (successfulParser && parserFailedLastTime) {
-          console.log(`🔄 Known parser ${successfulParser} failed last time, trying all parsers...`);
-        }
-
-        try {
-          const result = await processStaffDirectory(baseUrl, staffDirectory, parserToUse);
-
-          if (result.success) {
-            this.successCount++;
-            console.log(`✅ Successfully processed: ${baseUrl} (${result.staffCount} staff)`);
-            
-            // Update the directory with parser info and reset failure flag
-            await StaffDirectory.findOneAndUpdate(
-              { staffDirectory },
-              { 
-                successfulParser: result.usedParser,
-                parserFailedLastTime: false, // Reset failure flag
-                lastProcessedAt: new Date(),
-                lastStaffCount: result.staffCount,
-                $inc: { processCount: 1 }
-              }
-            );
-            
-            if (result.usedParser && result.usedParser !== parserToUse) {
-              console.log(`💾 Saved new parser ${result.usedParser} for future use`);
+        for (let i = this.lastProcessedIndex; i < this.directories.length; i++) {
+            // Check for stop signal at the beginning of each iteration
+            if (this.shouldStop) {
+                console.log(`🛑 Scraping stopped by user request at index ${i}`);
+                console.log(`📊 Progress: ${i}/${this.directories.length} sites processed`);
+                break;
             }
-          } else {
-            this.errorCount++;
-            console.log(`❌ No data extracted from: ${baseUrl}`);
+
+            const directory = this.directories[i];
+            const { baseUrl, staffDirectory, successfulParser, parserFailedLastTime } = directory;
+
+            console.log(`\n🔍 Processing ${i + 1}/${this.directories.length}: ${baseUrl}`);
             
-            // If we were using a known parser and it failed, mark it as failed
+            // If parser failed last time, don't use it
+            const parserToUse = parserFailedLastTime ? null : successfulParser;
+            
             if (parserToUse) {
-              await StaffDirectory.findOneAndUpdate(
-                { staffDirectory },
-                { 
-                  parserFailedLastTime: true,
-                  lastProcessedAt: new Date(),
-                  $inc: { processCount: 1 }
-                }
-              );
-              console.log(`⚠️ Marked parser ${parserToUse} as failed for this site`);
-            } else {
-              await StaffDirectory.findOneAndUpdate(
-                { staffDirectory },
-                { 
-                  lastProcessedAt: new Date(),
-                  $inc: { processCount: 1 }
-                }
-              );
+                console.log(`🎯 Using known parser: ${parserToUse}`);
+            } else if (successfulParser && parserFailedLastTime) {
+                console.log(`🔄 Known parser ${successfulParser} failed last time, trying all parsers...`);
             }
-          }
-          
-          this.lastProcessedIndex = i + 1;
-          
-        } catch (error) {
-          this.errorCount++;
-          console.error(`❌ Failed to process ${baseUrl}:`, error.message);
-          
-          // Mark parser as failed if we were using a known one
-          if (parserToUse) {
-            await StaffDirectory.findOneAndUpdate(
-              { staffDirectory },
-              { 
-                parserFailedLastTime: true,
-                lastProcessedAt: new Date(),
-                $inc: { processCount: 1 }
-              }
-            );
-          } else {
-            await StaffDirectory.findOneAndUpdate(
-              { staffDirectory },
-              { 
-                lastProcessedAt: new Date(),
-                $inc: { processCount: 1 }
-              }
-            );
-          }
+
+            try {
+                const result = await processStaffDirectory(baseUrl, staffDirectory, parserToUse);
+
+                if (result.success) {
+                    this.successCount++;
+                    console.log(`✅ Successfully processed: ${baseUrl} (${result.staffCount} staff)`);
+                    
+                    // Update the directory with parser info and reset failure flag
+                    await StaffDirectory.findOneAndUpdate(
+                        { staffDirectory },
+                        { 
+                            successfulParser: result.usedParser,
+                            parserFailedLastTime: false, // Reset failure flag
+                            lastProcessedAt: new Date(),
+                            lastStaffCount: result.staffCount,
+                            $inc: { processCount: 1 }
+                        }
+                    );
+                    
+                    if (result.usedParser && result.usedParser !== parserToUse) {
+                        console.log(`💾 Saved new parser ${result.usedParser} for future use`);
+                    }
+                } else {
+                    this.errorCount++;
+                    console.log(`❌ No data extracted from: ${baseUrl}`);
+                    
+                    // If we were using a known parser and it failed, mark it as failed
+                    if (parserToUse) {
+                        await StaffDirectory.findOneAndUpdate(
+                            { staffDirectory },
+                            { 
+                                parserFailedLastTime: true,
+                                lastProcessedAt: new Date(),
+                                $inc: { processCount: 1 }
+                            }
+                        );
+                        console.log(`⚠️ Marked parser ${parserToUse} as failed for this site`);
+                    } else {
+                        await StaffDirectory.findOneAndUpdate(
+                            { staffDirectory },
+                            { 
+                                lastProcessedAt: new Date(),
+                                $inc: { processCount: 1 }
+                            }
+                        );
+                    }
+                }
+                
+                this.lastProcessedIndex = i + 1;
+                
+            } catch (error) {
+                this.errorCount++;
+                console.error(`❌ Failed to process ${baseUrl}:`, error.message);
+                
+                // Mark parser as failed if we were using a known one
+                if (parserToUse) {
+                    await StaffDirectory.findOneAndUpdate(
+                        { staffDirectory },
+                        { 
+                            parserFailedLastTime: true,
+                            lastProcessedAt: new Date(),
+                            $inc: { processCount: 1 }
+                        }
+                    );
+                } else {
+                    await StaffDirectory.findOneAndUpdate(
+                        { staffDirectory },
+                        { 
+                            lastProcessedAt: new Date(),
+                            $inc: { processCount: 1 }
+                        }
+                    );
+                }
+            }
+
+            // Check for stop signal again before waiting
+            if (this.shouldStop) {
+                console.log(`🛑 Scraping stopped during wait period`);
+                break;
+            }
+
+            if (i < this.directories.length - 1 && !this.shouldStop) {
+                console.log(`⏳ Waiting ${delay / 1000} seconds before next directory...`);
+                await this.delay(delay);
+            }
         }
 
-        if (i < this.directories.length - 1 && !this.shouldStop) {
-          console.log(`⏳ Waiting ${delay / 1000} seconds before next directory...`);
-          await this.delay(delay);
+        if (!this.shouldStop) {
+            console.log(`\n🎉 Scraping cycle completed!`);
+            console.log(`📊 Results: ${this.successCount} successful, ${this.errorCount} failed`);
+            this.lastProcessedIndex = 0;
+        } else {
+            console.log(`\n⏹️ Scraping stopped.`);
+            console.log(`📊 Partial results: ${this.successCount} successful, ${this.errorCount} failed`);
+            console.log(`🔄 Next run will resume from index: ${this.lastProcessedIndex}`);
         }
-      }
-
-      if (!this.shouldStop) {
-        console.log(`\n🎉 Scraping cycle completed!`);
-        console.log(`📊 Results: ${this.successCount} successful, ${this.errorCount} failed`);
-        this.lastProcessedIndex = 0;
-      } else {
-        console.log(`\n⏹️ Scraping stopped.`);
-        console.log(`📊 Partial results: ${this.successCount} successful, ${this.errorCount} failed`);
-        console.log(`🔄 Next run will resume from index: ${this.lastProcessedIndex}`);
-      }
 
     } catch (error) {
-      console.error('❌ Error in scraping cycle:', error);
+        console.error('❌ Error in scraping cycle:', error);
     } finally {
-      this.isRunning = false;
-      this.shouldStop = false;
+        // CRITICAL: Reset the running state when done
+        this.isRunning = false;
+        this.shouldStop = false;
+        console.log('🏁 Scraping cycle fully stopped');
     }
-  }
+}
     // Import directories from uploaded file
   async importDirectories(urls) {
     try {
@@ -227,25 +237,36 @@ class SchedulerService {
     }
   }
 
-  // Add this method to stop scraping
-  stopScraping() {
-    if (this.isRunning) {
-      this.shouldStop = true;
-      console.log('🛑 Stop signal sent to scraping process...');
-      return { 
-        success: true, 
-        message: 'Scraping stop signal sent',
-        currentProgress: this.getProgress()
-      };
+stopScraping() {
+    if (this.isRunning && !this.shouldStop) {
+        this.shouldStop = true;
+        console.log('🛑 Stop signal sent to scraping process...');
+        
+        // Also stop the current process if it's stuck
+        if (this.currentProcess) {
+            console.log('⏹️ Force stopping current process...');
+            // You might need to handle process cancellation here
+        }
+        
+        return { 
+            success: true, 
+            message: 'Scraping stop signal sent. It may take a moment to fully stop.',
+            currentProgress: this.getProgress()
+        };
+    } else if (this.isRunning && this.shouldStop) {
+        return { 
+            success: false, 
+            message: 'Scraping is already being stopped. Please wait.',
+            currentProgress: this.getProgress()
+        };
     } else {
-      return { 
-        success: false, 
-        message: 'No scraping process is currently running',
-        currentProgress: this.getProgress()
-      };
+        return { 
+            success: false, 
+            message: 'No scraping process is currently running',
+            currentProgress: this.getProgress()
+        };
     }
-  }
-
+}
   // Manual trigger for testing
   async triggerManualScraping() {
     console.log('🔧 Manual scraping triggered');
