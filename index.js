@@ -582,7 +582,7 @@ app.use((req, res) => {
 
 // MongoDB Connection
 let isDevelopment = false;
-let mongoStr = isDevelopment ? "mongodb://127.0.0.1:27017/universities" : "mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht";
+let mongoStr = isDevelopment ? "mongodb://127.0.0.1:27017/universities" : process.env.MONGODB_URI;
 mongoose.connect(mongoStr, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

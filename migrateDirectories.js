@@ -4,7 +4,8 @@ import StaffDirectory from './models/StaffDirectory.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
+import dotenv from "dotenv";
+dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -12,7 +13,7 @@ async function migrateDirectories() {
   try {
     // Connect to MongoDB (use your existing connection string)
     let mongoStr = "mongodb://127.0.0.1:27017/universities";
-    let online = "mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht";
+    let online = process.env.MONGODB_URI;
     await mongoose.connect(online);
     console.log('✅ Connected to MongoDB');
 

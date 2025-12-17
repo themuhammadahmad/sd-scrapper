@@ -6768,15 +6768,7 @@
     "collegeWebsite": "http://menloathletics.com/",
     "sportsCode": ""
   },
-  {
-    "baseUrl": "http://milesgoldenbears.com/",
-    "staffDirectory": "http://milesgoldenbears.com/staff-directory",
-    "ipeds": "",
-    "schoolName": "",
-    "athleticWebsite": "",
-    "collegeWebsite": "http://milesgoldenbears.com/",
-    "sportsCode": ""
-  },
+
   {
     "baseUrl": "http://minesathletics.com",
     "staffDirectory": "http://minesathletics.com/staff-directory",
@@ -6813,24 +6805,7 @@
     "collegeWebsite": "http://mssulions.com",
     "sportsCode": ""
   },
-  {
-    "baseUrl": "http://msumdragons.com/",
-    "staffDirectory": "http://msumdragons.com/staff-directory",
-    "ipeds": "",
-    "schoolName": "",
-    "athleticWebsite": "",
-    "collegeWebsite": "http://msumdragons.com/",
-    "sportsCode": ""
-  },
-  {
-    "baseUrl": "http://msumustangs.com",
-    "staffDirectory": "http://msumustangs.com/staff-directory",
-    "ipeds": "",
-    "schoolName": "",
-    "athleticWebsite": "",
-    "collegeWebsite": "http://msumustangs.com",
-    "sportsCode": ""
-  },
+
   {
     "baseUrl": "http://msuspartans.com/",
     "staffDirectory": "http://msuspartans.com/staff-directory",
@@ -12449,15 +12424,7 @@
     "collegeWebsite": "http://www.smithpioneers.com",
     "sportsCode": ""
   },
-  {
-    "baseUrl": "http://www.smsumustangs.com",
-    "staffDirectory": "http://www.smsumustangs.com/staff-directory",
-    "ipeds": "",
-    "schoolName": "",
-    "athleticWebsite": "",
-    "collegeWebsite": "http://www.smsumustangs.com",
-    "sportsCode": ""
-  },
+
   {
     "baseUrl": "http://www.smumustangs.com",
     "staffDirectory": "http://www.smumustangs.com/staff-directory",
@@ -14035,15 +14002,7 @@
     "collegeWebsite": "https://athletics.middlebury.edu",
     "sportsCode": ""
   },
-  {
-    "baseUrl": "https://athletics.millikin.edu",
-    "staffDirectory": "https://athletics.millikin.edu/staff-directory",
-    "ipeds": "",
-    "schoolName": "",
-    "athleticWebsite": "",
-    "collegeWebsite": "https://athletics.millikin.edu",
-    "sportsCode": ""
-  },
+
   {
     "baseUrl": "https://athletics.misericordia.edu",
     "staffDirectory": "https://athletics.misericordia.edu/staff-directory",
@@ -16793,7 +16752,7 @@
   },
   {
     "baseUrl": "https://www.msutexas.edu/",
-    "staffDirectory": "https://www.msutexas.edu/msumustangs.com/staff-directory",
+    "staffDirectory": "https://www.msumustangs.com/staff-directory",
     "ipeds": "226833",
     "schoolName": "Midwestern State University",
     "athleticWebsite": "msumustangs.com",
@@ -16802,7 +16761,7 @@
   },
   {
     "baseUrl": "https://www.miles.edu/",
-    "staffDirectory": "https://www.miles.edu/milesgoldenbears.com//staff-directory",
+    "staffDirectory": "https://milesgoldenbears.com/staff-directory",
     "ipeds": "101675",
     "schoolName": "Miles College",
     "athleticWebsite": "milesgoldenbears.com/",
@@ -16838,10 +16797,10 @@
   },
   {
     "baseUrl": "https://millikin.edu/",
-    "staffDirectory": "https://millikin.edu/athletics.millikin.edu/staff-directory",
+    "staffDirectory": "https://athletics.millikin.edu/staff-directory",
     "ipeds": "147244",
     "schoolName": "Millikin University",
-    "athleticWebsite": "athletics.millikin.edu",
+    "athleticWebsite": "https://athletics.millikin.edu",
     "collegeWebsite": "https://millikin.edu/",
     "sportsCode": "1"
   },
@@ -16901,10 +16860,10 @@
   },
   {
     "baseUrl": "https://www.mnstate.edu/",
-    "staffDirectory": "https://www.mnstate.edu/msumdragons.com//staff-directory",
+    "staffDirectory": "https://www.msumdragons.com/staff-directory",
     "ipeds": "174358",
     "schoolName": "Minnesota State University Moorhead",
-    "athleticWebsite": "msumdragons.com/",
+    "athleticWebsite": "https://www.msumdragons.com",
     "collegeWebsite": "https://www.mnstate.edu/",
     "sportsCode": "1"
   },
