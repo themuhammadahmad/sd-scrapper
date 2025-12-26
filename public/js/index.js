@@ -522,6 +522,7 @@ async function fetchSiteSnapshot(siteId, siteName, element) {
         ]);
 
         const snapshotResult = await snapshotResponse.json();
+        console.log(snapshotResult)
         const changesResult = await changesResponse.json();
 
         // Remove loading state

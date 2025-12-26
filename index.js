@@ -75,7 +75,8 @@ app.use('/js', express.static(join(__dirname, 'public/js')));
 
 // Serve the main HTML file on root route - PROTECTED
 app.get("/", requireAuth, (req, res) => {
-    res.sendFile(join(__dirname, "public", "index.html"));
+    
+    res.sendFile(join(__dirname, "public", "index2.html"));
 });
 // Serve HTML pages
 app.get('/login', (req, res) => {
@@ -135,59 +136,75 @@ app.post("/scrape-now", requireAuthAPI, async (req, res) => {
     }
 });
 
+// In your route file
+import puppeteerManager from './services/puppeteerManager.js';
+app.get("/browser-stats", requireAuthAPI, (req, res) => {
+  res.json(puppeteerManager.getStats());
+});
 // Route to scrape a single site by ID
 app.post("/scrape-site/:siteId", requireAuthAPI, async (req, res) => {
-    try {
-        const siteId = req.params.siteId;
-        
-        // Find the site by ID
-        const site = await Site.findById(siteId);
-        if (!site) {
-            return res.status(404).json({ error: "Site not found" });
-        }
-
-        // Get staff directory info for this site
-        const staffDirectory = await StaffDirectory.findOne({ 
-            baseUrl: site.baseUrl 
-        });
-
-        if (!staffDirectory) {
-            return res.status(404).json({ 
-                error: "Staff directory not found for this site" 
-            });
-        }
-
-        // Trigger scraping for this single site
-        console.log(`🔧 Manual scraping triggered for: ${site.baseUrl}`);
-        
-        // Call the processStaffDirectory function directly
-        const result = await processStaffDirectory(
-            site.baseUrl,
-            site.staffDirectory,
-            staffDirectory.successfulParser || null
-        );
-
-        if (result.success) {
-            res.json({ 
-                success: true, 
-                message: `Successfully scraped ${site.baseUrl}`,
-                staffCount: result.staffCount,
-                siteId: site._id
-            });
-        } else {
-            res.status(500).json({ 
-                success: false, 
-                error: `Failed to scrape ${site.baseUrl}: No data extracted` 
-            });
-        }
-
-    } catch (error) {
-        console.error('Error scraping single site:', error);
-        res.status(500).json({ 
-            success: false, 
-            error: error.message 
-        });
+  try {
+    const siteId = req.params.siteId;
+    
+    // Get scheduler status
+    const schedulerStatus = schedulerService.getStatus();
+    
+    // If scheduler is running, wait or queue the request
+    if (schedulerStatus.isRunning) {
+      console.log(`⏳ Scheduler is busy, waiting to scrape site: ${siteId}`);
+      
+      // Option 1: Queue the request
+      return res.status(429).json({ 
+        message: 'Scraping in progress. Please try again in a few minutes.',
+        estimatedWait: '2-3 minutes'
+      });
+      
+      // Option 2: Add to queue (more complex implementation)
     }
+
+    // Find the site and proceed with scraping
+    const site = await Site.findById(siteId);
+    if (!site) {
+      return res.status(404).json({ error: "Site not found" });
+    }
+
+    // Get browser stats for monitoring
+    const browserStats = puppeteerManager.getStats();
+    console.log('Browser stats before scraping:', browserStats);
+
+    // Scrape the single site
+    const staffDirectory = await StaffDirectory.findOne({ 
+      baseUrl: site.baseUrl 
+    });
+
+    const result = await processStaffDirectory(
+      site.baseUrl,
+      site.staffDirectory,
+      staffDirectory?.successfulParser || null
+    );
+
+    // Clean up browser if no other requests
+    if (puppeteerManager.activeRequests === 0) {
+      setTimeout(() => puppeteerManager.closeBrowser(), 3000);
+    }
+
+    if (result.success) {
+      res.json({ 
+        success: true, 
+        message: `Successfully scraped ${site.baseUrl}`,
+        staffCount: result.staffCount
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        error: `Failed to scrape ${site.baseUrl}` 
+      });
+    }
+
+  } catch (error) {
+    console.error('Error scraping single site:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 

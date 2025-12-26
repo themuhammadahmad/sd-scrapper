@@ -300,22 +300,32 @@ for (const category of categories) {
 
 // ========== ADD THIS NEW FUNCTION AT THE BOTTOM OF THE FILE ==========
 async function runParsersWithNames(html, url) {
-  const parsers = [
-    { name: 'sidearmParser', fn: (await import('../parsers/sidearmParser.js')).default },
-    { name: 'genericTableParser', fn: (await import('../parsers/genericTableParser.js')).default },
-    { name: 'heuristicsParser', fn: (await import('../parsers/heuristicsParser.js')).default },
-    { name: 'separateTableParser', fn: (await import('../parsers/separateTableParser.js')).default },
-    { name: 'multiTbodyParser', fn: (await import('../parsers/multiTbodyParser.js')).default },
-    { name: 'cardBasedParser', fn: (await import('../parsers/cardBasedParser.js')).default },
-    { name: 'tableSeparatorParser', fn: (await import('../parsers/tableSeparatorParser.js')).default },
-    { name: 'subtitleCategoryParse', fn: (await import('../parsers/subtitleCategoryParse.js')).default },
-    { name: 'h2TableCategoryParser', fn: (await import('../parsers/h2TableCategoryParser.js')).default },
-    { name: 'sectionStaffDirectoryParser', fn: (await import('../parsers/sectionStaffDirectoryParser.js')).default },
-    { name: 'bobcatsTableParser', fn: (await import('../parsers/bobcatsTableParser.js')).default },
-    { name: 'vvcTableParser', fn: (await import('../parsers/vvcTableParser.js')).default },
-    { name: 'drupalPersonParser', fn: (await import('../parsers/drupalPersonParser.js')).default },
-    { name: 'albanyDirectoryParser', fn: (await import('../parsers/albanyDirectoryParser.js')).default }
-  ];
+const parsers = [
+  // Specific parsers first (they have strong identifiers)
+  { name: 'sidearmParser', fn: (await import('../parsers/sidearmParser.js')).default },
+  { name: 'sidearmModernParser', fn: (await import('../parsers/sidearmModernParser.js')).default },
+  { name: 'cardBasedParser', fn: (await import('../parsers/cardBasedParser.js')).default },
+  { name: 'staffDirectoryParser', fn: (await import('../parsers/staffDirectoryGroupParser.js')).default },
+  { name: 'h1TableCategoryParser', fn: (await import('../parsers/h1TableCategoryParser.js')).default },
+  { name: 'h2TableCategoryParser', fn: (await import('../parsers/h2TableCategoryParser.js')).default },
+  { name: 'drupalStaffDirectoryParser', fn: (await import('../parsers/drupalStaffDirectoryParser.js')).default },
+  { name: 'bobcatsTableParser', fn: (await import('../parsers/bobcatsTableParser.js')).default },
+  { name: 'vvcTableParser', fn: (await import('../parsers/vvcTableParser.js')).default },
+  { name: 'albanyDirectoryParser', fn: (await import('../parsers/albanyDirectoryParser.js')).default },
+  { name: 'drupalPersonParser', fn: (await import('../parsers/drupalPersonParser.js')).default },
+  { name: 'tableSeparatorParser', fn: (await import('../parsers/tableSeparatorParser.js')).default },
+  { name: 'subtitleCategoryParse', fn: (await import('../parsers/subtitleCategoryParse.js')).default },
+  { name: 'multiTbodyParser', fn: (await import('../parsers/multiTbodyParser.js')).default },
+  { name: 'spTeamProParser', fn: (await import('../parsers/spTeamProParser.js')).default },
+  { name: 'diviTeamMemberParser', fn: (await import('../parsers/diviTeamMemberParser.js')).default },
+  { name: 'intstaffParser', fn: (await import('../parsers/intstaffParser.js')).default },
+  { name: 'separateTableParser', fn: (await import('../parsers/separateTableParser.js')).default },
+  { name: 'sectionStaffDirectoryParser', fn: (await import('../parsers/sectionStaffDirectoryParser.js')).default },
+  
+  // Generic parsers last (fallbacks)
+  { name: 'genericTableParser', fn: (await import('../parsers/genericTableParser.js')).default },
+  { name: 'heuristicsParser', fn: (await import('../parsers/heuristicsParser.js')).default },
+];
 
   for (const parser of parsers) {
     try {
