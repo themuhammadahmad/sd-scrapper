@@ -4,6 +4,7 @@ import fs from 'fs';
 import processStaffDirectory from "../utils/processStaffDirectory.js";
 import puppeteerManager from '../fallback/puppeteerParser.js';
 import StaffDirectory from '../models/StaffDirectory.js';
+import FailedDirectory from '../models/FailedDirectory.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { dirname } from 'path';
@@ -324,16 +325,7 @@ class SchedulerService {
     });
   }
 
-  // Get current status with progress
-  getStatus() {
-    const progress = this.getProgress();
-    return {
-      isRunning: this.isRunning,
-      shouldStop: this.shouldStop,
-      progress: progress,
-      nextScheduled: "1st of every month at 2:00 AM"
-    };
-  }
+
 
   // Get progress information
   getProgress() {
@@ -394,6 +386,209 @@ class SchedulerService {
       console.log('⏹️ Scraping scheduler stopped');
     }
   }
+
+  // Add this method to your SchedulerService class
+async scrapeFailedDirectories(failedDirs) {
+    console.log(`🔧 Starting to process ${failedDirs.length} failed directories`);
+    
+    this.isRunning = true;
+    this.shouldStop = false;
+    this.successCount = 0;
+    this.errorCount = 0;
+    this.directories = []; // Reset for failed directory processing
+    this.lastProcessedIndex = 0;
+    
+    // Track that we're processing failed directories specifically
+    this.isProcessingFailed = true;
+    this.failedDirectoriesList = failedDirs;
+    
+    try {
+        let processedCount = 0;
+        let succeeded = 0;
+        let failed = 0;
+        
+        for (let i = 0; i < failedDirs.length; i++) {
+            // Check for stop signal
+            if (this.shouldStop) {
+                console.log(`🛑 Failed directory scraping stopped at index ${i}`);
+                break;
+            }
+            
+            const failedDir = failedDirs[i];
+            const { baseUrl, staffDirectory, _id } = failedDir;
+            
+            console.log(`\n🔄 Processing failed directory ${i + 1}/${failedDirs.length}: ${baseUrl}`);
+            
+            try {
+                // Remove from failed directories before retrying
+                await FailedDirectory.findByIdAndDelete(_id);
+                console.log(`🗑️ Removed ${baseUrl} from failed list`);
+                
+                // Try to find existing StaffDirectory entry for parser history
+                const staffDirEntry = await StaffDirectory.findOne({ 
+                    staffDirectory: staffDirectory 
+                });
+                
+                const parserToUse = staffDirEntry?.successfulParser && 
+                                  !staffDirEntry?.parserFailedLastTime ? 
+                                  staffDirEntry.successfulParser : null;
+                
+                if (parserToUse) {
+                    console.log(`🎯 Using known parser: ${parserToUse}`);
+                }
+                
+                // Scrape the directory
+                const result = await processStaffDirectory(
+                    baseUrl, 
+                    staffDirectory, 
+                    parserToUse
+                );
+                
+                if (result.success) {
+                    succeeded++;
+                    console.log(`✅ Successfully scraped ${baseUrl} (${result.staffCount} staff)`);
+                    
+                    // Update or create StaffDirectory entry
+                    await StaffDirectory.findOneAndUpdate(
+                        { staffDirectory: staffDirectory },
+                        {
+                            baseUrl: baseUrl,
+                            staffDirectory: staffDirectory,
+                            successfulParser: result.usedParser || parserToUse,
+                            parserFailedLastTime: false,
+                            lastProcessedAt: new Date(),
+                            lastStaffCount: result.staffCount,
+                            isActive: true,
+                            $inc: { processCount: 1 }
+                        },
+                        { upsert: true, new: true }
+                    );
+                    
+                } else {
+                    failed++;
+                    console.log(`❌ Failed to scrape ${baseUrl}`);
+                    
+                    // Add back to failed directories
+                    await FailedDirectory.findOneAndUpdate(
+                        { staffDirectory: staffDirectory },
+                        {
+                            baseUrl: baseUrl,
+                            staffDirectory: staffDirectory,
+                            failureType: 'no_data',
+                            errorMessage: 'Bulk retry failed: No data extracted',
+                            lastAttempt: new Date(),
+                            $inc: { attemptCount: 1 }
+                        },
+                        { upsert: true, new: true }
+                    );
+                    
+                    // Update parser failure status
+                    if (staffDirEntry) {
+                        await StaffDirectory.findByIdAndUpdate(
+                            staffDirEntry._id,
+                            {
+                                parserFailedLastTime: true,
+                                lastProcessedAt: new Date(),
+                                $inc: { processCount: 1 }
+                            }
+                        );
+                    }
+                }
+                
+                processedCount++;
+                
+            } catch (error) {
+                failed++;
+                console.error(`❌ Error processing ${baseUrl}:`, error.message);
+                
+                // Add back to failed directories
+                try {
+                    await FailedDirectory.findOneAndUpdate(
+                        { staffDirectory: staffDirectory },
+                        {
+                            baseUrl: baseUrl,
+                            staffDirectory: staffDirectory,
+                            failureType: 'fetch_failed',
+                            errorMessage: `Bulk retry error: ${error.message.substring(0, 200)}`,
+                            lastAttempt: new Date(),
+                            $inc: { attemptCount: 1 }
+                        },
+                        { upsert: true, new: true }
+                    );
+                } catch (dbError) {
+                    console.error('Error updating failed directory:', dbError);
+                }
+            }
+            
+            // Add delay between requests (shorter delay for failed directories)
+            if (i < failedDirs.length - 1 && !this.shouldStop) {
+                const delay = 3000; // 3 seconds between failed directory attempts
+                console.log(`⏳ Waiting ${delay/1000} seconds before next failed directory...`);
+                await this.delay(delay);
+            }
+            
+            this.lastProcessedIndex = i + 1;
+        }
+        
+        console.log(`\n📊 Failed directory processing complete!`);
+        console.log(`✅ Succeeded: ${succeeded}`);
+        console.log(`❌ Failed: ${failed}`);
+        console.log(`📈 Processed: ${processedCount}/${failedDirs.length}`);
+        
+        return {
+            total: failedDirs.length,
+            processed: processedCount,
+            succeeded: succeeded,
+            failed: failed,
+            isComplete: processedCount === failedDirs.length
+        };
+        
+    } catch (error) {
+        console.error('❌ Error in failed directory processing:', error);
+        throw error;
+    } finally {
+        this.isRunning = false;
+        this.shouldStop = false;
+        this.isProcessingFailed = false;
+        this.failedDirectoriesList = null;
+        
+        // Close browser after a delay
+        setTimeout(() => {
+            if (puppeteerManager.activeRequests === 0) {
+                puppeteerManager.closeBrowser().catch(console.error);
+            }
+        }, 5000);
+        
+        console.log('🏁 Failed directory processing fully stopped');
+    }
+}
+
+// Add this method to get status specific to failed directory processing
+getFailedDirStatus() {
+    return {
+        isProcessingFailed: this.isProcessingFailed || false,
+        failedDirProgress: this.failedDirectoriesList ? {
+            current: this.lastProcessedIndex,
+            total: this.failedDirectoriesList.length,
+            percentage: this.failedDirectoriesList.length > 0 ? 
+                Math.round((this.lastProcessedIndex / this.failedDirectoriesList.length) * 100) : 0
+        } : null
+    };
+}
+
+// Update the existing getStatus method to include failed directory info
+getStatus() {
+    const progress = this.getProgress();
+    const failedDirStatus = this.getFailedDirStatus();
+    
+    return {
+        isRunning: this.isRunning,
+        shouldStop: this.shouldStop,
+        progress: progress,
+        failedDirStatus: failedDirStatus,
+        nextScheduled: "1st of every month at 2:00 AM"
+    };
+}
 }
 
 export default new SchedulerService();

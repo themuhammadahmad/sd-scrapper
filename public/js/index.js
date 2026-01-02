@@ -745,97 +745,9 @@ async function fetchSiteSnapshot(siteId, siteName, element) {
                 `;
       }
     }
- 
-async function fetchFailedDirectories() {
-    const status = document.getElementById('status');
-    const failedList = document.getElementById('failedList');
-    const sitesList = document.getElementById('sitesList');
-    
-    status.innerHTML = '📡 Fetching failed directories...';
-    failedList.innerHTML = '';
-    sitesList.innerHTML = '';
-    
-    try {
-        const response = await fetch('/failed-directories');
-        const result = await response.json();
-        
-        if (result.failedDirectories && result.failedDirectories.length > 0) {
-            failedList.innerHTML = `
-                <div class="failed-container">
-                    <div class="table-header">
-                        ❌ Failed Directories (${result.count})
-                    </div>
-                    <div class="failed-stats">
-                        <strong>Total Failed:</strong> ${result.count} | 
-                        <strong>Last Updated:</strong> ${new Date().toLocaleString()}
-                    </div>
-            `;
-            
-            result.failedDirectories.forEach(failed => {
-                const failureBadgeClass = `failure-${failed.failureType.replace('_', '-')}`;
-                const failureLabel = failed.failureType === 'no_data' ? 'No Data' : 
-                                   failed.failureType === 'fetch_failed' ? 'Fetch Failed' : 
-                                   'Parsing Failed';
-                
-                const failedDiv = document.createElement('div');
-                failedDiv.className = 'failed-item';
-                failedDiv.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div>
-                            <span class="failure-badge ${failureBadgeClass}">${failureLabel}</span>
-                            <strong>${failed.baseUrl}</strong>
-                        </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn-scrap-site btn-small btn-primary" 
-                                    onclick="scrapFailedSite('${failed._id}', '${failed.baseUrl}', '${failed.staffDirectory}', event)">
-                                🔄 Retry
-                            </button>
-                            <button class="btn btn-small btn-secondary" 
-                                    onclick="removeFailedSite('${failed._id}', '${failed.baseUrl}', event)">
-                                ❌ Remove
-                            </button>
-                        </div>
-                    </div>
-                    <div style="margin: 5px 0; font-size: 12px;">
-                        <strong>Directory:</strong> <a href='${failed.staffDirectory}' target="_blank">${failed.staffDirectory}</a>
-                    </div>
-                    <div style="margin: 5px 0; font-size: 12px;">
-                        <strong>Attempts:</strong> ${failed.attemptCount} | 
-                        <strong>Last Attempt:</strong> ${new Date(failed.lastAttempt).toLocaleString()}
-                    </div>
-                    <div style="margin: 5px 0; font-size: 12px; color: #d32f2f;">
-                        <strong>Error:</strong> ${failed.errorMessage || 'Unknown error'}
-                    </div>
-                    ${failed.htmlSnippet ? `
-                        <div style="margin: 5px 0; font-size: 12px;">
-                            <strong>HTML Snippet:</strong>
-                            <div class="html-snippet">${failed.htmlSnippet}</div>
-                        </div>
-                    ` : ''}
-                `;
-                failedList.appendChild(failedDiv);
-            });
-            
-            failedList.innerHTML += `</div>`; // Close failed-container
-            status.innerHTML = `✅ Found ${result.count} failed directories`;
-        } else {
-            failedList.innerHTML = `
-                <div class="failed-container">
-                    <div class="table-header">
-                        ❌ Failed Directories
-                    </div>
-                    <p>No failed directories found.</p>
-                </div>
-            `;
-            status.innerHTML = '✅ No failed directories';
-        }
-    } catch (error) {
-        status.innerHTML = `❌ Error fetching failed directories: ${error.message}`;
-    }
-}
 
 // Function to scrap a failed site
-async function scrapFailedSite(failedId, baseUrl, staffDirectory, event) {
+async function scrapFailedSite(failedId, baseUrl, staffDirectory, event) { 
     if (event) {
         event.stopPropagation();
         event.preventDefault();
@@ -1021,6 +933,461 @@ async function scrapFailedSiteAlternative(baseUrl, staffDirectory, event) {
 
     } catch (error) {
         status.innerHTML = `❌ Error: ${error.message}`;
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText || '🔄 Retry';
+            button.classList.remove('loading');
+        }
+    }
+}
+
+// Add this function to trigger bulk scraping of failed directories
+async function scrapeAllFailedDirectories() {
+    const button = document.getElementById('scrapeAllFailedBtn');
+    const status = document.getElementById('status');
+    const originalText = button?.textContent;
+    
+    if (button) {
+        button.disabled = true;
+        button.textContent = '⏳ Starting...';
+        button.classList.add('loading');
+    }
+    
+    status.innerHTML = `
+        <div class="loading-text">
+            <div class="loading-indicator"></div>
+            Starting bulk scrape of all failed directories...
+        </div>
+    `;
+    
+    try {
+        const response = await fetch('/scrape-all-failed', {
+            method: 'POST'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            status.innerHTML = `
+                <div style="padding: 15px; background: #f0f8ff; border-radius: 8px; margin: 10px 0;">
+                    <strong>🚀 Bulk Failed Directory Scrape Started!</strong><br>
+                    <small>Processing ${result.total} failed directories...</small><br>
+                    <small>Using existing scheduler infrastructure with delays between requests.</small>
+                    <div id="failedBulkProgress" style="margin-top: 10px;">
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-text">Starting...</div>
+                    </div>
+                </div>
+            `;
+            
+            // Start polling for progress updates
+            startFailedBulkPolling();
+            
+        } else {
+            status.innerHTML = `
+                <div style="padding: 15px; background: #ffebee; border-radius: 8px; margin: 10px 0;">
+                    <strong>❌ Failed to start bulk scrape:</strong><br>
+                    <small>${result.error || 'Unknown error'}</small>
+                </div>
+            `;
+            resetBulkScrapeButton(button, originalText);
+        }
+        
+    } catch (error) {
+        status.innerHTML = `❌ Error: ${error.message}`;
+        resetBulkScrapeButton(button, originalText);
+    }
+}
+
+// Poll for failed directory scraping progress
+function startFailedBulkPolling() {
+    let pollInterval;
+    let lastProgress = 0;
+    
+    const pollFunction = async () => {
+        try {
+            const response = await fetch('/scrape-all-failed/status');
+            const status = await response.json();
+            
+            const progressElement = document.getElementById('failedBulkProgress');
+            const progressBar = progressElement?.querySelector('.progress-bar');
+            const progressText = progressElement?.querySelector('.progress-text');
+            
+            if (progressElement && status.failedDirStatus?.failedDirProgress) {
+                const progress = status.failedDirStatus.failedDirProgress;
+                
+                // Update progress bar
+                if (progressBar) {
+                    progressBar.style.width = `${progress.percentage}%`;
+                }
+                
+                // Update text
+                if (progressText) {
+                    progressText.textContent = 
+                        `Processing: ${progress.current}/${progress.total} (${progress.percentage}%)`;
+                }
+                
+                lastProgress = progress.percentage;
+                
+                // Check if completed
+                if (!status.isRunning && lastProgress > 0) {
+                    clearInterval(pollInterval);
+                    
+                    // Refresh failed list
+                    setTimeout(() => {
+                        fetchFailedDirectories();
+                        resetBulkScrapeButton(
+                            document.getElementById('scrapeAllFailedBtn'), 
+                            '🔄 Scrape All Failed'
+                        );
+                        
+                        // Show completion message
+                        const statusEl = document.getElementById('status');
+                        statusEl.innerHTML = `
+                            <div style="padding: 15px; background: #e8f5e9; border-radius: 8px; margin: 10px 0;">
+                                <strong>✅ Bulk Failed Directory Scrape Complete!</strong><br>
+                                <small>Processed ${progress.total} directories.</small><br>
+                                <small>Failed list has been refreshed.</small>
+                            </div>
+                        `;
+                    }, 1000);
+                }
+            }
+            
+            // If not processing failed directories anymore, stop polling
+            if (!status.failedDirStatus?.isProcessingFailed && !status.isRunning) {
+                clearInterval(pollInterval);
+                resetBulkScrapeButton(
+                    document.getElementById('scrapeAllFailedBtn'), 
+                    '🔄 Scrape All Failed'
+                );
+            }
+            
+        } catch (error) {
+            console.error('Error polling failed bulk status:', error);
+            clearInterval(pollInterval);
+        }
+    };
+    
+    // Start polling every 3 seconds
+    pollInterval = setInterval(pollFunction, 3000);
+    pollFunction(); // Initial call
+}
+
+function resetBulkScrapeButton(button, originalText) {
+    if (button) {
+        button.disabled = false;
+        button.textContent = originalText || '🔄 Scrape All Failed';
+        button.classList.remove('loading');
+    }
+}
+
+async function fetchFailedDirectories() {
+    const status = document.getElementById('status');
+    const failedList = document.getElementById('failedList');
+    const sitesList = document.getElementById('sitesList');
+    
+    status.innerHTML = '📡 Fetching failed directories...';
+    failedList.innerHTML = '';
+    sitesList.innerHTML = '';
+    
+    try {
+        const response = await fetch('/failed-directories');
+        const result = await response.json();
+        
+        if (result.failedDirectories && result.failedDirectories.length > 0) {
+            // Create the container first
+            const container = document.createElement('div');
+            container.className = 'failed-container';
+            
+            // Add the header with bulk button
+            container.innerHTML = `
+                <div class="table-header" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                    <div style="font-weight: bold; font-size: 16px;">
+                        ❌ Failed Directories (${result.count})
+                    </div>
+                    <div>
+                        <button id="scrapeAllFailedBtn" class="btn-bulk-scrape btn-primary" onclick="scrapeAllFailedDirectories()">
+                            🔄 Scrape All Failed (${result.count})
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bulk-info" style="padding: 12px; background: #e3f2fd; margin: 10px 15px; border-radius: 6px; border-left: 4px solid #2196f3;">
+                    <strong>💡 Bulk Retry:</strong> Click the button above to automatically retry all ${result.count} failed directories.
+                    This uses the same scheduler system with proper delays between requests.
+                </div>
+                
+                <div class="failed-stats" style="padding: 8px 15px; background: #f5f5f5; margin-bottom: 10px; font-size: 14px;">
+                    <strong>📊 Stats:</strong> ${result.count} failed directories | 
+                    <strong>Last updated:</strong> ${new Date().toLocaleTimeString()}
+                </div>
+                
+                <div id="failedDirectoriesList" style="padding: 0 15px 15px 15px;">
+                    <!-- Individual failed directories will be inserted here -->
+                </div>
+            `;
+            
+            // Now add individual failed directories
+            const failedDirectoriesList = container.querySelector('#failedDirectoriesList');
+            
+            result.failedDirectories.forEach(failed => {
+                const failureBadgeClass = `failure-${failed.failureType.replace('_', '-')}`;
+                const failureLabel = failed.failureType === 'no_data' ? 'No Data' : 
+                                   failed.failureType === 'fetch_failed' ? 'Fetch Failed' : 
+                                   'Parsing Failed';
+                
+                const failedDiv = document.createElement('div');
+                failedDiv.className = 'failed-item';
+                failedDiv.style.cssText = `
+                    background: white;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 8px;
+                    padding: 15px;
+                    margin-bottom: 10px;
+                    transition: all 0.2s ease;
+                `;
+                
+                failedDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <span class="failure-badge ${failureBadgeClass}" style="
+                                display: inline-block;
+                                padding: 2px 8px;
+                                border-radius: 12px;
+                                font-size: 11px;
+                                font-weight: bold;
+                                margin-right: 8px;
+                                background: ${failureLabel === 'No Data' ? '#ff9800' : 
+                                           failureLabel === 'Fetch Failed' ? '#f44336' : 
+                                           '#9c27b0'};
+                                color: white;
+                            ">
+                                ${failureLabel}
+                            </span>
+                            <strong style="font-size: 14px;">${failed.baseUrl}</strong>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn-scrap-site btn-small btn-primary" 
+                                    onclick="scrapFailedSite('${failed._id}', '${failed.baseUrl}', '${failed.staffDirectory}', event)"
+                                    style="
+                                        padding: 4px 12px;
+                                        background: #007bff;
+                                        color: white;
+                                        border: none;
+                                        border-radius: 4px;
+                                        font-size: 12px;
+                                        cursor: pointer;
+                                        transition: background 0.2s;
+                                    ">
+                                🔄 Retry
+                            </button>
+                            <button class="btn btn-small btn-secondary" 
+                                    onclick="removeFailedSite('${failed._id}', '${failed.baseUrl}', event)"
+                                    style="
+                                        padding: 4px 12px;
+                                        background: #6c757d;
+                                        color: white;
+                                        border: none;
+                                        border-radius: 4px;
+                                        font-size: 12px;
+                                        cursor: pointer;
+                                        transition: background 0.2s;
+                                    ">
+                                ❌ Remove
+                            </button>
+                        </div>
+                    </div>
+                    <div style="margin: 8px 0; font-size: 13px;">
+                        <strong>Directory:</strong> 
+                        <a href="${failed.staffDirectory}" target="_blank" style="color: #007bff; text-decoration: none;">
+                            ${failed.staffDirectory}
+                        </a>
+                    </div>
+                    <div style="margin: 8px 0; font-size: 12px; color: #666;">
+                        <strong>Attempts:</strong> ${failed.attemptCount} | 
+                        <strong>Last Attempt:</strong> ${new Date(failed.lastAttempt).toLocaleString()}
+                    </div>
+                    <div style="margin: 8px 0; font-size: 12px; color: #d32f2f;">
+                        <strong>Error:</strong> ${failed.errorMessage || 'Unknown error'}
+                    </div>
+                    ${failed.htmlSnippet ? `
+                        <div style="margin: 8px 0; font-size: 12px;">
+                            <strong>HTML Snippet:</strong>
+                            <div class="html-snippet" style="
+                                background: #f8f9fa;
+                                border: 1px solid #dee2e6;
+                                border-radius: 4px;
+                                padding: 8px;
+                                margin-top: 4px;
+                                font-family: monospace;
+                                font-size: 11px;
+                                color: #495057;
+                                max-height: 60px;
+                                overflow-y: auto;
+                                white-space: pre-wrap;
+                                word-break: break-all;
+                            ">
+                                ${failed.htmlSnippet}
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+                
+                // Add hover effect
+                failedDiv.onmouseenter = () => {
+                    failedDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+                    failedDiv.style.transform = 'translateY(-1px)';
+                };
+                
+                failedDiv.onmouseleave = () => {
+                    failedDiv.style.boxShadow = 'none';
+                    failedDiv.style.transform = 'translateY(0)';
+                };
+                
+                failedDirectoriesList.appendChild(failedDiv);
+            });
+            
+            // Add CSS for button hover effects
+            const style = document.createElement('style');
+            style.textContent = `
+                .btn-scrap-site:hover:not(:disabled) {
+                    background: #0056b3 !important;
+                }
+                .btn-small.btn-secondary:hover:not(:disabled) {
+                    background: #545b62 !important;
+                }
+                .btn-bulk-scrape:hover:not(:disabled) {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+                }
+            `;
+            container.appendChild(style);
+            
+            failedList.appendChild(container);
+            status.innerHTML = `✅ Found ${result.count} failed directories`;
+            
+        } else {
+            failedList.innerHTML = `
+                <div class="failed-container" style="
+                    background: white;
+                    border-radius: 8px;
+                    border: 1px solid #e0e0e0;
+                    overflow: hidden;
+                ">
+                    <div class="table-header" style="
+                        padding: 15px;
+                        background: #f8f9fa;
+                        border-bottom: 1px solid #dee2e6;
+                        font-weight: bold;
+                        font-size: 16px;
+                    ">
+                        ❌ Failed Directories
+                    </div>
+                    <div style="padding: 40px 20px; text-align: center; color: #666;">
+                        <p style="font-size: 18px; margin-bottom: 10px;">✅ No failed directories found!</p>
+                        <small style="font-size: 14px; color: #888;">All directories are successfully processed.</small>
+                    </div>
+                </div>
+            `;
+            status.innerHTML = '✅ No failed directories';
+        }
+        
+    } catch (error) {
+        status.innerHTML = `❌ Error fetching failed directories: ${error.message}`;
+        failedList.innerHTML = `
+            <div style="padding: 20px; background: #ffebee; border-radius: 8px; color: #c62828;">
+                <strong>❌ Error:</strong> ${error.message}
+            </div>
+        `;
+    }
+}
+
+// Also, here's a cleaner version of the scrapFailedSite function:
+async function scrapFailedSite(failedId, baseUrl, staffDirectory, event) { 
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    const button = event?.target;
+    const originalText = button?.textContent;
+    
+    if (button) {
+        button.disabled = true;
+        button.textContent = '⏳ Retrying...';
+        button.classList.add('loading');
+    }
+
+    const status = document.getElementById('status');
+    status.innerHTML = `🔄 Retrying failed site: ${baseUrl}...`;
+
+    try {
+        // First, remove from failed list
+        const removeResponse = await fetch(`/failed-directories/${failedId}`, {
+            method: 'DELETE'
+        });
+
+        if (!removeResponse.ok) {
+            throw new Error('Failed to remove from failed list');
+        }
+
+        // Now try to scrape the site
+        const response = await fetch('/scrape-failed-site', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                baseUrl: baseUrl,
+                staffDirectory: staffDirectory
+            })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            status.innerHTML = `
+                <div style="padding: 15px; background: #e8f5e9; border-radius: 8px; margin: 10px 0;">
+                    <strong>✅ Successfully scraped ${baseUrl}</strong><br>
+                    <small>Found ${result.staffCount} staff members</small>
+                </div>
+            `;
+            
+            // Update the failed list after a short delay
+            setTimeout(() => {
+                fetchFailedDirectories();
+            }, 1500);
+            
+        } else {
+            status.innerHTML = `
+                <div style="padding: 15px; background: #fff3cd; border-radius: 8px; margin: 10px 0;">
+                    <strong>❌ Failed to scrape ${baseUrl}</strong><br>
+                    <small>${result.error}</small>
+                </div>
+            `;
+            
+            // Refresh failed list to show updated attempt count
+            setTimeout(() => {
+                fetchFailedDirectories();
+            }, 1500);
+        }
+
+    } catch (error) {
+        status.innerHTML = `
+            <div style="padding: 15px; background: #ffebee; border-radius: 8px; margin: 10px 0;">
+                <strong>❌ Error scraping failed site</strong><br>
+                <small>${error.message}</small>
+            </div>
+        `;
+        
+        // Refresh failed list
+        setTimeout(() => {
+            fetchFailedDirectories();
+        }, 1500);
     } finally {
         if (button) {
             button.disabled = false;

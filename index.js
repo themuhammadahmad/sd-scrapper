@@ -348,6 +348,7 @@ app.get("/site-by-url", requireAuthAPI, async (req, res) => {
     }
 });
 
+
 // Route to scrape a single directory (for failed sites)
 app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
     try {
@@ -376,15 +377,19 @@ app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
                 baseUrl: baseUrl
             });
         } else {
-            // Add back to failed directories
-            await FailedDirectory.create({
-                baseUrl,
-                staffDirectory,
-                failureType: 'no_data',
-                errorMessage: 'Retry failed: No data extracted',
-                lastAttempt: new Date(),
-                attemptCount: 1
-            });
+            // Add back to failed directories - use findOneAndUpdate with upsert to avoid duplicate key error
+            await FailedDirectory.findOneAndUpdate(
+                { staffDirectory: staffDirectory },
+                {
+                    baseUrl: baseUrl,
+                    staffDirectory: staffDirectory,
+                    failureType: 'no_data',
+                    errorMessage: 'Retry failed: No data extracted',
+                    lastAttempt: new Date(),
+                    $inc: { attemptCount: 1 }
+                },
+                { upsert: true, new: true }
+            );
             
             res.status(500).json({ 
                 success: false, 
@@ -395,7 +400,7 @@ app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
     } catch (error) {
         console.error('Error scraping failed site:', error);
         
-        // Add to failed directories with error
+        // Add to failed directories with error - use findOneAndUpdate
         try {
             await FailedDirectory.findOneAndUpdate(
                 { staffDirectory: req.body.staffDirectory },
@@ -403,11 +408,11 @@ app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
                     baseUrl: req.body.baseUrl,
                     staffDirectory: req.body.staffDirectory,
                     failureType: 'fetch_failed',
-                    errorMessage: error.message,
+                    errorMessage: error.message.substring(0, 500), // Limit error message length
                     lastAttempt: new Date(),
                     $inc: { attemptCount: 1 }
                 },
-                { upsert: true }
+                { upsert: true, new: true }
             );
         } catch (dbError) {
             console.error('Error updating failed directory:', dbError);
@@ -419,6 +424,8 @@ app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
         });
     }
 });
+
+
 
 // Route to delete a specific failed directory
 app.delete("/failed-directories/:id", requireAuthAPI, async (req, res) => {
@@ -442,6 +449,64 @@ app.delete("/failed-directories/:id", requireAuthAPI, async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+});
+
+// Route to scrape all failed directories using the scheduler pattern
+app.post("/scrape-all-failed", requireAuthAPI, async (req, res) => {
+    try {
+        console.log('🔄 Starting bulk scrape of all failed directories');
+        
+        // Fetch all failed directories
+        const failedDirs = await FailedDirectory.find().sort({ lastAttempt: 1 }); // Oldest first
+        
+        if (failedDirs.length === 0) {
+            return res.json({
+                success: true,
+                message: "No failed directories to scrape",
+                total: 0,
+                processed: 0
+            });
+        }
+        
+        // Check if scheduler is already running
+        const schedulerStatus = schedulerService.getStatus();
+        if (schedulerStatus.isRunning) {
+            return res.status(429).json({
+                success: false,
+                error: "Scheduler is already running. Please wait for current process to complete."
+            });
+        }
+        
+        // Start processing failed directories
+        const result = await schedulerService.scrapeFailedDirectories(failedDirs);
+        
+        res.json({
+            success: true,
+            message: `Started scraping ${failedDirs.length} failed directories`,
+            total: failedDirs.length,
+            details: result
+        });
+        
+    } catch (error) {
+        console.error('Error starting bulk scrape:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
+
+// Optional: Add status endpoint for failed directory scraping
+app.get("/scrape-all-failed/status", requireAuthAPI, (req, res) => {
+    const status = schedulerService.getStatus();
+    const failedDirStatus = schedulerService.getFailedDirStatus ? 
+        schedulerService.getFailedDirStatus() : 
+        { isProcessingFailed: false };
+    
+    res.json({
+        ...status,
+        ...failedDirStatus
+    });
 });
 
 app.delete("/failed-directories", requireAuthAPI, async (req, res) => {

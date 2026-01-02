@@ -14,6 +14,38 @@ import StaffProfile from "../models/StaffProfile.js";
 import ChangeLog from "../models/ChangeLog.js";
 import crypto from "crypto";
 let sadf = "with pupeteer ✅";
+// Add this helper function at the top
+// Add this helper function at the top
+function detectCloudflare(html) {
+    if (!html) return false;
+    
+    const lowerHtml = html.toLowerCase();
+    
+    const cloudflareIndicators = [
+        'cloudflare',
+        'cf-ray',
+        '__cfuid',
+        'ddos-guard',
+        'security check',
+        'please stand by',
+        'verifying you are human',
+        'checking your browser',
+        'jschl_vc',
+        'jschl_answer',
+        'captcha-bypass',
+        'ray id',
+        'just a moment'
+    ];
+    
+    for (const indicator of cloudflareIndicators) {
+        if (lowerHtml.includes(indicator)) {
+            console.log(`⚠️ Cloudflare detected: ${indicator}`);
+            return true;
+        }
+    }
+    
+    return false;
+}
 export default async function processStaffDirectory(baseUrl, staffDirectory, knownParser = null) {
   let html = null;
   let fetchFailed = false;
@@ -318,7 +350,11 @@ const parsers = [
   { name: 'multiTbodyParser', fn: (await import('../parsers/multiTbodyParser.js')).default },
   { name: 'spTeamProParser', fn: (await import('../parsers/spTeamProParser.js')).default },
   { name: 'diviTeamMemberParser', fn: (await import('../parsers/diviTeamMemberParser.js')).default },
-  { name: 'intstaffParser', fn: (await import('../parsers/intstaffParser.js')).default },
+  { name: 'indStaffParser', fn: (await import('../parsers/indStaffParser.js')).default },
+  { name: 'staffContainerParser', fn: (await import('../parsers/staffContainerParser.js')).default },
+  { name: 'rfTeamParser', fn: (await import('../parsers/rfTeamParser.js')).default },
+  { name: 'tablePressParser', fn: (await import('../parsers/tablePressParser.js')).default },
+  { name: 'coachCardParser', fn: (await import('../parsers/coachCardParser.js')).default },
   { name: 'separateTableParser', fn: (await import('../parsers/separateTableParser.js')).default },
   { name: 'sectionStaffDirectoryParser', fn: (await import('../parsers/sectionStaffDirectoryParser.js')).default },
   
