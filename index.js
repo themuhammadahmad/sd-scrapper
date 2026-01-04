@@ -7,7 +7,7 @@ import mongoose, { mongo } from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 // Import database connection
-import { connectDB, getConnectionStatus } from "./config/database.js";
+// import { connectDB, getConnectionStatus } from "./config/database.js";
 
 // Models
 import Site from "./models/Site.js";
@@ -106,25 +106,25 @@ app.get("/search", requireAuth, (req, res) => {
     res.sendFile(join(__dirname, "public", "search.html"));
 });
 
-// Health check endpoint - public
-app.get("/health", (req, res) => {
-    const dbStatus = getConnectionStatus();
-    res.json({
-        status: "OK",
-        timestamp: new Date().toISOString(),
-        database: dbStatus,
-        uptime: process.uptime()
-    });
-});
+// // Health check endpoint - public
+// app.get("/health", (req, res) => {
+//     const dbStatus = getConnectionStatus();
+//     res.json({
+//         status: "OK",
+//         timestamp: new Date().toISOString(),
+//         database: dbStatus,
+//         uptime: process.uptime()
+//     });
+// });
 
-// Database status endpoint - public
-app.get("/db-status", (req, res) => {
-    const status = getConnectionStatus();
-    res.json({
-        database: status,
-        message: status.isConnected ? "✅ Database connected" : "❌ Database disconnected"
-    });
-});
+// // Database status endpoint - public
+// app.get("/db-status", (req, res) => {
+//     const status = getConnectionStatus();
+//     res.json({
+//         database: status,
+//         message: status.isConnected ? "✅ Database connected" : "❌ Database disconnected"
+//     });
+// });
 
 // Protect all these routes with authentication
 app.post("/scrape-now", requireAuthAPI, async (req, res) => {
