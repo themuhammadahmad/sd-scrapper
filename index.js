@@ -3,7 +3,7 @@ import express from "express";
 import session from 'express-session';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 // Import database connection
@@ -676,5 +676,6 @@ mongoose.connect(mongoStr, {
     });
 })
 .catch((err) => {
+    console.log(mongoStr);
     console.error("❌ MongoDB connection error:", err);
 });
