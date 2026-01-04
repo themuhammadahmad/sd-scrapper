@@ -84,7 +84,7 @@ function getChromePath() {
 
   if (platform === "linux") {
     try {
-      const googleChrome = execSync("which google-chrome").toString().trim();
+      const googleChrome = execSync("which chromium-browser").toString().trim();
       console.log("Found google-chrome at:", googleChrome);
       return googleChrome;
     } catch (error) {
