@@ -26,7 +26,7 @@ class PuppeteerManager {
       this.chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
     } else if (platform === "linux") {
       try {
-        this.chromePath = execSync("which google-chrome").toString().trim();
+        this.chromePath = execSync("which chromium-browser").toString().trim();
       } catch {
         try {
           this.chromePath = execSync("which chromium-browser").toString().trim();
