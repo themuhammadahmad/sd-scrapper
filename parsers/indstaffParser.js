@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
 
-export default async function indStaffParser(html, url) {
+export default async function IndStaffParser(html, url) {
   const $ = cheerio.load(html);
   
   // Check if this page uses the ind-staff layout
