@@ -350,7 +350,7 @@ const parsers = [
   { name: 'multiTbodyParser', fn: (await import('../parsers/multiTbodyParser.js')).default },
   { name: 'spTeamProParser', fn: (await import('../parsers/spTeamProParser.js')).default },
   { name: 'diviTeamMemberParser', fn: (await import('../parsers/diviTeamMemberParser.js')).default },
-  { name: 'IndStaffParser', fn: (await import('../parsers/IndStaffParser.js')).default },
+  // { name: 'IndStaffParser', fn: (await import('../parsers/IndStaffParser.js')).default },
   { name: 'staffContainerParser', fn: (await import('../parsers/staffContainerParser.js')).default },
   { name: 'rfTeamParser', fn: (await import('../parsers/rfTeamParser.js')).default },
   { name: 'tablePressParser', fn: (await import('../parsers/tablePressParser.js')).default },
