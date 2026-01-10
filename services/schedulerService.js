@@ -9,6 +9,8 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { dirname } from 'path';
 
+import { ExportScheduler } from './export/ExportScheduler.js'; 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -22,6 +24,7 @@ class SchedulerService {
     this.directories = [];
     this.successCount = 0;
     this.errorCount = 0;
+     this.exportScheduler = new ExportScheduler();
   }
 
   startMonthlyScraping() {

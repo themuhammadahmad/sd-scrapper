@@ -12,29 +12,29 @@ export class ExportScheduler {
    * Initialize scheduled jobs
    */
   initialize() {
-    console.log('📅 Initializing export scheduler...');
+    // console.log('📅 Initializing export scheduler...');
     
-    // Run every 2 hours
-    cron.schedule('0 */2 * * *', async () => {
-      console.log('⏰ Scheduled full export triggered (every 2 hours)');
-      await this.runFullExport();
-    });
+    // // Run every 2 hours
+    // cron.schedule('0 */2 * * *', async () => {
+    //   console.log('⏰ Scheduled full export triggered (every 2 hours)');
+    //   await this.runFullExport();
+    // });
 
-    // Run cleanup every day at 3 AM
-    cron.schedule('0 3 * * *', async () => {
-      console.log('🧹 Scheduled cleanup triggered (daily at 3 AM)');
-      await this.runCleanup();
-    });
+    // // Run cleanup every day at 3 AM
+    // cron.schedule('0 3 * * *', async () => {
+    //   console.log('🧹 Scheduled cleanup triggered (daily at 3 AM)');
+    //   await this.runCleanup();
+    // });
 
-    console.log('✅ Scheduler initialized');
-    console.log('📊 Full export: Every 2 hours');
-    console.log('🗑️  Cleanup: Daily at 3 AM');
+    // console.log('✅ Scheduler initialized');
+    // console.log('📊 Full export: Every 2 hours');
+    // console.log('🗑️  Cleanup: Daily at 3 AM');
     
-    // Trigger first export immediately when server starts
-    setTimeout(async () => {
-      console.log('🚀 Triggering initial export on server start...');
-      // await this.runFullExport();
-    }, 10000); // Wait 10 seconds after server starts
+    // // Trigger first export immediately when server starts
+    // setTimeout(async () => {
+    //   console.log('🚀 Triggering initial export on server start...');
+    //   // await this.runFullExport();
+    // }, 10000); // Wait 10 seconds after server starts
   }
 
 // services/export/ExportScheduler.js
