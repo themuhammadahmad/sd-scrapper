@@ -13,7 +13,6 @@ import { ExportScheduler } from './export/ExportScheduler.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 class SchedulerService {
   constructor() {
     this.isRunning = false;
@@ -24,14 +23,20 @@ class SchedulerService {
     this.directories = [];
     this.successCount = 0;
     this.errorCount = 0;
-     this.exportScheduler = new ExportScheduler();
+    this.isProcessingFailed = false;
+    this.failedDirectoriesList = null;
+    
+    // Export scheduler instance
+    this.exportScheduler = null;
+    this.exportInProgress = false;
   }
+
 
   startMonthlyScraping() {
     // Run on the 1st day of every month at 2:00 AM
-    this.currentJob = cron.schedule('0 2 1 * *', () => {
+    this.currentJob = cron.schedule('0 2 1 * *', async () => {
       console.log('🚀 Starting monthly automated scraping cycle...');
-      this.runScrapingCycle();
+      await this.runScrapingCycle();
     }, {
       scheduled: true,
       timezone: "America/New_York"
@@ -44,7 +49,7 @@ class SchedulerService {
     // IMPORTANT: Check if already running at the very beginning
     if (this.isRunning) {
       console.log('⚠️ Scraping cycle already running, skipping...');
-      return Promise.resolve(); // Return a resolved promise instead
+      return Promise.resolve();
     }
 
     this.isRunning = true;
@@ -64,12 +69,11 @@ class SchedulerService {
       // Get current month and year for comparison
       const now = new Date();
       const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth(); // 0-indexed (0=Jan, 11=Dec)
+      const currentMonth = now.getMonth();
 
       // Filter out directories that were already processed this month
       const directoriesToProcess = this.directories.filter(directory => {
         if (!directory.lastProcessedAt) {
-          // Never processed before - include it
           return true;
         }
 
@@ -77,9 +81,7 @@ class SchedulerService {
         const lastYear = lastProcessed.getFullYear();
         const lastMonth = lastProcessed.getMonth();
 
-        // Check if it was processed in the current month
         const wasProcessedThisMonth = (lastYear === currentYear && lastMonth === currentMonth);
-
         return !wasProcessedThisMonth;
       });
 
@@ -89,7 +91,6 @@ class SchedulerService {
       let delay = 600;
 
       for (let i = this.lastProcessedIndex; i < directoriesToProcess.length; i++) {
-        // Check for stop signal at the beginning of each iteration
         if (this.shouldStop) {
           console.log(`🛑 Scraping stopped by user request at index ${i}`);
           console.log(`📊 Progress: ${i}/${directoriesToProcess.length} sites processed`);
@@ -100,8 +101,6 @@ class SchedulerService {
         const { baseUrl, staffDirectory, successfulParser, parserFailedLastTime } = directory;
 
         console.log(`\n🔍 Processing ${i + 1}/${directoriesToProcess.length}: ${baseUrl}`);
-
-        // If parser failed last time, don't use it
         const parserToUse = parserFailedLastTime ? null : successfulParser;
 
         if (parserToUse) {
@@ -117,12 +116,11 @@ class SchedulerService {
             this.successCount++;
             console.log(`✅ Successfully processed: ${baseUrl} (${result.staffCount} staff)`);
 
-            // Update the directory with parser info and reset failure flag
             await StaffDirectory.findOneAndUpdate(
               { staffDirectory },
               {
                 successfulParser: result.usedParser,
-                parserFailedLastTime: false, // Reset failure flag
+                parserFailedLastTime: false,
                 lastProcessedAt: new Date(),
                 lastStaffCount: result.staffCount,
                 $inc: { processCount: 1 }
@@ -136,7 +134,6 @@ class SchedulerService {
             this.errorCount++;
             console.log(`❌ No data extracted from: ${baseUrl}`);
 
-            // If we were using a known parser and it failed, mark it as failed
             if (parserToUse) {
               await StaffDirectory.findOneAndUpdate(
                 { staffDirectory },
@@ -164,7 +161,6 @@ class SchedulerService {
           this.errorCount++;
           console.error(`❌ Failed to process ${baseUrl}:`, error.message);
 
-          // Mark parser as failed if we were using a known one
           if (parserToUse) {
             await StaffDirectory.findOneAndUpdate(
               { staffDirectory },
@@ -185,7 +181,6 @@ class SchedulerService {
           }
         }
 
-        // Check for stop signal again before waiting
         if (this.shouldStop) {
           console.log(`🛑 Scraping stopped during wait period`);
           break;
@@ -200,6 +195,14 @@ class SchedulerService {
       if (!this.shouldStop) {
         console.log(`\n🎉 Scraping cycle completed!`);
         console.log(`📊 Results: ${this.successCount} successful, ${this.errorCount} failed`);
+        
+        // ✅ Run export after successful scraping completion
+        if (this.successCount > 0) {
+          await this.runExportIfNotInProgress();
+        } else {
+          console.log('⚠️ No successful scrapes, skipping export');
+        }
+        
         this.lastProcessedIndex = 0;
       } else {
         console.log(`\n⏹️ Scraping stopped.`);
@@ -210,16 +213,14 @@ class SchedulerService {
     } catch (error) {
       console.error('❌ Error in scraping cycle:', error);
     } finally {
-      // CRITICAL: Reset the running state when done
       this.isRunning = false;
       this.shouldStop = false;
       
-      // Close browser if no active requests
       setTimeout(() => {
         if (puppeteerManager.activeRequests === 0) {
           puppeteerManager.closeBrowser().catch(console.error);
         }
-      }, 5000); // Wait 5 seconds before closing
+      }, 5000);
       console.log('🏁 Scraping cycle fully stopped');
     }
   }
@@ -390,208 +391,234 @@ class SchedulerService {
     }
   }
 
-  // Add this method to your SchedulerService class
-async scrapeFailedDirectories(failedDirs) {
+    async runExportIfNotInProgress() {
+    if (!this.exportScheduler) {
+      console.log('⚠️ Export scheduler not available, skipping export');
+      return null;
+    }
+
+    if (this.exportInProgress) {
+      console.log('⏳ Export already in progress, skipping duplicate call');
+      return null;
+    }
+
+    try {
+      this.exportInProgress = true;
+      console.log('📤 Starting export after scraping completion...');
+      
+      const exportResult = await this.exportScheduler.runFullExport();
+      
+      console.log('✅ Export completed successfully');
+      return exportResult;
+    } catch (error) {
+      console.error('❌ Export failed after scraping:', error.message);
+      return { error: error.message };
+    } finally {
+      this.exportInProgress = false;
+    }
+  }
+  async scrapeFailedDirectories(failedDirs) {
     console.log(`🔧 Starting to process ${failedDirs.length} failed directories`);
     
     this.isRunning = true;
     this.shouldStop = false;
     this.successCount = 0;
     this.errorCount = 0;
-    this.directories = []; // Reset for failed directory processing
+    this.directories = [];
     this.lastProcessedIndex = 0;
-    
-    // Track that we're processing failed directories specifically
     this.isProcessingFailed = true;
     this.failedDirectoriesList = failedDirs;
     
     try {
-        let processedCount = 0;
-        let succeeded = 0;
-        let failed = 0;
-        
-        for (let i = 0; i < failedDirs.length; i++) {
-            // Check for stop signal
-            if (this.shouldStop) {
-                console.log(`🛑 Failed directory scraping stopped at index ${i}`);
-                break;
-            }
-            
-            const failedDir = failedDirs[i];
-            const { baseUrl, staffDirectory, _id } = failedDir;
-            
-            console.log(`\n🔄 Processing failed directory ${i + 1}/${failedDirs.length}: ${baseUrl}`);
-            
-            try {
-                // Remove from failed directories before retrying
-                await FailedDirectory.findByIdAndDelete(_id);
-                console.log(`🗑️ Removed ${baseUrl} from failed list`);
-                
-                // Try to find existing StaffDirectory entry for parser history
-                const staffDirEntry = await StaffDirectory.findOne({ 
-                    staffDirectory: staffDirectory 
-                });
-                
-                const parserToUse = staffDirEntry?.successfulParser && 
-                                  !staffDirEntry?.parserFailedLastTime ? 
-                                  staffDirEntry.successfulParser : null;
-                
-                if (parserToUse) {
-                    console.log(`🎯 Using known parser: ${parserToUse}`);
-                }
-                
-                // Scrape the directory
-                const result = await processStaffDirectory(
-                    baseUrl, 
-                    staffDirectory, 
-                    parserToUse
-                );
-                
-                if (result.success) {
-                    succeeded++;
-                    console.log(`✅ Successfully scraped ${baseUrl} (${result.staffCount} staff)`);
-                    
-                    // Update or create StaffDirectory entry
-                    await StaffDirectory.findOneAndUpdate(
-                        { staffDirectory: staffDirectory },
-                        {
-                            baseUrl: baseUrl,
-                            staffDirectory: staffDirectory,
-                            successfulParser: result.usedParser || parserToUse,
-                            parserFailedLastTime: false,
-                            lastProcessedAt: new Date(),
-                            lastStaffCount: result.staffCount,
-                            isActive: true,
-                            $inc: { processCount: 1 }
-                        },
-                        { upsert: true, new: true }
-                    );
-                    
-                } else {
-                    failed++;
-                    console.log(`❌ Failed to scrape ${baseUrl}`);
-                    
-                    // Add back to failed directories
-                    await FailedDirectory.findOneAndUpdate(
-                        { staffDirectory: staffDirectory },
-                        {
-                            baseUrl: baseUrl,
-                            staffDirectory: staffDirectory,
-                            failureType: 'no_data',
-                            errorMessage: 'Bulk retry failed: No data extracted',
-                            lastAttempt: new Date(),
-                            $inc: { attemptCount: 1 }
-                        },
-                        { upsert: true, new: true }
-                    );
-                    
-                    // Update parser failure status
-                    if (staffDirEntry) {
-                        await StaffDirectory.findByIdAndUpdate(
-                            staffDirEntry._id,
-                            {
-                                parserFailedLastTime: true,
-                                lastProcessedAt: new Date(),
-                                $inc: { processCount: 1 }
-                            }
-                        );
-                    }
-                }
-                
-                processedCount++;
-                
-            } catch (error) {
-                failed++;
-                console.error(`❌ Error processing ${baseUrl}:`, error.message);
-                
-                // Add back to failed directories
-                try {
-                    await FailedDirectory.findOneAndUpdate(
-                        { staffDirectory: staffDirectory },
-                        {
-                            baseUrl: baseUrl,
-                            staffDirectory: staffDirectory,
-                            failureType: 'fetch_failed',
-                            errorMessage: `Bulk retry error: ${error.message.substring(0, 200)}`,
-                            lastAttempt: new Date(),
-                            $inc: { attemptCount: 1 }
-                        },
-                        { upsert: true, new: true }
-                    );
-                } catch (dbError) {
-                    console.error('Error updating failed directory:', dbError);
-                }
-            }
-            
-            // Add delay between requests (shorter delay for failed directories)
-            if (i < failedDirs.length - 1 && !this.shouldStop) {
-                const delay = 3000; // 3 seconds between failed directory attempts
-                console.log(`⏳ Waiting ${delay/1000} seconds before next failed directory...`);
-                await this.delay(delay);
-            }
-            
-            this.lastProcessedIndex = i + 1;
+      let processedCount = 0;
+      let succeeded = 0;
+      let failed = 0;
+      
+      for (let i = 0; i < failedDirs.length; i++) {
+        if (this.shouldStop) {
+          console.log(`🛑 Failed directory scraping stopped at index ${i}`);
+          break;
         }
         
-        console.log(`\n📊 Failed directory processing complete!`);
-        console.log(`✅ Succeeded: ${succeeded}`);
-        console.log(`❌ Failed: ${failed}`);
-        console.log(`📈 Processed: ${processedCount}/${failedDirs.length}`);
+        const failedDir = failedDirs[i];
+        const { baseUrl, staffDirectory, _id } = failedDir;
         
-        return {
-            total: failedDirs.length,
-            processed: processedCount,
-            succeeded: succeeded,
-            failed: failed,
-            isComplete: processedCount === failedDirs.length
-        };
+        console.log(`\n🔄 Processing failed directory ${i + 1}/${failedDirs.length}: ${baseUrl}`);
         
-    } catch (error) {
-        console.error('❌ Error in failed directory processing:', error);
-        throw error;
-    } finally {
-        this.isRunning = false;
-        this.shouldStop = false;
-        this.isProcessingFailed = false;
-        this.failedDirectoriesList = null;
-        
-        // Close browser after a delay
-        setTimeout(() => {
-            if (puppeteerManager.activeRequests === 0) {
-                puppeteerManager.closeBrowser().catch(console.error);
+        try {
+          await FailedDirectory.findByIdAndDelete(_id);
+          console.log(`🗑️ Removed ${baseUrl} from failed list`);
+          
+          const staffDirEntry = await StaffDirectory.findOne({ 
+            staffDirectory: staffDirectory 
+          });
+          
+          const parserToUse = staffDirEntry?.successfulParser && 
+                            !staffDirEntry?.parserFailedLastTime ? 
+                            staffDirEntry.successfulParser : null;
+          
+          if (parserToUse) {
+            console.log(`🎯 Using known parser: ${parserToUse}`);
+          }
+          
+          const result = await processStaffDirectory(
+            baseUrl, 
+            staffDirectory, 
+            parserToUse
+          );
+          
+          if (result.success) {
+            succeeded++;
+            this.successCount++;
+            console.log(`✅ Successfully scraped ${baseUrl} (${result.staffCount} staff)`);
+            
+            await StaffDirectory.findOneAndUpdate(
+              { staffDirectory: staffDirectory },
+              {
+                baseUrl: baseUrl,
+                staffDirectory: staffDirectory,
+                successfulParser: result.usedParser || parserToUse,
+                parserFailedLastTime: false,
+                lastProcessedAt: new Date(),
+                lastStaffCount: result.staffCount,
+                isActive: true,
+                $inc: { processCount: 1 }
+              },
+              { upsert: true, new: true }
+            );
+            
+          } else {
+            failed++;
+            this.errorCount++;
+            console.log(`❌ Failed to scrape ${baseUrl}`);
+            
+            await FailedDirectory.findOneAndUpdate(
+              { staffDirectory: staffDirectory },
+              {
+                baseUrl: baseUrl,
+                staffDirectory: staffDirectory,
+                failureType: 'no_data',
+                errorMessage: 'Bulk retry failed: No data extracted',
+                lastAttempt: new Date(),
+                $inc: { attemptCount: 1 }
+              },
+              { upsert: true, new: true }
+            );
+            
+            if (staffDirEntry) {
+              await StaffDirectory.findByIdAndUpdate(
+                staffDirEntry._id,
+                {
+                  parserFailedLastTime: true,
+                  lastProcessedAt: new Date(),
+                  $inc: { processCount: 1 }
+                }
+              );
             }
-        }, 5000);
+          }
+          
+          processedCount++;
+          
+        } catch (error) {
+          failed++;
+          this.errorCount++;
+          console.error(`❌ Error processing ${baseUrl}:`, error.message);
+          
+          try {
+            await FailedDirectory.findOneAndUpdate(
+              { staffDirectory: staffDirectory },
+              {
+                baseUrl: baseUrl,
+                staffDirectory: staffDirectory,
+                failureType: 'fetch_failed',
+                errorMessage: `Bulk retry error: ${error.message.substring(0, 200)}`,
+                lastAttempt: new Date(),
+                $inc: { attemptCount: 1 }
+              },
+              { upsert: true, new: true }
+            );
+          } catch (dbError) {
+            console.error('Error updating failed directory:', dbError);
+          }
+        }
         
-        console.log('🏁 Failed directory processing fully stopped');
+        if (i < failedDirs.length - 1 && !this.shouldStop) {
+          const delay = 3000;
+          console.log(`⏳ Waiting ${delay/1000} seconds before next failed directory...`);
+          await this.delay(delay);
+        }
+        
+        this.lastProcessedIndex = i + 1;
+      }
+      
+      console.log(`\n📊 Failed directory processing complete!`);
+      console.log(`✅ Succeeded: ${succeeded}`);
+      console.log(`❌ Failed: ${failed}`);
+      console.log(`📈 Processed: ${processedCount}/${failedDirs.length}`);
+      
+      // ✅ Run export after failed directories processing if any succeeded
+      if (succeeded > 0) {
+        await this.runExportIfNotInProgress();
+      } else {
+        console.log('⚠️ No successful scrapes in failed directory processing, skipping export');
+      }
+      
+      return {
+        total: failedDirs.length,
+        processed: processedCount,
+        succeeded: succeeded,
+        failed: failed,
+        isComplete: processedCount === failedDirs.length
+      };
+      
+    } catch (error) {
+      console.error('❌ Error in failed directory processing:', error);
+      throw error;
+    } finally {
+      this.isRunning = false;
+      this.shouldStop = false;
+      this.isProcessingFailed = false;
+      this.failedDirectoriesList = null;
+      
+      setTimeout(() => {
+        if (puppeteerManager.activeRequests === 0) {
+          puppeteerManager.closeBrowser().catch(console.error);
+        }
+      }, 5000);
+      
+      console.log('🏁 Failed directory processing fully stopped');
     }
-}
-
-// Add this method to get status specific to failed directory processing
-getFailedDirStatus() {
+  }
+  // Set export scheduler after initialization
+  setExportScheduler(exportScheduler) {
+    this.exportScheduler = exportScheduler;
+    console.log('✅ Export scheduler linked to scraping service');
+  }
+  getFailedDirStatus() {
     return {
-        isProcessingFailed: this.isProcessingFailed || false,
-        failedDirProgress: this.failedDirectoriesList ? {
-            current: this.lastProcessedIndex,
-            total: this.failedDirectoriesList.length,
-            percentage: this.failedDirectoriesList.length > 0 ? 
-                Math.round((this.lastProcessedIndex / this.failedDirectoriesList.length) * 100) : 0
-        } : null
+      isProcessingFailed: this.isProcessingFailed || false,
+      failedDirProgress: this.failedDirectoriesList ? {
+        current: this.lastProcessedIndex,
+        total: this.failedDirectoriesList.length,
+        percentage: this.failedDirectoriesList.length > 0 ? 
+          Math.round((this.lastProcessedIndex / this.failedDirectoriesList.length) * 100) : 0
+      } : null
     };
-}
+  }
 
-// Update the existing getStatus method to include failed directory info
-getStatus() {
+ getStatus() {
     const progress = this.getProgress();
     const failedDirStatus = this.getFailedDirStatus();
     
     return {
-        isRunning: this.isRunning,
-        shouldStop: this.shouldStop,
-        progress: progress,
-        failedDirStatus: failedDirStatus,
-        nextScheduled: "1st of every month at 2:00 AM"
+      isRunning: this.isRunning,
+      shouldStop: this.shouldStop,
+      progress: progress,
+      failedDirStatus: failedDirStatus,
+      nextScheduled: "1st of every month at 2:00 AM",
+      exportInProgress: this.exportInProgress || false
     };
-}
+  }
 }
 
 export default new SchedulerService();

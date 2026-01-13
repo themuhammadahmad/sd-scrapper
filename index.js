@@ -29,7 +29,7 @@ const exportScheduler = new ExportScheduler();
 exportScheduler.initialize();
 
 
-
+schedulerService.setExportScheduler(exportScheduler);
 
 
 // Routes
@@ -699,7 +699,7 @@ app.use((req, res) => {
 
 
 // Always use the environment variable (no development flag needed)
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI =  process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   console.error("❌ MONGODB_URI environment variable is required!");

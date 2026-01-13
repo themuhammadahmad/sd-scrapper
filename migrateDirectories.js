@@ -14,13 +14,13 @@ async function migrateDirectories() {
     // Connect to MongoDB (use your existing connection string)
     let mongoStr = "mongodb://127.0.0.1:27017/universities";
     let online = process.env.MONGODB_URI;
-    await mongoose.connect(online);
+    await mongoose.connect(mongoStr);
     console.log('✅ Connected to MongoDB', mongoStr);
 
     // Read your merged JSON file
     const filePath = path.join(__dirname, 'public', 'data', 'fixed-directories-processed.json');
     console.log(filePath)
-    const directories = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    let directories = JSON.parse(fs.readFileSync(filePath, "utf-8"));
     
     console.log(`📋 Found ${directories.length} directories in fixed-directories-processed.json`);
 
@@ -28,7 +28,7 @@ async function migrateDirectories() {
     let updated = 0;
     let skipped = 0;
     let errors = 0;
-    
+    directories = [directories[0]];
     // Process each directory
     for (const dir of directories) {
       try {
