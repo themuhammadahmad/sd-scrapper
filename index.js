@@ -20,7 +20,17 @@ import StaffProfile from './models/StaffProfile.js'; // Make sure to import
 // Services
 import processStaffDirectory from "./utils/processStaffDirectory.js";
 import schedulerService from "./services/schedulerService.js";
+import { ExportScheduler } from './services/export/ExportScheduler.js';
 import { createTestSnapshots } from './utils/test-snapshots.js';
+
+
+// Initialize scheduler
+const exportScheduler = new ExportScheduler();
+exportScheduler.initialize();
+
+
+
+
 
 // Routes
 import searchRoutes from './routes/search.js';
@@ -72,6 +82,31 @@ app.use('/api/exports', exportRoutes);
 app.use('/api', searchRoutes);
 app.use('/css', express.static(join(__dirname, 'public/css')));
 app.use('/js', express.static(join(__dirname, 'public/js')));
+
+// In your Express app
+app.get('/export-dashboard', (req, res) => {
+  res.sendFile(join(__dirname, "public", "export-dashboard.html"));
+});
+// API Routes for manual export
+app.get('/api/exports/trigger', async (req, res) => {
+  try {
+    console.log('📤 Manual export triggered via API');
+    const result = await exportScheduler.triggerManualExport();
+    
+    res.json({
+      success: true,
+      message: 'Export triggered successfully',
+      data: result
+    });
+  } catch (error) {
+    console.error('Error triggering export:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to trigger export',
+      error: error.message
+    });
+  }
+});
 
 // Serve the main HTML file on root route - PROTECTED
 app.get("/", requireAuth, (req, res) => {
@@ -662,20 +697,76 @@ app.use((req, res) => {
 });
 
 
-// MongoDB Connection
-let isDevelopment = false;
-let mongoStr = isDevelopment ? "mongodb://127.0.0.1:27017/universities" : process.env.MONGODB_URI;
-mongoose.connect(mongoStr, {
+
+// Always use the environment variable (no development flag needed)
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error("❌ MONGODB_URI environment variable is required!");
+  process.exit(1);
+}
+console.log(MONGODB_URI)
+// Enhanced connection options with auto-reconnect
+mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 30000,  // 30 seconds timeout
+    socketTimeoutMS: 45000,           // 45 seconds socket timeout
+    maxPoolSize: 10,                  // Keep 10 connections ready
+    minPoolSize: 2,                   // Minimum 2 connections
+    heartbeatFrequencyMS: 10000,      // Send heartbeat every 10 seconds
+    retryWrites: true,
+    retryReads: true
 })
 .then(() => {
-    console.log("✅ Connected to MongoDB", mongoStr);
+    console.log("✅ Connected to MongoDB Atlas");
     app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
 })
 .catch((err) => {
-    console.log(mongoStr);
-    console.error("❌ MongoDB connection error:", err);
+    console.error("❌ MongoDB connection error:", err.message);
+    console.log("💡 Tip: Check if your Atlas IP whitelist includes your server IP");
+    process.exit(1); // Exit if can't connect initially
+});
+
+// Add auto-reconnect event listeners
+mongoose.connection.on('disconnected', () => {
+    console.log('⚠️  MongoDB disconnected. Will auto-reconnect...');
+});
+
+mongoose.connection.on('reconnected', () => {
+    console.log('✅ MongoDB reconnected!');
+});
+
+mongoose.connection.on('error', (err) => {
+    console.error('❌ MongoDB connection error:', err.message);
+});
+
+// Auto-reconnect logic
+let reconnectAttempts = 0;
+const maxReconnectAttempts = 10;
+
+mongoose.connection.on('disconnected', async () => {
+    if (reconnectAttempts < maxReconnectAttempts) {
+        reconnectAttempts++;
+        const delay = Math.min(1000 * reconnectAttempts, 30000); // Max 30 second delay
+        
+        console.log(`🔄 Reconnecting in ${delay/1000} seconds (attempt ${reconnectAttempts})...`);
+        
+        setTimeout(async () => {
+            try {
+                await mongoose.connect(MONGODB_URI, {
+                    useNewUrlParser: true,
+                    useUnifiedTopology: true
+                });
+                reconnectAttempts = 0; // Reset counter on success
+                console.log('✅ Reconnected successfully!');
+            } catch (error) {
+                console.error('❌ Reconnection failed:', error.message);
+            }
+        }, delay);
+    } else {
+        console.error('❌ Max reconnection attempts reached. Manual restart required.');
+    }
 });

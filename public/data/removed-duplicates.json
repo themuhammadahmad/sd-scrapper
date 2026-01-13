@@ -1,0 +1,794 @@
+[
+  {
+    "baseUrl": "https://www.acu.edu/academics/online/undergraduate",
+    "staffDirectory": "https:///www.acusports.com/staff-directory",
+    "ipeds": "497037",
+    "schoolName": "Abilene Christian University-Undergraduate Online",
+    "athleticWebsite": "www.acusports.com",
+    "collegeWebsite": "https://www.acu.edu/academics/online/undergraduate",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.csum.edu/",
+    "staffDirectory": "https://gopoly.com/staff-directory",
+    "ipeds": "111188",
+    "schoolName": "California State University Maritime Academy",
+    "athleticWebsite": "https://gopoly.com/",
+    "collegeWebsite": "https://www.csum.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.ccc.edu/colleges/kennedy/pages/default.aspx",
+    "staffDirectory": "https://citycollegesofchicagoathletics.com/staff-directory",
+    "ipeds": "144157",
+    "schoolName": "City Colleges of Chicago-Kennedy-King College",
+    "athleticWebsite": "https://citycollegesofchicagoathletics.com",
+    "collegeWebsite": "www.ccc.edu/colleges/kennedy/pages/default.aspx",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.ccc.edu/colleges/malcolm-x/pages/default.aspx",
+    "staffDirectory": "https://citycollegesofchicagoathletics.com/staff-directory",
+    "ipeds": "144166",
+    "schoolName": "City Colleges of Chicago-Malcolm X College",
+    "athleticWebsite": "https://citycollegesofchicagoathletics.com/",
+    "collegeWebsite": "www.ccc.edu/colleges/malcolm-x/pages/default.aspx",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.ccc.edu/colleges/olive-harvey/Pages/default.aspx",
+    "staffDirectory": "https://citycollegesofchicagoathletics.com/staff-directory",
+    "ipeds": "144175",
+    "schoolName": "City Colleges of Chicago-Olive-Harvey College",
+    "athleticWebsite": "https://citycollegesofchicagoathletics.com",
+    "collegeWebsite": "www.ccc.edu/colleges/olive-harvey/Pages/default.aspx",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.ccc.edu/colleges/daley/pages/default.aspx",
+    "staffDirectory": "https://citycollegesofchicagoathletics.com/staff-directory",
+    "ipeds": "144193",
+    "schoolName": "City Colleges of Chicago-Richard J Daley College",
+    "athleticWebsite": "https://citycollegesofchicagoathletics.com",
+    "collegeWebsite": "www.ccc.edu/colleges/daley/pages/default.aspx",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.ccc.edu/colleges/wright/pages/default.aspx",
+    "staffDirectory": "https://citycollegesofchicagoathletics.com/staff-directory",
+    "ipeds": "144218",
+    "schoolName": "City Colleges of Chicago-Wilbur Wright College",
+    "athleticWebsite": "https://citycollegesofchicagoathletics.com",
+    "collegeWebsite": "www.ccc.edu/colleges/wright/pages/default.aspx",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.csi.cuny.edu/",
+    "staffDirectory": "https:///www.csidolphins.com/staff-directory",
+    "ipeds": "190558",
+    "schoolName": "College of Staten Island CUNY",
+    "athleticWebsite": "www.csidolphins.com",
+    "collegeWebsite": "www.csi.cuny.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.eou.edu/",
+    "staffDirectory": "https://corbanwarriors.com/staff-directory",
+    "ipeds": "208646",
+    "schoolName": "Eastern Oregon University",
+    "athleticWebsite": "https://corbanwarriors.com",
+    "collegeWebsite": "www.eou.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://prescott.erau.edu/",
+    "staffDirectory": "https:///www.erauathletics.com/staff-directory",
+    "ipeds": "104586",
+    "schoolName": "Embry-Riddle Aeronautical University-Prescott",
+    "athleticWebsite": "www.erauathletics.com",
+    "collegeWebsite": "prescott.erau.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.hmc.edu/",
+    "staffDirectory": "https://cmsathletics.org/staff-directory",
+    "ipeds": "115409",
+    "schoolName": "Harvey Mudd College",
+    "athleticWebsite": "https://cmsathletics.org/",
+    "collegeWebsite": "https://www.hmc.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://athletics.abac.edu",
+    "staffDirectory": "https://athletics.abac.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.abac.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.amherst.edu",
+    "staffDirectory": "https://athletics.amherst.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.amherst.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.bowdoin.edu",
+    "staffDirectory": "https://athletics.bowdoin.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.bowdoin.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.capital.edu",
+    "staffDirectory": "https://athletics.capital.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.capital.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.carleton.edu",
+    "staffDirectory": "https://athletics.carleton.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.carleton.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.central.edu",
+    "staffDirectory": "https://athletics.central.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.central.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.concordia.edu",
+    "staffDirectory": "https://athletics.concordia.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.concordia.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.crown.edu",
+    "staffDirectory": "https://athletics.crown.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.crown.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.delval.edu",
+    "staffDirectory": "https://athletics.delval.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.delval.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.georgefox.edu",
+    "staffDirectory": "https://athletics.georgefox.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.georgefox.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.hamilton.edu",
+    "staffDirectory": "https://athletics.hamilton.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.hamilton.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.hanover.edu",
+    "staffDirectory": "https://athletics.hanover.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.hanover.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://auwolves.com",
+    "staffDirectory": "https://auwolves.com/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://auwolves.com",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://bobcats.cofo.edu",
+    "staffDirectory": "https://bobcats.cofo.edu/Staff-Directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://bobcats.cofo.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://sports.hindscc.edu",
+    "staffDirectory": "https://sports.hindscc.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://sports.hindscc.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://www.guayama.inter.edu/",
+    "staffDirectory": "https://gtcctitans.com/information/directory/index",
+    "ipeds": "242699",
+    "schoolName": "Inter American University of Puerto Rico-Guayama",
+    "athleticWebsite": "https://gtcctitans.com/landing/index",
+    "collegeWebsite": "www.guayama.inter.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.juniata.edu/",
+    "staffDirectory": "https://www.huntingdonhawks.com/information/directory/index",
+    "ipeds": "213251",
+    "schoolName": "Juniata College",
+    "athleticWebsite": "www.juniatasports.net",
+    "collegeWebsite": "www.juniata.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://hornets.kzoo.edu",
+    "staffDirectory": "https://hornets.kzoo.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://hornets.kzoo.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://www.kent.edu/tusc",
+    "staffDirectory": "https:///www.kentstatesports.com/staff-directory",
+    "ipeds": "203483",
+    "schoolName": "Kent State University at Tuscarawas",
+    "athleticWebsite": "www.kentstatesports.com",
+    "collegeWebsite": "www.kent.edu/tusc",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://vikings.lawrence.edu",
+    "staffDirectory": "https://vikings.lawrence.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://vikings.lawrence.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.lawsonstate.edu",
+    "staffDirectory": "https://athletics.lawsonstate.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.lawsonstate.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.macalester.edu",
+    "staffDirectory": "https://athletics.macalester.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.macalester.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://www.marian.edu/ancilla-college",
+    "staffDirectory": "https://muknights.com/staff-directory",
+    "ipeds": "497833",
+    "schoolName": "Marian University-Ancilla",
+    "athleticWebsite": "https://muknights.com/index.aspx",
+    "collegeWebsite": "https://www.marian.edu/ancilla-college",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://pioneers.marietta.edu",
+    "staffDirectory": "https://pioneers.marietta.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://pioneers.marietta.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.middlebury.edu",
+    "staffDirectory": "https://athletics.middlebury.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.middlebury.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.misericordia.edu",
+    "staffDirectory": "https://athletics.misericordia.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.misericordia.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://wp.missouristate.edu/",
+    "staffDirectory": "https:///www.missouristatebears.com/staff-directory",
+    "ipeds": "179344",
+    "schoolName": "Missouri State University-West Plains",
+    "athleticWebsite": "www.missouristatebears.com",
+    "collegeWebsite": "wp.missouristate.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://athletics.northpark.edu",
+    "staffDirectory": "https://athletics.northpark.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.northpark.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.parkland.edu",
+    "staffDirectory": "https://athletics.parkland.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.parkland.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://beaver.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214698",
+    "schoolName": "Pennsylvania State University-Penn State Beaver",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://beaver.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://berks.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214704",
+    "schoolName": "Pennsylvania State University-Penn State Berks",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://berks.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://dubois.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214740",
+    "schoolName": "Pennsylvania State University-Penn State DuBois",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://dubois.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://behrend.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214591",
+    "schoolName": "Pennsylvania State University-Penn State Erie-Behrend College",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://behrend.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://fayette.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214759",
+    "schoolName": "Pennsylvania State University-Penn State Fayette- Eberly",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://fayette.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://greaterallegheny.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214786",
+    "schoolName": "Pennsylvania State University-Penn State Greater Allegheny",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://greaterallegheny.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://harrisburg.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214713",
+    "schoolName": "Pennsylvania State University-Penn State Harrisburg",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://harrisburg.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://hazleton.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214768",
+    "schoolName": "Pennsylvania State University-Penn State Hazleton",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://hazleton.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://lehighvalley.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214670",
+    "schoolName": "Pennsylvania State University-Penn State Lehigh Valley",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://lehighvalley.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://montalto.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214795",
+    "schoolName": "Pennsylvania State University-Penn State Mont Alto",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://montalto.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://newkensington.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214625",
+    "schoolName": "Pennsylvania State University-Penn State New Kensington",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://newkensington.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://schuylkill.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214810",
+    "schoolName": "Pennsylvania State University-Penn State Schuylkill",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://schuylkill.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://scranton.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214652",
+    "schoolName": "Pennsylvania State University-Penn State Scranton",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://scranton.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://shenango.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214634",
+    "schoolName": "Pennsylvania State University-Penn State Shenango",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://shenango.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://wilkesbarre.psu.edu/",
+    "staffDirectory": "https://psblions.com/information/directory/index",
+    "ipeds": "214643",
+    "schoolName": "Pennsylvania State University-Penn State Wilkes-Barre",
+    "athleticWebsite": "PSBLions.com",
+    "collegeWebsite": "https://wilkesbarre.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.york.psu.edu/",
+    "staffDirectory": "https:///www.yorkathletics.com/staff-directory",
+    "ipeds": "214829",
+    "schoolName": "Pennsylvania State University-Penn State York",
+    "athleticWebsite": "www.yorkathletics.com",
+    "collegeWebsite": "https://www.york.psu.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://athletics.rose-hulman.edu",
+    "staffDirectory": "https://athletics.rose-hulman.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.rose-hulman.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://newbrunswick.rutgers.edu/",
+    "staffDirectory": "https:///www.scarletknights.com/staff-directory",
+    "ipeds": "186380",
+    "schoolName": "Rutgers University-New Brunswick",
+    "athleticWebsite": "www.scarletknights.com",
+    "collegeWebsite": "https://newbrunswick.rutgers.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://athletics.stvincent.edu",
+    "staffDirectory": "https://athletics.stvincent.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.stvincent.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://www.scrippscollege.edu/",
+    "staffDirectory": "https://cmsathletics.org/staff-directory",
+    "ipeds": "123165",
+    "schoolName": "Scripps College",
+    "athleticWebsite": "https://cmsathletics.org/",
+    "collegeWebsite": "www.scrippscollege.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "http://spufalcons.com",
+    "staffDirectory": "https://spufalcons.com/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "http://spufalcons.com",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.setonhill.edu",
+    "staffDirectory": "https://athletics.setonhill.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.setonhill.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://fire.seu.edu",
+    "staffDirectory": "https://fire.seu.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://fire.seu.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "http://www.stkatesathletics.com/",
+    "staffDirectory": "https://stkatesathletics.com/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "http://www.stkatesathletics.com/",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://wildcats.sunypoly.edu",
+    "staffDirectory": "https://wildcats.sunypoly.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://wildcats.sunypoly.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://www.sbts.edu/",
+    "staffDirectory": "https://rusaints.com/information/directory/index",
+    "ipeds": "157748",
+    "schoolName": "The Southern Baptist Theological Seminary",
+    "athleticWebsite": "https://rusaints.com/landing/index",
+    "collegeWebsite": "www.sbts.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://athletics.thomas.edu",
+    "staffDirectory": "https://athletics.thomas.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.thomas.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://www.tm.edu/",
+    "staffDirectory": "https://tmcclizards.com/staff-directory",
+    "ipeds": "200527",
+    "schoolName": "Turtle Mountain Community College",
+    "athleticWebsite": "https://tmcclizards.com/",
+    "collegeWebsite": "www.tm.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://athletics.uchicago.edu",
+    "staffDirectory": "https://athletics.uchicago.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.uchicago.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://averypoint.uconn.edu/",
+    "staffDirectory": "https:///www.uconnhuskies.com/staff-directory",
+    "ipeds": "436827",
+    "schoolName": "University of Connecticut-Avery Point",
+    "athleticWebsite": "www.uconnhuskies.com",
+    "collegeWebsite": "https://averypoint.uconn.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://manoa.hawaii.edu/",
+    "staffDirectory": "https://hawaiiathletics.com/staff-directory",
+    "ipeds": "141574",
+    "schoolName": "University of Hawaii at Manoa",
+    "athleticWebsite": "hawaiiathletics.com",
+    "collegeWebsite": "https://manoa.hawaii.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://athletics.uindy.edu",
+    "staffDirectory": "https://athletics.uindy.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.uindy.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://owls.umpi.edu",
+    "staffDirectory": "https://owls.umpi.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://owls.umpi.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://d.umn.edu/",
+    "staffDirectory": "https:///www.gophersports.com/staff-directory",
+    "ipeds": "174233",
+    "schoolName": "University of Minnesota-Duluth",
+    "athleticWebsite": "www.gophersports.com",
+    "collegeWebsite": "https://d.umn.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://morris.umn.edu/",
+    "staffDirectory": "https:///www.gophersports.com/staff-directory",
+    "ipeds": "174251",
+    "schoolName": "University of Minnesota-Morris",
+    "athleticWebsite": "www.gophersports.com",
+    "collegeWebsite": "https://morris.umn.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://twin-cities.umn.edu/",
+    "staffDirectory": "https:///www.gophersports.com/staff-directory",
+    "ipeds": "174066",
+    "schoolName": "University of Minnesota-Twin Cities",
+    "athleticWebsite": "www.gophersports.com",
+    "collegeWebsite": "https://twin-cities.umn.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.uprrp.edu/",
+    "staffDirectory": "https://coastguardathletics.com/staff-directory",
+    "ipeds": "243221",
+    "schoolName": "University of Puerto Rico-Rio Piedras",
+    "athleticWebsite": "https://estudiantes.uprrp.edu/desarollo-estudiantil/departamento-atletico/",
+    "collegeWebsite": "https://www.uprrp.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.sc.edu/about/system_and_campuses/lancaster/index.php",
+    "staffDirectory": "https://gamecocksonline.com/staff-directory",
+    "ipeds": "218672",
+    "schoolName": "University of South Carolina-Lancaster",
+    "athleticWebsite": "gamecocksonline.com",
+    "collegeWebsite": "www.sc.edu/about/system_and_campuses/lancaster/index.php",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.sc.edu/about/system_and_campuses/sumter/index.php",
+    "staffDirectory": "https://gamecocksonline.com/staff-directory",
+    "ipeds": "218690",
+    "schoolName": "University of South Carolina-Sumter",
+    "athleticWebsite": "gamecocksonline.com",
+    "collegeWebsite": "www.sc.edu/about/system_and_campuses/sumter/index.php",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.sc.edu/about/system_and_campuses/union/index.php",
+    "staffDirectory": "https://gamecocksonline.com/staff-directory",
+    "ipeds": "218706",
+    "schoolName": "University of South Carolina-Union",
+    "athleticWebsite": "gamecocksonline.com",
+    "collegeWebsite": "www.sc.edu/about/system_and_campuses/union/index.php",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://athletics.walsh.edu",
+    "staffDirectory": "https://athletics.walsh.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.walsh.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.wesleyan.edu",
+    "staffDirectory": "https://athletics.wesleyan.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.wesleyan.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://wcbluejays.wcmo.edu",
+    "staffDirectory": "https://wcbluejays.wcmo.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://wcbluejays.wcmo.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.westminster.edu",
+    "staffDirectory": "https://athletics.westminster.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.westminster.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://athletics.westmont.edu",
+    "staffDirectory": "https://athletics.westmont.edu/staff-directory",
+    "ipeds": "",
+    "schoolName": "",
+    "athleticWebsite": "",
+    "collegeWebsite": "https://athletics.westmont.edu",
+    "sportsCode": ""
+  },
+  {
+    "baseUrl": "https://www.wright.edu/",
+    "staffDirectory": "https:///www.wsuraiders.com/staff-directory",
+    "ipeds": "206604",
+    "schoolName": "Wright State University-Main Campus",
+    "athleticWebsite": "www.wsuraiders.com",
+    "collegeWebsite": "https://www.wright.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://www.york.edu/",
+    "staffDirectory": "https:///www.yorkathletics.com/staff-directory",
+    "ipeds": "181853",
+    "schoolName": "York University",
+    "athleticWebsite": "www.yorkathletics.com",
+    "collegeWebsite": "www.york.edu/",
+    "sportsCode": "1"
+  },
+  {
+    "baseUrl": "https://yc.yccd.edu/",
+    "staffDirectory": "https://www.yorkcountyhawks.com/information/directory/index",
+    "ipeds": "126119",
+    "schoolName": "Yuba College",
+    "athleticWebsite": "https://www.yorkcountyhawks.com",
+    "collegeWebsite": "https://yc.yccd.edu/",
+    "sportsCode": "1"
+  }
+]

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .actions-section {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .export-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .export-btn i {
+            font-size: 1.5rem;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        .status-indicator.running {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeaa7;
+        }
+
+        .status-indicator.idle {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .exports-section {
+            padding: 30px;
+            background: #f8f9fa;
+            min-height: 300px;
+        }
+
+        .exports-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 1.8rem;
+        }
+
+        .exports-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .export-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        .export-item:hover {
+            transform: translateX(5px);
+        }
+
+        .export-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .export-info p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+
+        .export-actions button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .export-actions button:hover {
+            background: #5a6fd8;
+        }
+
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(400px);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+
+        .alert.show {
+            transform: translateX(0);
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+
+        .alert.warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 5px solid #ffc107;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .export-btn {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+            
+            .export-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-file-export"></i> Export Dashboard</h1>
+            <p>Generate and manage Excel exports for 2700 university sites</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-university"></i>
+                <h3>Total Sites</h3>
+                <div class="value" id="totalSites">2700</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>Last Export Records</h3>
+                <div class="value" id="lastRecordCount">-</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-download"></i>
+                <h3>Exports Generated</h3>
+                <div class="value" id="exportCount">-</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <h3>Last Run</h3>
+                <div class="value" id="lastRunTime">-</div>
+            </div>
+        </div>
+
+        <div class="actions-section">
+            <button class="export-btn" id="triggerExport">
+                <i class="fas fa-play"></i>
+                <span>Run Full Export Now</span>
+            </button>
+            
+            <div id="statusIndicator" class="status-indicator idle">
+                <i class="fas fa-circle"></i>
+                <span>Idle</span>
+            </div>
+        </div>
+
+        <div class="exports-section">
+            <h2><i class="fas fa-history"></i> Recent Exports</h2>
+            <div class="exports-list" id="exportsList">
+                <div class="loading-text">Loading exports...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <script>
+        // DOM Elements
+        const triggerExportBtn = document.getElementById('triggerExport');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const exportsList = document.getElementById('exportsList');
+        const alertBox = document.getElementById('alert');
+        
+        // Stats elements
+        const lastRecordCount = document.getElementById('lastRecordCount');
+        const exportCount = document.getElementById('exportCount');
+        const lastRunTime = document.getElementById('lastRunTime');
+
+        let isExportRunning = false;
+        let exports = [];
+
+        // Show alert message
+        function showAlert(message, type = 'success') {
+            alertBox.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'exclamation-triangle'}"></i>
+                <span>${message}</span>
+            `;
+            alertBox.className = `alert ${type} show`;
+            
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Update status indicator
+        function updateStatus(isRunning) {
+            isExportRunning = isRunning;
+            
+            if (isRunning) {
+                statusIndicator.innerHTML = `
+                    <div class="loader"></div>
+                    <span>Export in progress...</span>
+                `;
+                statusIndicator.className = 'status-indicator running';
+                triggerExportBtn.disabled = true;
+                triggerExportBtn.innerHTML = `
+                    <i class="fas fa-sync-alt fa-spin"></i>
+                    <span>Exporting...</span>
+                `;
+            } else {
+                statusIndicator.innerHTML = `
+                    <i class="fas fa-circle" style="color: #28a745"></i>
+                    <span>Ready for export</span>
+                `;
+                statusIndicator.className = 'status-indicator idle';
+                triggerExportBtn.disabled = false;
+                triggerExportBtn.innerHTML = `
+                    <i class="fas fa-play"></i>
+                    <span>Run Full Export Now</span>
+                `;
+            }
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (!bytes) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Load exports list
+        async function loadExports() {
+            try {
+                const response = await fetch('/api/exports/status');
+                const data = await response.json();
+                
+                if (data.success) {
+                    exports = data.data.exports || [];
+                    renderExports();
+                    updateStats(data.data.exports);
+                }
+            } catch (error) {
+                console.error('Error loading exports:', error);
+                exportsList.innerHTML = '<div class="error-text">Failed to load exports</div>';
+            }
+        }
+
+        // Update statistics
+        function updateStats(exportsList) {
+            if (exportsList.length > 0) {
+                const latest = exportsList[0];
+                lastRecordCount.textContent = latest.recordCount.toLocaleString();
+                exportCount.textContent = exportsList.length;
+                lastRunTime.textContent = formatDate(latest.generatedAt).split(',')[0];
+            }
+        }
+
+        // Render exports list
+        function renderExports() {
+            if (exports.length === 0) {
+                exportsList.innerHTML = '<div class="no-exports">No exports found</div>';
+                return;
+            }
+
+            exportsList.innerHTML = exports.map(exp => `
+                <div class="export-item">
+                    <div class="export-info">
+                        <h4>${exp.filename}</h4>
+                        <p><i class="fas fa-university"></i> ${exp.universityName}</p>
+                        <p><i class="fas fa-users"></i> ${exp.recordCount.toLocaleString()} records</p>
+                        <p><i class="fas fa-calendar"></i> ${formatDate(exp.generatedAt)}</p>
+                    </div>
+                    <div class="export-actions">
+                        <button onclick="downloadExport('${exp.id}')">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Trigger export
+        async function triggerExport() {
+            if (isExportRunning) {
+                showAlert('Export is already in progress', 'warning');
+                return;
+            }
+
+            updateStatus(true);
+            
+            try {
+                const response = await fetch('/api/exports/trigger');
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Export started successfully! This may take several minutes.', 'success');
+                    
+                    // Poll for completion every 5 seconds
+                    const pollInterval = setInterval(async () => {
+                        try {
+                            const statusResponse = await fetch('/api/exports/status');
+                            const statusData = await statusResponse.json();
+                            
+                            if (statusData.success && !statusData.data.scheduler.isRunning) {
+                                clearInterval(pollInterval);
+                                updateStatus(false);
+                                loadExports();
+                                showAlert('Export completed successfully!', 'success');
+                            }
+                        } catch (error) {
+                            console.error('Error polling status:', error);
+                        }
+                    }, 5000);
+                    
+                } else {
+                    throw new Error(data.message || 'Export failed');
+                }
+            } catch (error) {
+                console.error('Error triggering export:', error);
+                showAlert(`Export failed: ${error.message}`, 'error');
+                updateStatus(false);
+            }
+        }
+
+        // Download export
+        async function downloadExport(fileId) {
+            try {
+                // Direct download link
+                window.open(`/api/exports/download/${fileId}`, '_blank');
+                
+                // Update download count in UI
+                setTimeout(loadExports, 1000);
+            } catch (error) {
+                console.error('Error downloading export:', error);
+                showAlert('Failed to download export', 'error');
+            }
+        }
+
+        // Initialize
+        async function init() {
+            // Load initial data
+            await loadExports();
+            
+            // Set up event listeners
+            triggerExportBtn.addEventListener('click', triggerExport);
+            
+            // Auto-refresh exports every 30 seconds
+            setInterval(loadExports, 30000);
+        }
+
+        // Start the application
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
