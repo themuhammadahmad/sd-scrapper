@@ -78,7 +78,7 @@ const requireAuthAPI = (req, res, next) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/exports', exportRoutes);
+app.use('/api/exports', requireAuth,exportRoutes);
 app.use('/api', searchRoutes);
 app.use('/css', express.static(join(__dirname, 'public/css')));
 app.use('/js', express.static(join(__dirname, 'public/js')));
@@ -685,7 +685,7 @@ app.get('/test-change-detection', requireAuthAPI, async (req, res) => {
 });
 
 // Serve download page
-app.get('/download', (req, res) => {
+app.get('/download', requireAuth, (req, res) => {
     res.sendFile(join(__dirname, 'public', 'download.html'));
 });
 
