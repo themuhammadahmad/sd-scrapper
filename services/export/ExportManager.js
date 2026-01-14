@@ -5,99 +5,117 @@ import fs from 'fs-extra';
 import path from 'path';
 
 export class ExportManager {
-  constructor() {
+ constructor() {
     this.excelService = new ExcelExportService();
+    this.isGenerating = false; // Track if generation is in progress
+    this.currentGenerationPromise = null; // Store the current generation promise
   }
 
-// services/export/ExportManager.js
-
-async generateFullExport() {
-  try {
-    console.log('🚀 Starting full export generation...');
-    
-    const fileInfo = await this.excelService.generateFullExport();
-    
-    // Check if file with same name already exists in database
-    const existingFile = await ExportFile.findOne({ filename: fileInfo.filename });
-    if (existingFile) {
-      console.log(`⚠️ File ${fileInfo.filename} already exists in database, skipping save`);
-      return {
-        success: true,
-        fileId: existingFile._id,
-        filename: fileInfo.filename,
-        recordCount: fileInfo.recordCount,
-        fileSize: this.formatFileSize(fileInfo.fileSize),
-        downloadUrl: `/api/exports/download/${existingFile._id}`,
-        alreadyExists: true
-      };
+  async generateFullExport() {
+    // Check if already generating
+    if (this.isGenerating) {
+      console.log('⚠️ Export generation already in progress, returning existing promise');
+      return this.currentGenerationPromise;
     }
-    
-    // Create database record
-    const exportFile = new ExportFile({
-      filename: fileInfo.filename,
-      filePath: fileInfo.filePath,
-      fileType: 'full',
-      universityName: 'All Universities',
-      recordCount: fileInfo.recordCount,
-      fileSize: fileInfo.fileSize,
-      generatedAt: fileInfo.generatedAt,
-      metadata: {
-        columns: [
-          'IPEDS/NCES ID', 'School', 'Unique ID', 'Sport code',
-          'First name', 'Last name', 'Position', 'Email address', 
-          'Phone number', 'Last Updated:'
-        ]
-      }
-    });
 
-    await exportFile.save();
-    
-    // Deactivate old full exports (keep only latest active)
-    await ExportFile.updateMany(
-      { 
-        fileType: 'full',
-        _id: { $ne: exportFile._id },
-        isActive: true 
-      },
-      { isActive: false }
-    );
-
-    console.log(`✅ Full export saved to database: ${fileInfo.filename}`);
-    
-    return {
-      success: true,
-      fileId: exportFile._id,
-      filename: fileInfo.filename,
-      recordCount: fileInfo.recordCount,
-      fileSize: this.formatFileSize(fileInfo.fileSize),
-      downloadUrl: `/api/exports/download/${exportFile._id}`
-    };
-
-  } catch (error) {
-    // Handle duplicate key error specifically
-    if (error.code === 11000 || error.message.includes('duplicate key')) {
-      console.log(`⚠️ File already exists, skipping database save`);
+    try {
+      this.isGenerating = true;
+      console.log('🔒 Starting full export generation (locked)...');
       
-      // Try to get the existing file
-      const existingFile = await ExportFile.findOne({ filename: error.keyValue?.filename });
+      // Store the promise so concurrent calls can wait for it
+      this.currentGenerationPromise = this._generateFullExportInternal();
+      const result = await this.currentGenerationPromise;
+      
+      return result;
+      
+    } finally {
+      // Always unlock when done
+      this.isGenerating = false;
+      this.currentGenerationPromise = null;
+      console.log('🔓 Export generation completed (unlocked)');
+    }
+  }
+
+  /**
+   * Internal method that does the actual generation
+   */
+  async _generateFullExportInternal() {
+    try {
+      console.log('🚀 Starting full export generation...');
+      
+      const fileInfo = await this.excelService.generateFullExport();
+      
+      // Check if file with same name already exists in database
+      const existingFile = await ExportFile.findOne({ filename: fileInfo.filename });
       if (existingFile) {
+        console.log(`⚠️ File ${fileInfo.filename} already exists in database, skipping save`);
         return {
           success: true,
           fileId: existingFile._id,
-          filename: existingFile.filename,
-          recordCount: existingFile.recordCount,
-          fileSize: this.formatFileSize(existingFile.fileSize),
+          filename: fileInfo.filename,
+          recordCount: fileInfo.recordCount,
+          fileSize: this.formatFileSize(fileInfo.fileSize),
           downloadUrl: `/api/exports/download/${existingFile._id}`,
           alreadyExists: true
         };
       }
-    }
-    
-    console.error('❌ Failed to generate full export:', error);
-    throw error;
-  }
-}
+      
+      // Create database record
+      const exportFile = new ExportFile({
+        filename: fileInfo.filename,
+        filePath: fileInfo.filePath,
+        fileType: 'full',
+        universityName: 'All Universities',
+        recordCount: fileInfo.recordCount,
+        fileSize: fileInfo.fileSize,
+        generatedAt: fileInfo.generatedAt,
+        metadata: {
+          columns: [
+            'IPEDS/NCES ID', 'School', 'Unique ID', 'Sport code',
+            'First name', 'Last name', 'Position', 'Email address', 
+            'Phone number', 'Last Updated:'
+          ]
+        }
+      });
 
+      await exportFile.save();
+      
+      // Deactivate old full exports (keep only latest active)
+      await ExportFile.updateMany(
+        { 
+          fileType: 'full',
+          _id: { $ne: exportFile._id },
+          isActive: true 
+        },
+        { isActive: false }
+      );
+
+      console.log(`✅ Full export saved to database: ${fileInfo.filename}`);
+      
+      return {
+        success: true,
+        fileId: exportFile._id,
+        filename: fileInfo.filename,
+        recordCount: fileInfo.recordCount,
+        fileSize: this.formatFileSize(fileInfo.fileSize),
+        downloadUrl: `/api/exports/download/${exportFile._id}`
+      };
+
+    } catch (error) {
+      console.error('❌ Failed to generate full export:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Check if generation is in progress
+   */
+  getGenerationStatus() {
+    return {
+      isGenerating: this.isGenerating,
+      timestamp: new Date().toISOString()
+    };
+  }
   /**
    * Generate export for specific university
    */
@@ -198,6 +216,9 @@ async generateFullExport() {
       throw error;
     }
   }
+
+
+  
 
   /**
    * Get download stream for a file

@@ -28,9 +28,9 @@ async function migrateDirectories() {
     let updated = 0;
     let skipped = 0;
     let errors = 0;
-    directories = [directories[0]];
+
     // Process each directory
-    for (const dir of directories) {
+    for (const dir of directories.slice(0, 20)) {
       try {
         if (!dir.baseUrl || !dir.staffDirectory) {
           console.log(`⚠️ Skipping entry with missing required fields:`, dir);
