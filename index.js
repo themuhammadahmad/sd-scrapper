@@ -697,7 +697,7 @@ app.use((req, res) => {
 });
 
 
-
+    let mongoStr = "mongodb://127.0.0.1:27017/universities";
 // Always use the environment variable (no development flag needed)
 const MONGODB_URI =   process.env.MONGODB_URI;
 

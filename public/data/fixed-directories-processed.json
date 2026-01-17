@@ -13465,7 +13465,7 @@
   },
   {
     "baseUrl": "https://bloomington.iu.edu/",
-    "staffDirectory": "https://bloomington.iu.edu/iuindyjags.com/staff-directory",
+    "staffDirectory": "https://iuindyjags.com/staff-directory",
     "ipeds": "151351",
     "schoolName": "Indiana University-Bloomington",
     "athleticWebsite": "iuindyjags.com/",
@@ -13474,7 +13474,7 @@
   },
   {
     "baseUrl": "https://east.iu.edu/",
-    "staffDirectory": "https://east.iu.edu/iuindyjags.com/staff-directory",
+    "staffDirectory": "https://iuindyjags.com/staff-directory",
     "ipeds": "151388",
     "schoolName": "Indiana University-East",
     "athleticWebsite": "iuindyjags.com/",
@@ -13483,16 +13483,16 @@
   },
   {
     "baseUrl": "https://indianapolis.iu.edu/",
-    "staffDirectory": "https://indianapolis.iu.edu/iuindyjags.com/staff-directory",
+    "staffDirectory": "https://iuindyjags.com/staff-directory",
     "ipeds": "151111",
-    "schoolName": "Indiana University-Indianapolis",
+    "schoolName": " ",
     "athleticWebsite": "iuindyjags.com/",
     "collegeWebsite": "https://indianapolis.iu.edu/",
     "sportsCode": "1"
   },
   {
     "baseUrl": "https://kokomo.iu.edu/",
-    "staffDirectory": "https://kokomo.iu.edu/iuindyjags.com/staff-directory",
+    "staffDirectory": "https://iuindyjags.com/staff-directory",
     "ipeds": "151333",
     "schoolName": "Indiana University-Kokomo",
     "athleticWebsite": "iuindyjags.com/",
@@ -13501,7 +13501,7 @@
   },
   {
     "baseUrl": "https://northwest.iu.edu/",
-    "staffDirectory": "https://northwest.iu.edu/iuindyjags.com/staff-directory",
+    "staffDirectory": "https://iuindyjags.com/staff-directory",
     "ipeds": "151360",
     "schoolName": "Indiana University-Northwest",
     "athleticWebsite": "iuindyjags.com/",
@@ -13510,7 +13510,7 @@
   },
   {
     "baseUrl": "https://southbend.iu.edu/",
-    "staffDirectory": "https://southbend.iu.edu/iuindyjags.com/staff-directory",
+    "staffDirectory": "https://iuindyjags.com/staff-directory",
     "ipeds": "151342",
     "schoolName": "Indiana University-South Bend",
     "athleticWebsite": "iuindyjags.com/",
@@ -13519,7 +13519,7 @@
   },
   {
     "baseUrl": "https://southeast.iu.edu/",
-    "staffDirectory": "https://southeast.iu.edu/iuindyjags.com/staff-directory",
+    "staffDirectory": "https://iuindyjags.com/staff-directory",
     "ipeds": "151379",
     "schoolName": "Indiana University-Southeast",
     "athleticWebsite": "iuindyjags.com/",

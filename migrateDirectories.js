@@ -1,5 +1,5 @@
 // scripts/migrateDirectories.js
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 import StaffDirectory from './models/StaffDirectory.js';
 import fs from 'fs';
 import path from 'path';
@@ -13,9 +13,9 @@ async function migrateDirectories() {
   try {
     // Connect to MongoDB (use your existing connection string)
     let mongoStr = "mongodb://127.0.0.1:27017/universities";
-    let online = process.env.MONGODB_URI;
+    let online = process.env.MONGODB_URI || "mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht";
     await mongoose.connect(mongoStr);
-    console.log('✅ Connected to MongoDB', mongoStr);
+    console.log('✅ Connected to MongoDB', online);
 
     // Read your merged JSON file
     const filePath = path.join(__dirname, 'public', 'data', 'fixed-directories-processed.json');
@@ -30,7 +30,7 @@ async function migrateDirectories() {
     let errors = 0;
 
     // Process each directory
-    for (const dir of directories.slice(0, 20)) {
+    for (const dir of directories.slice(0, 5)) {
       try {
         if (!dir.baseUrl || !dir.staffDirectory) {
           console.log(`⚠️ Skipping entry with missing required fields:`, dir);
