@@ -70,10 +70,7 @@ app.use('/css', express.static(join(__dirname, 'public/css')));
 app.use('/js', express.static(join(__dirname, 'public/js')));
 
 
-// Serve the new changes dashboard page
-app.get("/changes-dashboard", requireAuth, (req, res) => {
-    res.sendFile(join(__dirname, "public", "changes-dashboard.html"));
-});
+
 
 // In your Express app
 app.get('/export-dashboard', (req, res) => {
@@ -120,7 +117,10 @@ app.get('/signup', (req, res) => {
     }
     res.sendFile(join(__dirname, "public", 'signup.html'));
 });
-
+// Serve the new changes dashboard page
+app.get("/changes", requireAuth, (req, res) => {
+    res.sendFile(join(__dirname, "public", "changes.html"));
+});
 
 // Protected route example
 app.get('/api/protected', requireAuthAPI, (req, res) => {
