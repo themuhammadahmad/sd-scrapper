@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changes Dashboard - University Staff Directory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/change.css">
+
+</head>
+<body>
+    <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="/" class="navbar-brand">
+        <i>🔍</i> StaffScraper Pro
+      </a>
+      
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      
+      <ul class="navbar-menu" id="navbarMenu">
+        <li class="navbar-item">
+          <a href="/" class="navbar-link active">
+            <i>🏠</i> Home
+          </a>
+        </li>
+        <li class="navbar-item">
+    <a href="/changes-dashboard" class="navbar-link">
+        <i class="fas fa-history"></i> Changes Dashboard
+    </a>
+</li>
+        <!-- <li class="navbar-item">
+          <a href="search" class="navbar-link">
+            <i>🔎</i> Staff Search
+          </a>
+        </li> -->
+        <li class="navbar-item">
+          <a href="download" class="navbar-link">
+            <i>🔎</i> Download
+          </a>
+        </li>
+        
+          
+    <button id="loginBtn" class="btn btn-primary" style="display: none;">Login</button>
+    <button id="logoutBtn" class="btn btn-secondary" style="display: none;">Logout</button>
+      
+      </ul>
+    </div>
+  </nav>
+
+    <!-- Main Content -->   
+    <div class="changes-dashboard-container">
+        <div class="dashboard-header">
+            <h1 class="main-title">
+                <i class="fas fa-history"></i> Changes Dashboard
+            </h1>
+            <p>View all directories that have recorded changes between snapshots</p>
+            
+            <div class="dashboard-stats" id="dashboardStats">
+                <!-- Stats will be loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" 
+                   id="siteSearch" 
+                   class="search-input" 
+                   placeholder="Search changed directories by URL or directory path..."
+                   autocomplete="off">
+        </div>
+        <!-- Changes Export Section -->
+<div class="export-container" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 20px; border-radius: 12px; margin: 20px 0; border: 2px solid #4CAF50;">
+    <h3 style="margin-top: 0; color: #2e7d32;">
+        <i class="fas fa-file-excel"></i> Changes Export
+    </h3>
+    
+    <div id="changesExportStats" class="stats-container" style="display: none; background: white; padding: 15px; border-radius: 8px; margin: 15px 0;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div>
+                <div style="font-size: 0.9em; color: #666;">File Name</div>
+                <div style="font-weight: bold;" id="changesFileName">-</div>
+            </div>
+            <div>
+                <div style="font-size: 0.9em; color: #666;">Records</div>
+                <div style="font-weight: bold; color: #4CAF50;" id="changesRecordCount">0</div>
+            </div>
+            <div>
+                <div style="font-size: 0.9em; color: #666;">File Size</div>
+                <div style="font-weight: bold;" id="changesFileSize">-</div>
+            </div>
+            <div>
+                <div style="font-size: 0.9em; color: #666;">Generated</div>
+                <div style="font-weight: bold;" id="changesGeneratedAt">-</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="changesExportMessage" class="message" style="display: none; padding: 10px; border-radius: 6px; margin: 10px 0;"></div>
+    
+    <div class="export-actions" style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <button id="downloadChangesBtn" class="btn btn-success" style="padding: 12px 24px; background: linear-gradient(45deg, #4CAF50, #45a049);" disabled>
+            <i class="fas fa-download"></i> Download Changes Export
+            <span id="downloadChangesSpinner" class="loading-spinner" style="display: none; margin-left: 8px;"></span>
+        </button>
+        
+        <button id="generateChangesBtn" class="btn btn-primary" style="padding: 12px 24px; background: linear-gradient(45deg, #2196F3, #1976D2);">
+            <i class="fas fa-sync-alt"></i> Generate New Changes Export
+            <span id="generateChangesSpinner" class="loading-spinner" style="display: none; margin-left: 8px;"></span>
+        </button>
+    </div>
+    
+    <div style="margin-top: 15px; color: #666; font-size: 14px;">
+        <span id="changesStatusText">Checking for existing changes export...</span>
+    </div>
+</div>
+<script>
+  // Changes Export Functionality
+function setupChangesExport() {
+  const downloadBtn = document.getElementById('downloadChangesBtn');
+  const generateBtn = document.getElementById('generateChangesBtn');
+  const statusText = document.getElementById('changesStatusText');
+  const messageDiv = document.getElementById('changesExportMessage');
+  const statsDiv = document.getElementById('changesExportStats');
+  
+  const downloadSpinner = document.getElementById('downloadChangesSpinner');
+  const generateSpinner = document.getElementById('generateChangesSpinner');
+  
+  let isChecking = false;
+  let checkInterval = null;
+
+  // Check for existing changes export on page load
+  checkExistingChangesExport();
+  
+  // Start periodic checking
+  startPeriodicCheck();
+
+  // Event Listeners
+  if (downloadBtn) downloadBtn.addEventListener('click', downloadChangesExport);
+  if (generateBtn) generateBtn.addEventListener('click', generateChangesExport);
+
+  function startPeriodicCheck() {
+    if (checkInterval) clearInterval(checkInterval);
+    checkInterval = setInterval(checkExistingChangesExport, 5000);
+  }
+
+  async function checkExistingChangesExport() {
+    if (isChecking) return;
+    
+    try {
+      isChecking = true;
+      
+      const response = await fetch('/api/exports/check-changes');
+      if (!response.ok) throw new Error('Failed to check changes export status');
+      
+      const data = await response.json();
+      
+      updateChangesUI(data);
+      
+    } catch (error) {
+      console.error('Error checking changes export:', error);
+      statusText.textContent = '⚠️ Failed to check changes export status';
+      statsDiv.style.display = 'none';
+      if (downloadBtn) downloadBtn.disabled = true;
+      if (generateBtn) generateBtn.disabled = true;
+    } finally {
+      isChecking = false;
+    }
+  }
+
+  function updateChangesUI(data) {
+    const { exists, isGenerating, fileInfo } = data;
+    
+    // Handle generation in progress
+    if (isGenerating) {
+      statsDiv.style.display = 'none';
+      if (downloadBtn) {
+        downloadBtn.disabled = true;
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> Export in Progress...';
+      }
+      if (generateBtn) {
+        generateBtn.disabled = true;
+        generateBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Generation in Progress';
+        generateSpinner.style.display = 'inline-block';
+      }
+      
+      statusText.textContent = '🔄 Changes export generation is in progress. Please wait...';
+      return;
+    }
+    
+    // Hide spinner if not generating
+    if (generateSpinner) generateSpinner.style.display = 'none';
+    
+    if (exists && fileInfo) {
+      // Show existing export info
+      statsDiv.style.display = 'block';
+      document.getElementById('changesFileName').textContent = fileInfo.filename;
+      document.getElementById('changesRecordCount').textContent = fileInfo.recordCount.toLocaleString();
+      document.getElementById('changesFileSize').textContent = fileInfo.fileSize;
+      document.getElementById('changesGeneratedAt').textContent = new Date(fileInfo.generatedAt).toLocaleString();
+      
+      if (downloadBtn) {
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = `<i class="fas fa-download"></i> Download Changes Export (${fileInfo.recordCount.toLocaleString()} records)`;
+      }
+      
+      if (generateBtn) {
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Generate New Changes Export';
+      }
+      
+      statusText.textContent = `✅ Changes export is ready to download. Last generated: ${new Date(fileInfo.generatedAt).toLocaleString()}`;
+      
+    } else {
+      // No changes export exists
+      statsDiv.style.display = 'none';
+      if (downloadBtn) {
+        downloadBtn.disabled = true;
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> No Changes Export Available';
+      }
+      
+      if (generateBtn) {
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Generate New Changes Export';
+      }
+      
+      statusText.textContent = '⚠️ No changes export file found. Click "Generate New Changes Export" to create one.';
+    }
+  }
+
+  async function downloadChangesExport() {
+    try {
+      // Show loading state
+      downloadBtn.disabled = true;
+      downloadSpinner.style.display = 'inline-block';
+      downloadBtn.innerHTML = '<i class="fas fa-download"></i> Preparing download...';
+      hideChangesMessage();
+      
+      // Trigger download
+      const downloadWindow = window.open('/api/exports/download-changes', '_blank');
+      
+      // If window.open was blocked, use fetch
+      if (!downloadWindow) {
+        const response = await fetch('/api/exports/download-changes');
+        if (!response.ok) throw new Error('Failed to download file');
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'staff-changes-export.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }
+      
+      showChangesSuccess('Download started! The changes export should begin downloading shortly.');
+      
+    } catch (error) {
+      showChangesError('Download failed: ' + error.message);
+    } finally {
+      // Reset button after 2 seconds
+      setTimeout(() => {
+        downloadSpinner.style.display = 'none';
+        checkExistingChangesExport(); // Refresh stats
+      }, 2000);
+    }
+  }
+
+  async function generateChangesExport() {
+    try {
+      // Show loading state
+      generateBtn.disabled = true;
+      generateSpinner.style.display = 'inline-block';
+      generateBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Generating...';
+      statusText.textContent = 'Starting changes export generation. This may take a few minutes...';
+      hideChangesMessage();
+      
+      const response = await fetch('/api/exports/generate-changes', {
+        method: 'POST'
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        
+        if (response.status === 409) {
+          // 409 Conflict - Already generating
+          showChangesError(errorData.error);
+          statusText.textContent = 'Changes export generation is already in progress.';
+        } else {
+          throw new Error(errorData.error || 'Failed to generate changes export');
+        }
+        return;
+      }
+      
+      const data = await response.json();
+      
+      showChangesSuccess(`✅ ${data.message}`);
+      statusText.textContent = '✅ Changes export generation started! The page will update when complete.';
+      
+      // Start checking more frequently
+      startPeriodicCheck();
+      
+    } catch (error) {
+      showChangesError('Generation failed: ' + error.message);
+      statusText.textContent = '❌ Failed to start changes export generation';
+    } finally {
+      // Always re-enable button after 2 seconds (unless generation started)
+      setTimeout(() => {
+        checkExistingChangesExport(); // Update UI with current status
+      }, 2000);
+    }
+  }
+
+  // Utility functions
+  function showChangesError(message) {
+    messageDiv.textContent = message;
+    messageDiv.style.display = 'block';
+    messageDiv.style.background = '#ffebee';
+    messageDiv.style.color = '#d32f2f';
+    messageDiv.style.borderLeft = '4px solid #f44336';
+  }
+
+  function showChangesSuccess(message) {
+    messageDiv.textContent = message;
+    messageDiv.style.display = 'block';
+    messageDiv.style.background = '#e8f5e8';
+    messageDiv.style.color = '#2e7d32';
+    messageDiv.style.borderLeft = '4px solid #4CAF50';
+  }
+
+  function hideChangesMessage() {
+    messageDiv.style.display = 'none';
+  }
+}
+
+// Update the DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', function() {
+
+  setupChangesExport(); // Add this line
+  fetchChangedSites();
+});
+</script>
+
+    
+              <!-- Loading Indicator -->
+        <div class="loading-container" id="loadingIndicator">
+            <div class="" style="font-size: 2em; margin-bottom: 10px;">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <!-- <p>Loading changed directories...</p> -->
+        </div>
+   
+
+        <!-- Changed Sites List -->
+        <div id="changedSitesList">
+            <!-- Sites will be loaded dynamically -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be loaded dynamically -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <i class="fas fa-inbox" style="font-size: 3em; margin-bottom: 15px; color: #ccc;"></i>
+            <h3>No changes recorded yet</h3>
+            <p>Start scraping directories to track changes over time.</p>
+        </div>
+    </div>
+   
+<script src="js/changes.js"></script>
+</body>
+</html>

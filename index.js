@@ -35,6 +35,7 @@ schedulerService.setExportScheduler(exportScheduler);
 // Routes
 import searchRoutes from './routes/search.js';
 import authRoutes from './routes/auth.js';
+import changeRoutes from './routes/changeRoutes.js';
 import exportRoutes from './routes/exportRoutes.js';
 // ... your imports remain the same ...
 
@@ -58,30 +59,21 @@ app.use(session({
     }
 }));
 
-// Auth middleware
-const requireAuth = (req, res, next) => {
-    console.log("requireAuth", req.session.user)
-    if (!req.session.user) {
-      console.log("not logged in")
-        return res.redirect('/login');
-    }
-    next();
-};
-
-// Auth middleware for API routes
-const requireAuthAPI = (req, res, next) => {
-    if (!req.session.user) {
-        return res.status(401).json({ error: 'Not authenticated' });
-    }
-    next();
-};
+import {requireAuth, requireAuthAPI} from "./middleware/auth.js"
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/', changeRoutes);
 app.use('/api/exports', requireAuth,exportRoutes);
 app.use('/api', searchRoutes);
 app.use('/css', express.static(join(__dirname, 'public/css')));
 app.use('/js', express.static(join(__dirname, 'public/js')));
+
+
+// Serve the new changes dashboard page
+app.get("/changes-dashboard", requireAuth, (req, res) => {
+    res.sendFile(join(__dirname, "public", "changes-dashboard.html"));
+});
 
 // In your Express app
 app.get('/export-dashboard', (req, res) => {

@@ -7,6 +7,8 @@ import StaffProfile from '../models/StaffProfile.js';
 import ExportFile from '../models/ExportFile.js';
 import fs from 'fs';
 
+
+
 const router = express.Router();
 const exportManager = new ExportManager();
 const exportScheduler = new ExportScheduler();
@@ -197,6 +199,8 @@ router.get('/check', async (req, res) => {
   }
 });
 
+
+
 /**
  * GET /api/exports/download/university/:siteId
  * Generate and download university export
@@ -284,6 +288,126 @@ router.post('/generate/full', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+
+// Check for existing changes export
+router.get("/check-changes",  async (req, res) => {
+  try {
+    const exportManager = exportScheduler.exportManager;
+    
+    // Check if generation is in progress
+    const generationStatus = exportManager.getGenerationStatus();
+    
+    // Get latest changes export
+    const latestExport = await exportManager.getLatestChangesExport();
+    
+    res.json({
+      exists: !!latestExport,
+      isGenerating: generationStatus.isGenerating,
+      fileInfo: latestExport ? {
+        id: latestExport._id,
+        filename: latestExport.filename,
+        fileType: latestExport.fileType,
+        universityName: latestExport.universityName,
+        recordCount: latestExport.recordCount,
+        fileSize: exportManager.formatFileSize(latestExport.fileSize),
+        generatedAt: latestExport.generatedAt,
+        downloadCount: latestExport.downloadCount,
+        metadata: latestExport.metadata
+      } : null
+    });
+    
+  } catch (error) {
+    console.error('Error checking changes export:', error);
+    res.status(500).json({
+      error: 'Failed to check changes export status'
+    });
+  }
+});
+
+// Generate new changes export
+router.post("/generate-changes",  async (req, res) => {
+  try {
+    const exportManager = exportScheduler.exportManager;
+    
+    // Check if generation is already in progress
+    const status = exportManager.getGenerationStatus();
+    if (status.isGenerating) {
+      return res.status(409).json({
+        error: 'Export generation is already in progress. Please wait.'
+      });
+    }
+    
+    console.log('👤 Manual changes export triggered');
+    const result = await exportManager.generateChangesExport();
+    
+    res.json({
+      success: true,
+      message: 'Changes export generation started successfully',
+      data: result
+    });
+    
+  } catch (error) {
+    console.error('Error generating changes export:', error);
+    res.status(500).json({
+      error: error.message || 'Failed to generate changes export'
+    });
+  }
+});
+
+// Download changes export
+router.get(["/download-changes", "/download-changes/:fileId"], async (req, res) => {
+  try {
+    const exportManager = exportScheduler.exportManager;
+    const fileId = req.params.fileId;
+    
+    let exportFile;
+    
+    if (fileId) {
+      // Download specific file
+      const streamInfo = await exportManager.getDownloadStream(fileId);
+      
+      res.setHeader('Content-Type', streamInfo.contentType);
+      res.setHeader('Content-Disposition', `attachment; filename="${streamInfo.filename}"`);
+      
+      const fileStream = fs.createReadStream(streamInfo.filePath);
+      fileStream.pipe(res);
+      
+    } else {
+      // Download latest changes export
+      exportFile = await exportManager.getLatestChangesExport();
+      
+      if (!exportFile) {
+        return res.status(404).json({
+          error: 'No changes export file found'
+        });
+      }
+      
+      // Check if file exists
+      const exists = await fs.existsSync(exportFile.filePath);
+      if (!exists) {
+        throw new Error('File not found on disk');
+      }
+
+      // Update download stats
+      exportFile.downloadCount += 1;
+      exportFile.lastDownloadedAt = new Date();
+      await exportFile.save();
+      
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.setHeader('Content-Disposition', `attachment; filename="${exportFile.filename}"`);
+      
+      const fileStream = fs.createReadStream(exportFile.filePath);
+      fileStream.pipe(res);
+    }
+    
+  } catch (error) {
+    console.error('Error downloading changes export:', error);
+    res.status(500).json({
+      error: error.message || 'Failed to download changes export'
+    });
   }
 });
 

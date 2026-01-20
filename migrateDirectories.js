@@ -14,7 +14,7 @@ async function migrateDirectories() {
     // Connect to MongoDB (use your existing connection string)
     let mongoStr = "mongodb://127.0.0.1:27017/universities";
     let online = process.env.MONGODB_URI || "mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht";
-    await mongoose.connect(mongoStr);
+    await mongoose.connect(online);
     console.log('✅ Connected to MongoDB', online);
 
     // Read your merged JSON file
@@ -30,7 +30,7 @@ async function migrateDirectories() {
     let errors = 0;
 
     // Process each directory
-    for (const dir of directories.slice(0, 5)) {
+    for (const dir of directories) {
       try {
         if (!dir.baseUrl || !dir.staffDirectory) {
           console.log(`⚠️ Skipping entry with missing required fields:`, dir);

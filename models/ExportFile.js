@@ -14,7 +14,7 @@ const ExportFileSchema = new Schema({
   },
   fileType: { 
     type: String, 
-    enum: ['full', 'university'], 
+    enum: ['full', 'university', 'changes'], 
     required: true 
   },
   universityId: { 

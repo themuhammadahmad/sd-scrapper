@@ -36,6 +36,228 @@ export class ExportManager {
     }
   }
 
+/**
+ * Check for existing changes export and get latest
+ */
+async getLatestChangesExport() {
+  try {
+    const exportFile = await ExportFile.findOne({
+      fileType: 'changes',
+      isActive: true
+    }).sort({ generatedAt: -1 });
+
+    if (!exportFile) {
+      return null;
+    }
+
+    // Check if file exists
+    const exists = await fs.pathExists(exportFile.filePath);
+    if (!exists) {
+      throw new Error('Changes export file not found on disk');
+    }
+
+    return exportFile;
+  } catch (error) {
+    console.error('Failed to get latest changes export:', error);
+    throw error;
+  }
+}
+
+/**
+ * Generate changes export (full, not site-specific)
+ */
+async generateChangesExport() {
+  // Check if already generating
+  if (this.isGenerating) {
+    console.log('⚠️ Export generation already in progress, returning existing promise');
+    return this.currentGenerationPromise;
+  }
+
+  try {
+    this.isGenerating = true;
+    console.log('🔒 Starting changes export generation (locked)...');
+    
+    // Store the promise so concurrent calls can wait for it
+    this.currentGenerationPromise = this._generateChangesExportInternal();
+    const result = await this.currentGenerationPromise;
+    
+    return result;
+    
+  } finally {
+    // Always unlock when done
+    this.isGenerating = false;
+    this.currentGenerationPromise = null;
+    console.log('🔓 Changes export generation completed (unlocked)');
+  }
+}
+
+/**
+ * Internal method for changes export
+ */
+async _generateChangesExportInternal() {
+  try {
+    console.log('🔄 Starting changes export generation...');
+    
+    // Get all changes
+    const fileInfo = await this.excelService.generateChangesExport();
+    
+    // If no changes, we still created a file with a message
+    if (fileInfo.summary && fileInfo.summary.message === 'No changes found') {
+      console.log('⚠️ No changes to export, created empty report');
+    }
+    
+    // Check if file with same name already exists in database
+    const existingFile = await ExportFile.findOne({ filename: fileInfo.filename });
+    if (existingFile) {
+      console.log(`⚠️ Changes file ${fileInfo.filename} already exists in database, skipping save`);
+      return {
+        success: true,
+        fileId: existingFile._id,
+        filename: fileInfo.filename,
+        recordCount: fileInfo.recordCount,
+        fileSize: this.formatFileSize(fileInfo.fileSize),
+        downloadUrl: `/api/exports/download-changes/${existingFile._id}`,
+        alreadyExists: true,
+        summary: fileInfo.summary
+      };
+    }
+    
+    // Create database record
+    const exportFile = new ExportFile({
+      filename: fileInfo.filename,
+      filePath: fileInfo.filePath,
+      fileType: 'changes',
+      universityName: 'All Changed Staff',
+      recordCount: fileInfo.recordCount,
+      fileSize: fileInfo.fileSize,
+      generatedAt: fileInfo.generatedAt,
+      metadata: {
+        columns: [
+          'Change Type', 'Change Date', 'IPEDS/NCES ID', 'School', 'Unique ID', 'Sport code',
+          'First name', 'Last name', 'Position', 'Email address', 'Phone number',
+          'Previous Value', 'New Value', 'Change Details', 'Snapshot Period'
+        ],
+        summary: fileInfo.summary
+      }
+    });
+
+    await exportFile.save();
+    
+    // Deactivate old changes exports (keep only latest active)
+    await ExportFile.updateMany(
+      { 
+        fileType: 'changes',
+        _id: { $ne: exportFile._id },
+        isActive: true 
+      },
+      { isActive: false }
+    );
+
+    console.log(`✅ Changes export saved to database: ${fileInfo.filename}`);
+    
+    return {
+      success: true,
+      fileType: 'changes',
+      fileId: exportFile._id,
+      filename: fileInfo.filename,
+      recordCount: fileInfo.recordCount,
+      fileSize: this.formatFileSize(fileInfo.fileSize),
+      downloadUrl: `/api/exports/download-changes/${exportFile._id}`,
+      summary: fileInfo.summary
+    };
+
+  } catch (error) {
+    console.error('❌ Failed to generate changes export:', error);
+    throw error;
+  }
+}
+
+  /**
+ * Generate export containing only changed staff profiles
+ * @param {Object} options - Filter options (fromDate, toDate, siteId)
+ */
+async generateChangesExport(options = {}) {
+  // Check if already generating
+  if (this.isGenerating) {
+    console.log('⚠️ Export generation already in progress, returning existing promise');
+    return this.currentGenerationPromise;
+  }
+
+  try {
+    this.isGenerating = true;
+    console.log('🔒 Starting changes export generation (locked)...');
+    
+    // Store the promise so concurrent calls can wait for it
+    this.currentGenerationPromise = this._generateChangesExportInternal(options);
+    const result = await this.currentGenerationPromise;
+    
+    return result;
+    
+  } finally {
+    // Always unlock when done
+    this.isGenerating = false;
+    this.currentGenerationPromise = null;
+    console.log('🔓 Changes export generation completed (unlocked)');
+  }
+}
+
+/**
+ * Internal method for changes export
+ */
+async _generateChangesExportInternal(options = {}) {
+  try {
+    const { fromDate, toDate, siteId } = options;
+    
+    console.log('🔄 Starting changes export generation...');
+    
+    const fileInfo = await this.excelService.generateChangesExport(fromDate, toDate, siteId);
+    
+    // Create database record with new fileType 'changes'
+    const exportFile = new ExportFile({
+      filename: fileInfo.filename,
+      filePath: fileInfo.filePath,
+      fileType: 'changes',
+      universityId: siteId || null,
+      universityName: siteId ? (await Site.findById(siteId).lean())?.baseUrl : 'All Universities',
+      recordCount: fileInfo.recordCount,
+      fileSize: fileInfo.fileSize,
+      generatedAt: fileInfo.generatedAt,
+      metadata: {
+        columns: [
+          'Change Type', 'Change Date', 'IPEDS/NCES ID', 'School', 'Unique ID', 'Sport code',
+          'First name', 'Last name', 'Position', 'Email address', 'Phone number',
+          'Previous Value', 'New Value', 'Change Details', 'Snapshot Period'
+        ],
+        filters: {
+          fromDate: fromDate || null,
+          toDate: toDate || null,
+          siteId: siteId || null
+        },
+        summary: fileInfo.summary
+      }
+    });
+
+    await exportFile.save();
+    
+    console.log(`✅ Changes export saved to database: ${fileInfo.filename}`);
+    
+    return {
+      success: true,
+      fileType: 'changes',
+      fileId: exportFile._id,
+      filename: fileInfo.filename,
+      recordCount: fileInfo.recordCount,
+      fileSize: this.formatFileSize(fileInfo.fileSize),
+      downloadUrl: `/api/exports/download/${exportFile._id}`,
+      summary: fileInfo.summary
+    };
+
+  } catch (error) {
+    console.error('❌ Failed to generate changes export:', error);
+    throw error;
+  }
+}
+
   /**
    * Internal method that does the actual generation
    */
