@@ -72,8 +72,8 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
     
       usedPuppeteer = true;
     } catch (puppeteerError) {
-      console.log("PUPPETEER-DID-NOT-WORK ❌")
-      // Both fetch and puppeteer failed
+ console.log("PUPPETEER-DID-NOT-WORK ❌");
+      // Both fetch and puppeteer failed - DON'T THROW, just record and continue
       await FailedDirectory.findOneAndUpdate(
         { staffDirectory },
         {
@@ -86,7 +86,17 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
         },
         { upsert: true, new: true }
       );
-      throw new Error(`Complete fetch failure for ${staffDirectory}`);
+      
+      // CRITICAL: Return error object instead of throwing
+      return {
+        snapshot: null,
+        success: false,
+        staffCount: 0,
+        usedPuppeteer: false,
+        usedParser: null,
+        error: `Complete fetch failure for ${staffDirectory}`
+      };
+    
     }
   }
 

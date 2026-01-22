@@ -700,8 +700,7 @@ if (!MONGODB_URI) {
 console.log(MONGODB_URI)
 // Enhanced connection options with auto-reconnect
 mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+
     serverSelectionTimeoutMS: 30000,  // 30 seconds timeout
     socketTimeoutMS: 45000,           // 45 seconds socket timeout
     maxPoolSize: 10,                  // Keep 10 connections ready
