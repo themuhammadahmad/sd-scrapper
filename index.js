@@ -33,6 +33,7 @@ schedulerService.setExportScheduler(exportScheduler);
 
 
 schedulerService.triggerManualScraping();
+schedulerService.initializeMonthlyScheduling();
 
 
 // Routes

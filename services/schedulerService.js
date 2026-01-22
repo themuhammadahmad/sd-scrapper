@@ -44,6 +44,7 @@ class SchedulerService {
   }
 
   initializeMonthlyScheduling() {
+    console.log("👋 initializeMonthlyScheduling");
     if (!this.monthlyScheduled) {
       this.startMonthlyScraping();
     } else {
