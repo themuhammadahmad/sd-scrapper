@@ -32,6 +32,9 @@ exportScheduler.initialize();
 schedulerService.setExportScheduler(exportScheduler);
 
 
+schedulerService.triggerManualScraping();
+
+
 // Routes
 import searchRoutes from './routes/search.js';
 import authRoutes from './routes/auth.js';

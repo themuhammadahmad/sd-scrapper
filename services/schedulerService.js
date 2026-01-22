@@ -1,89 +1,30 @@
 // services/schedulerService.js
 import cron from 'node-cron';
-import fs from 'fs';
 import processStaffDirectory from "../utils/processStaffDirectory.js";
 import puppeteerManager from '../fallback/puppeteerParser.js';
 import StaffDirectory from '../models/StaffDirectory.js';
 import FailedDirectory from '../models/FailedDirectory.js';
-import ScrapingSession from '../models/ScrapingSession.js';
-import { fileURLToPath } from 'url';
-import path from 'path';
-import { dirname } from 'path';
-
 import { ExportScheduler } from './export/ExportScheduler.js';
-class ScrapingSessionManager {
-  async createNewSession(totalDirectories) {
-    const session = await ScrapingSession.create({
-      totalDirectories,
-      status: 'running'
-    });
-    console.log(`📝 Created scraping session: ${session.sessionId}`);
-    return session.sessionId;
-  }
 
-  async updateSessionProgress(sessionId, data) {
-    try {
-      await ScrapingSession.findOneAndUpdate(
-        { sessionId },
-        {
-          currentIndex: data.currentIndex,
-          successCount: data.successCount,
-          errorCount: data.errorCount,
-          lastUpdated: new Date(),
-          status: data.status || 'running'
-        }
-      );
-    } catch (error) {
-      console.error('Failed to update session:', error);
-    }
-  }
-
-  async getActiveSession() {
-    return await ScrapingSession.findOne({
-      status: 'running',
-      lastUpdated: { $gt: new Date(Date.now() - 24 * 60 * 60 * 1000) } // Last 24 hours
-    }).sort({ lastUpdated: -1 });
-  }
-
-  async resumeSession(sessionId) {
-    const session = await ScrapingSession.findOne({ sessionId });
-    if (!session) return null;
-
-    console.log(`🔄 Resuming session ${sessionId} from index ${session.currentIndex}`);
-    return {
-      currentIndex: session.currentIndex,
-      successCount: session.successCount,
-      errorCount: session.errorCount
-    };
-  }
-}
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 class SchedulerService {
   constructor() {
     this.isRunning = false;
     this.currentJob = null;
     this.shouldStop = false;
-    this.currentProcess = null;
-    this.lastProcessedIndex = 0;
-    this.directories = [];
     this.successCount = 0;
     this.errorCount = 0;
     this.isProcessingFailed = false;
     this.failedDirectoriesList = null;
+    this.currentlyProcessingUrl = null; // Track current URL for crash recovery
 
     // Export scheduler instance
     this.exportScheduler = null;
     this.exportInProgress = false;
 
     this.monthlyScheduled = false; // Track if monthly scheduling is already set up
-
-    this.sessionManager = new ScrapingSessionManager();
   }
 
   startMonthlyScraping() {
-    // ✅ ADD THIS CHECK AT THE BEGINNING:
     if (this.monthlyScheduled) {
       console.log('📅 Monthly scraping already scheduled');
       return;
@@ -98,37 +39,19 @@ class SchedulerService {
       timezone: "America/New_York"
     });
 
-    // ✅ ADD THIS FLAG SETTING:
     this.monthlyScheduled = true;
     console.log('✅ Monthly scraping scheduler started (will run on 1st of every month at 2:00 AM)');
   }
 
-  // ✅ ADD THIS NEW METHOD:
   initializeMonthlyScheduling() {
-    // Only initialize if not already scheduled
     if (!this.monthlyScheduled) {
       this.startMonthlyScraping();
     } else {
       console.log('📅 Monthly scheduling already initialized');
     }
   }
-  async runScrapingCycle() {
-    // IMPORTANT: Check for existing session to resume
-    if (typeof this.sessionManager !== 'undefined') {
-      const activeSession = await this.sessionManager.getActiveSession();
-      
-      if (activeSession && !this.isRunning) {
-        console.log(`🔄 Found active session ${activeSession.sessionId}, resuming...`);
-        this.currentSessionId = activeSession.sessionId;
-        const sessionData = await this.sessionManager.resumeSession(activeSession.sessionId);
-        this.lastProcessedIndex = sessionData.currentIndex;
-        this.successCount = sessionData.successCount;
-        this.errorCount = sessionData.errorCount;
-      } else {
-        this.currentSessionId = await this.sessionManager.createNewSession(this.directories.length);
-      }
-    }
 
+  async runScrapingCycle() {
     // IMPORTANT: Check if already running at the very beginning
     if (this.isRunning) {
       console.log('⚠️ Scraping cycle already running, skipping...');
@@ -137,15 +60,18 @@ class SchedulerService {
 
     this.isRunning = true;
     this.shouldStop = false;
+    this.successCount = 0;
+    this.errorCount = 0;
+    this.currentlyProcessingUrl = null;
 
     try {
       // Fetch active directories from database
-      this.directories = await StaffDirectory.find({ isActive: true })
+      const directories = await StaffDirectory.find({ isActive: true })
         .sort({ lastProcessedAt: 1 })
         .select('baseUrl staffDirectory successfulParser parserFailedLastTime lastProcessedAt')
         .lean();
 
-      console.log(`📋 Found ${this.directories.length} directories to process from database`);
+      console.log(`📋 Found ${directories.length} directories to process from database`);
 
       // Get current month and year for comparison
       const now = new Date();
@@ -153,7 +79,7 @@ class SchedulerService {
       const currentMonth = now.getMonth();
 
       // Filter out directories that were already processed this month
-      const directoriesToProcess = this.directories.filter(directory => {
+      const directoriesToProcess = directories.filter(directory => {
         if (!directory.lastProcessedAt) {
           return true;
         }
@@ -166,28 +92,22 @@ class SchedulerService {
         return !wasProcessedThisMonth;
       });
 
-      console.log(`🔄 Filtered to ${directoriesToProcess.length} directories to process (skipping ${this.directories.length - directoriesToProcess.length} already processed this month)`);
-      console.log(`🎯 Resuming from index: ${this.lastProcessedIndex}`);
+      console.log(`🔄 Filtered to ${directoriesToProcess.length} directories to process (skipping ${directories.length - directoriesToProcess.length} already processed this month)`);
 
       let delay = 600;
 
-      for (let i = this.lastProcessedIndex; i < directoriesToProcess.length; i++) {
+      for (let i = 0; i < directoriesToProcess.length; i++) {
         if (this.shouldStop) {
           console.log(`🛑 Scraping stopped by user request at index ${i}`);
-          if (typeof this.sessionManager !== 'undefined' && this.currentSessionId) {
-            await this.sessionManager.updateSessionProgress(this.currentSessionId, {
-              currentIndex: i,
-              successCount: this.successCount,
-              errorCount: this.errorCount,
-              status: 'stopped'
-            });
-          }
           console.log(`📊 Progress: ${i}/${directoriesToProcess.length} sites processed`);
           break;
         }
 
         const directory = directoriesToProcess[i];
         const { baseUrl, staffDirectory, successfulParser, parserFailedLastTime } = directory;
+        
+        // Track current URL for crash recovery visibility
+        this.currentlyProcessingUrl = baseUrl;
 
         console.log(`\n🔍 Processing ${i + 1}/${directoriesToProcess.length}: ${baseUrl}`);
         const parserToUse = parserFailedLastTime ? null : successfulParser;
@@ -244,8 +164,6 @@ class SchedulerService {
             }
           }
 
-          this.lastProcessedIndex = i + 1;
-
         } catch (error) {
           this.errorCount++;
           console.error(`❌ Failed to process ${baseUrl}:`, error.message);
@@ -265,14 +183,8 @@ class SchedulerService {
           );
         }
 
-        // Save progress periodically
-        if (typeof this.sessionManager !== 'undefined' && this.currentSessionId && i % 10 === 0) {
-          await this.sessionManager.updateSessionProgress(this.currentSessionId, {
-            currentIndex: this.lastProcessedIndex,
-            successCount: this.successCount,
-            errorCount: this.errorCount
-          });
-        }
+        // Clear current URL after processing (success or failure)
+        this.currentlyProcessingUrl = null;
 
         if (this.shouldStop) {
           console.log(`🛑 Scraping stopped during wait period`);
@@ -289,46 +201,27 @@ class SchedulerService {
         console.log(`\n🎉 Scraping cycle completed!`);
         console.log(`📊 Results: ${this.successCount} successful, ${this.errorCount} failed`);
 
-        if (typeof this.sessionManager !== 'undefined' && this.currentSessionId) {
-          await this.sessionManager.updateSessionProgress(this.currentSessionId, {
-            currentIndex: this.lastProcessedIndex,
-            successCount: this.successCount,
-            errorCount: this.errorCount,
-            status: 'completed'
-          });
-        }
-
-        this.initializeMonthlyScheduling();
         // ✅ Run export after successful scraping completion
         if (this.successCount > 0) {
           await this.runExportIfNotInProgress();
         } else {
           console.log('⚠️ No successful scrapes, skipping export');
         }
-
-        this.lastProcessedIndex = 0;
       } else {
         console.log(`\n⏹️ Scraping stopped.`);
         console.log(`📊 Partial results: ${this.successCount} successful, ${this.errorCount} failed`);
-        console.log(`🔄 Next run will resume from index: ${this.lastProcessedIndex}`);
       }
 
     } catch (error) {
-      console.error('❌ Error in scraping cycle:', error);
-      
-      // Save failed state if session manager exists
-      if (typeof this.sessionManager !== 'undefined' && this.currentSessionId) {
-        await this.sessionManager.updateSessionProgress(this.currentSessionId, {
-          currentIndex: this.lastProcessedIndex,
-          successCount: this.successCount,
-          errorCount: this.errorCount,
-          status: 'failed'
-        });
-      }
+      console.error('❌ Fatal error in scraping cycle:', error);
+      // Clear current URL on fatal error
+      this.currentlyProcessingUrl = null;
+      throw error;
       
     } finally {
       this.isRunning = false;
       this.shouldStop = false;
+      this.currentlyProcessingUrl = null;
 
       setTimeout(() => {
         if (puppeteerManager.activeRequests === 0) {
@@ -338,6 +231,7 @@ class SchedulerService {
       console.log('🏁 Scraping cycle fully stopped');
     }
   }
+
   // Import directories from uploaded file
   async importDirectories(urls) {
     try {
@@ -392,13 +286,6 @@ class SchedulerService {
     if (this.isRunning && !this.shouldStop) {
       this.shouldStop = true;
       console.log('🛑 Stop signal sent to scraping process...');
-
-      // Also stop the current process if it's stuck
-      if (this.currentProcess) {
-        console.log('⏹️ Force stopping current process...');
-        // You might need to handle process cancellation here
-      }
-
       return {
         success: true,
         message: 'Scraping stop signal sent. It may take a moment to fully stop.',
@@ -418,52 +305,18 @@ class SchedulerService {
       };
     }
   }
-// New method
-async checkAndAutoRestart() {
-  try {
-    const staleSession = await ScrapingSession.findOne({
-      status: 'running',
-      lastUpdated: { 
-        $lt: new Date(Date.now() - 30 * 60 * 1000) // 30 minutes stale
-      }
-    });
 
-    if (staleSession && !this.isRunning) {
-      console.log(`🔄 Auto-restarting stale session ${staleSession.sessionId}`);
-      await this.resumeScraping(staleSession.sessionId);
+  async triggerManualScraping() {
+    console.log('🔧 Manual scraping triggered');
+    
+    if (this.isRunning) {
+      console.log('⏳ Already running, skipping...');
+      return;
     }
-  } catch (error) {
-    console.error('Auto-restart check failed:', error);
-  }
-}
 
-// Start auto-restart checker
-startAutoRestartChecker() {
-  if (this.autoRestartInterval) clearInterval(this.autoRestartInterval);
-  
-  this.autoRestartInterval = setInterval(() => {
-    this.checkAndAutoRestart();
-  }, 5 * 60 * 1000); // Check every 5 minutes
-  
-  console.log('🔄 Auto-restart checker started');
-}
-async triggerManualScraping() {
-  console.log('🔧 Manual scraping triggered');
-  
-  if (this.isRunning) {
-    console.log('⏳ Already running, skipping...');
-    return;
+    await this.runScrapingCycle();
   }
 
-  // Check for session to resume
-  const activeSession = await this.sessionManager.getActiveSession();
-  if (activeSession) {
-    console.log(`🔄 Resuming existing session ${activeSession.sessionId}`);
-  }
-
-  await this.runScrapingCycle();
-}
-  // ✅ ADD THIS METHOD (place it near other getter methods):
   getSchedulingStatus() {
     return {
       monthlyScheduled: this.monthlyScheduled,
@@ -483,55 +336,16 @@ async triggerManualScraping() {
     });
   }
 
-
-
   // Get progress information
   getProgress() {
-    const total = this.directories.length;
-    const current = this.lastProcessedIndex;
-    const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
-
     return {
-      currentIndex: current,
-      totalDirectories: total,
-      progressPercentage: percentage,
+      isRunning: this.isRunning,
+      shouldStop: this.shouldStop,
       successCount: this.successCount,
       errorCount: this.errorCount,
-      status: this.isRunning ?
-        (this.shouldStop ? 'stopping' : 'running') :
-        (current > 0 && current < total ? 'paused' : 'idle')
+      currentlyProcessingUrl: this.currentlyProcessingUrl,
+      status: this.isRunning ? (this.shouldStop ? 'stopping' : 'running') : 'idle'
     };
-  }
-
-  // Reset progress to start from beginning
-  resetProgress() {
-    this.lastProcessedIndex = 0;
-    this.successCount = 0;
-    this.errorCount = 0;
-    console.log('🔄 Progress reset to beginning');
-    return {
-      success: true,
-      message: 'Progress reset to beginning',
-      progress: this.getProgress()
-    };
-  }
-
-  // Jump to specific index (for testing/debugging)
-  setProgressIndex(index) {
-    if (index >= 0 && index <= this.directories.length) {
-      this.lastProcessedIndex = index;
-      console.log(`🔄 Progress set to index: ${index}`);
-      return {
-        success: true,
-        message: `Progress set to index ${index}`,
-        progress: this.getProgress()
-      };
-    } else {
-      return {
-        success: false,
-        message: `Invalid index. Must be between 0 and ${this.directories.length}`
-      };
-    }
   }
 
   delay(ms) {
@@ -571,6 +385,7 @@ async triggerManualScraping() {
       this.exportInProgress = false;
     }
   }
+
   async scrapeFailedDirectories(failedDirs) {
     console.log(`🔧 Starting to process ${failedDirs.length} failed directories`);
 
@@ -578,8 +393,6 @@ async triggerManualScraping() {
     this.shouldStop = false;
     this.successCount = 0;
     this.errorCount = 0;
-    this.directories = [];
-    this.lastProcessedIndex = 0;
     this.isProcessingFailed = true;
     this.failedDirectoriesList = failedDirs;
 
@@ -701,8 +514,6 @@ async triggerManualScraping() {
           console.log(`⏳ Waiting ${delay / 1000} seconds before next failed directory...`);
           await this.delay(delay);
         }
-
-        this.lastProcessedIndex = i + 1;
       }
 
       console.log(`\n📊 Failed directory processing complete!`);
@@ -743,19 +554,21 @@ async triggerManualScraping() {
       console.log('🏁 Failed directory processing fully stopped');
     }
   }
+
   // Set export scheduler after initialization
   setExportScheduler(exportScheduler) {
     this.exportScheduler = exportScheduler;
     console.log('✅ Export scheduler linked to scraping service');
   }
+
   getFailedDirStatus() {
     return {
       isProcessingFailed: this.isProcessingFailed || false,
       failedDirProgress: this.failedDirectoriesList ? {
-        current: this.lastProcessedIndex,
+        current: this.successCount + this.errorCount,
         total: this.failedDirectoriesList.length,
         percentage: this.failedDirectoriesList.length > 0 ?
-          Math.round((this.lastProcessedIndex / this.failedDirectoriesList.length) * 100) : 0
+          Math.round(((this.successCount + this.errorCount) / this.failedDirectoriesList.length) * 100) : 0
       } : null
     };
   }
