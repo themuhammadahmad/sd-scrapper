@@ -159,6 +159,84 @@
   <script src="js/auth.js"></script>
 
   <script src="js/index.js"></script>
+  <script>
+    // Function to check monthly scheduling status
+async function checkMonthlyScheduling() {
+  try {
+    // console.log('🔍 Checking monthly scheduling status...');
+    
+    const response = await fetch('/api/monthly-scheduling-status', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin' // Include cookies for authentication
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // console.log('📅 Monthly Scheduling Status:', data);
+    // console.log('📊 Details:', {
+    //   isActive: data.isMonthlyJobActive,
+    //   nextRun: data.nextRunHuman,
+    //   description: data.description
+    // });
+    
+    return data;
+  } catch (error) {
+    console.error('❌ Error checking monthly scheduling:', error);
+    return null;
+  }
+}
+
+// Function to check scraping status
+async function checkScrapingStatus() {
+  try {
+    // console.log('🔍 Checking scraping status...');
+    
+    const response = await fetch('/api/scrape-status', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin'
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // console.log('🔄 Scraping Status:', data);
+    // console.log('📊 Details:', {
+    //   isRunning: data.isRunning,
+    //   currentlyProcessing: data.progress?.currentlyProcessingUrl || 'None',
+    //   successCount: data.progress?.successCount || 0,
+    //   errorCount: data.progress?.errorCount || 0
+    // });
+    
+    return data;
+  } catch (error) {
+    console.error('❌ Error checking scraping status:', error);
+    return null;
+  }
+}
+
+// Function to check both statuses
+async function checkAllStatus() {
+  // console.log('🚀 Checking all system statuses...');
+  
+  const monthlyStatus = await checkMonthlyScheduling();
+  const scrapingStatus = await checkScrapingStatus();
+  
+  // console.log('✅ Status check complete');
+  return { monthlyStatus, scrapingStatus };
+}
+checkAllStatus()
+  </script>
 </body>
 
 </html>

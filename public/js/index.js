@@ -127,11 +127,11 @@ async function waitForScrapingToStop() {
     
     while (attempts < maxAttempts) {
         try {
-            const response = await fetch('/scrape-status');
+            const response = await fetch('/api/scrape-status');
             const status = await response.json();
             
             if (!status.isRunning) {
-                console.log('✅ Scraping fully stopped');
+                // console.log('✅ Scraping fully stopped');
                 return;
             }
             
@@ -144,7 +144,7 @@ async function waitForScrapingToStop() {
         }
     }
     
-    console.log('⚠️ Timeout waiting for scraping to stop');
+    // console.log('⚠️ Timeout waiting for scraping to stop');
 }
 
 function startStatusPolling() {
@@ -154,7 +154,7 @@ function startStatusPolling() {
     // Poll every 3 seconds
     scrapingStatusInterval = setInterval(async () => {
         try {
-            const response = await fetch('/scrape-status');
+            const response = await fetch('/api/scrape-status');
             const status = await response.json();
             
             updateScrapingStatus(status);
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function checkInitialStatus() {
     try {
-        const response = await fetch('/scrape-status');
+        const response = await fetch('/api/scrape-status');
         const status = await response.json();
         
         if (status.isRunning) {
@@ -297,10 +297,9 @@ async function fetchSites(page = 1, search = '') {
       // Build URL with search parameter
       const url = `/sites?page=${page}&limit=${sitesPerPage}${search ? `&search=${encodeURIComponent(search)}` : ''}`;
       
-      console.log({search, page, url})
       const response = await fetch(url);
         const result = await response.json();
-        console.log(result)
+        
         if (result.sites && result.sites.length > 0) {
             // Create sites container with header
             const sitesContainer = document.createElement('div');
@@ -522,7 +521,7 @@ async function fetchSiteSnapshot(siteId, siteName, element) {
         ]);
 
         const snapshotResult = await snapshotResponse.json();
-        console.log(snapshotResult)
+    
         const changesResult = await changesResponse.json();
 
         // Remove loading state

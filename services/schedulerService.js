@@ -574,16 +574,65 @@ class SchedulerService {
     };
   }
 
+  // Add this method to your SchedulerService class (place it near getSchedulingStatus method)
+
+  // Method to check if monthly scraping job is active
+  getMonthlySchedulingStatus() {
+    const now = new Date();
+    const nextRunDate = this.calculateNextRunDate();
+    
+    return {
+      isMonthlyJobActive: this.monthlyScheduled,
+      monthlyScheduled: this.monthlyScheduled,
+      cronExpression: "0 2 1 * *",  // 2:00 AM on 1st of every month
+      timezone: "America/New_York",
+      nextScheduledRun: nextRunDate,
+      nextRunHuman: nextRunDate ? nextRunDate.toLocaleString() : "Not scheduled",
+      currentJobStatus: this.currentJob ? this.currentJob.getStatus() : "No job created",
+      // Info about what will happen
+      description: this.monthlyScheduled 
+        ? "Monthly scraping is scheduled and will automatically run on the 1st of every month at 2:00 AM EST."
+        : "Monthly scraping is not scheduled. Scraping will only run when manually triggered."
+    };
+  }
+
+  // Helper method to calculate next run date
+  calculateNextRunDate() {
+    if (!this.monthlyScheduled || !this.currentJob) {
+      return null;
+    }
+    
+    try {
+      const now = new Date();
+      let nextRun = new Date(now);
+      
+      // If we're past the 1st of this month, schedule for next month
+      if (now.getDate() >= 1) {
+        nextRun.setMonth(nextRun.getMonth() + 1);
+      }
+      
+      // Set to 1st of the month at 2:00 AM
+      nextRun.setDate(1);
+      nextRun.setHours(2, 0, 0, 0);
+      
+      return nextRun;
+    } catch (error) {
+      console.error('Error calculating next run date:', error);
+      return null;
+    }
+  }
+
   getStatus() {
     const progress = this.getProgress();
     const failedDirStatus = this.getFailedDirStatus();
+    const monthlyStatus = this.getMonthlySchedulingStatus();
 
     return {
       isRunning: this.isRunning,
       shouldStop: this.shouldStop,
       progress: progress,
       failedDirStatus: failedDirStatus,
-      nextScheduled: "1st of every month at 2:00 AM",
+      monthlyScheduling: monthlyStatus,  // Add monthly scheduling info
       exportInProgress: this.exportInProgress || false
     };
   }

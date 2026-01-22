@@ -74,7 +74,22 @@ app.use('/css', express.static(join(__dirname, 'public/css')));
 app.use('/js', express.static(join(__dirname, 'public/js')));
 
 
-
+// Route to check monthly scheduling status
+app.get("/api/monthly-scheduling-status", requireAuthAPI, (req, res) => {
+  try {
+    const status = schedulerService.getMonthlySchedulingStatus();
+    res.json({
+      success: true,
+      ...status
+    });
+  } catch (error) {
+    console.error('Error getting monthly scheduling status:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 
 // In your Express app
 app.get('/export-dashboard', (req, res) => {
@@ -290,7 +305,7 @@ app.post("/stop-scraping", requireAuthAPI, async (req, res) => {
     }
 });
 
-app.get("/scrape-status", requireAuthAPI, (req, res) => {
+app.get("/api/scrape-status", requireAuthAPI, (req, res) => {
     const status = schedulerService.getStatus();
     res.json(status);
 });
@@ -695,7 +710,7 @@ app.use((req, res) => {
 
     let mongoStr = "mongodb://127.0.0.1:27017/universities";
 // Always use the environment variable (no development flag needed)
-const MONGODB_URI =   process.env.MONGODB_URI;
+const MONGODB_URI =   mongoStr || process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   console.error("❌ MONGODB_URI environment variable is required!");
