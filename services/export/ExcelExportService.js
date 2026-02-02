@@ -234,7 +234,7 @@ async generateChangesExport() {
 
   try {
       // Get all change logs
-    const changeLogs = await ChangeLog.find({}).populate('site fromSnapshot toSnapshot')
+    let changeLogs = await ChangeLog.find({}).populate('site fromSnapshot toSnapshot')
       .sort({ createdAt: -1 })
       .lean();
 

@@ -14,7 +14,7 @@ async function migrateDirectories() {
     // Connect to MongoDB (use your existing connection string)
     let mongoStr = "mongodb://127.0.0.1:27017/universities";
     let online = process.env.MONGODB_URI || "mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht";
-    await mongoose.connect(mongoStr);
+    await mongoose.connect(online);
     console.log('✅ Connected to MongoDB', online);
 
     // Read your merged JSON file
