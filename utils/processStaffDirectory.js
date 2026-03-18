@@ -221,6 +221,24 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
     });
   }
 
+  // 1.5 Fetch existing profiles for this site to maintain identity persistence
+  const existingProfiles = await StaffProfile.find({ site: site._id }).lean();
+  const identityMaps = {
+    emailToFingerprint: new Map(),
+    nameOnlyToFingerprint: new Map() // Only for profiles with no current emails
+  };
+
+  existingProfiles.forEach(p => {
+    if (p.emails && p.emails.length > 0) {
+      p.emails.forEach(email => {
+        identityMaps.emailToFingerprint.set(email.toLowerCase().trim(), p.fingerprint);
+      });
+    } else if (p.canonicalName) {
+      // If no email, index by name to handle transition to email later
+      identityMaps.nameOnlyToFingerprint.set(p.canonicalName.toLowerCase().trim(), p.fingerprint);
+    }
+  });
+
   // 2. Build categories for Snapshot
   const categoriesMap = new Map();
 
@@ -237,7 +255,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
   const categories = Array.from(categoriesMap.entries()).map(([name, members]) => ({
     name,
     members: members.map(person => ({
-      fingerprint: createPersonFingerprint(person), // USE CORRECT FINGERPRINT
+      fingerprint: resolveStatefulFingerprint(person, identityMaps), // USE STATEFUL FINGERPRINT
       name: person.name,
       title: person.title,
       emails: person.email ? [person.email] : [],
@@ -786,17 +804,45 @@ function areArraysEqual(arr1, arr2) {
 
   return sorted1.every((item, index) => item === sorted2[index]);
 }
-function createPersonFingerprint(person) {
-  // Use ONLY email for fingerprint (most stable identifier)
+function resolveStatefulFingerprint(person, identityMaps) {
   const email = (person.email || '').toLowerCase().trim();
+  const name = (person.name || '').toLowerCase().trim();
 
+  // 1. If person has email, try to find existing profile by email
+  if (email) {
+    if (identityMaps.emailToFingerprint.has(email)) {
+      return identityMaps.emailToFingerprint.get(email);
+    }
+    // 1.1 Transition check: person has email now, but maybe previously they were name-only
+    if (identityMaps.nameOnlyToFingerprint.has(name)) {
+      console.log(`🔗 Linking existing name-only profile "${person.name}" to newly found email "${email}"`);
+      return identityMaps.nameOnlyToFingerprint.get(name);
+    }
+    // 1.2 No previous profile found, generate standard email fingerprint
+    return crypto.createHash("md5").update(email).digest("hex");
+  }
+
+  // 2. If person has no email, try to find existing profile by name (among name-only profiles)
+  if (name) {
+    if (identityMaps.nameOnlyToFingerprint.has(name)) {
+      return identityMaps.nameOnlyToFingerprint.get(name);
+    }
+    // 2.1 Standard name fingerprint fallback
+    return crypto.createHash("md5").update(name).digest("hex");
+  }
+
+  // 3. Last resort fallback
+  return crypto.randomUUID();
+}
+
+function createPersonFingerprint(person) {
+  // Keeping this for backward compatibility if called elsewhere, but it's stateless
+  const email = (person.email || '').toLowerCase().trim();
   if (!email) {
-    // Fallback: if no email, use name (less reliable)
     return crypto.createHash("md5")
       .update((person.name || '').toLowerCase().trim())
       .digest("hex");
   }
-
   return crypto.createHash("md5")
     .update(email)
     .digest("hex");

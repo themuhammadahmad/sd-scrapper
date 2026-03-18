@@ -364,7 +364,7 @@ const profiles = await StaffProfile.find({ site: university._id })
 //             : '';
 
 //           worksheet.addRow({
-//             changeType: 'ADDED',
+//             changeType: 'n', // n = new person
 //             changeDate: changeDate,
 //             ipedsId: ipedsId,
 //             school: schoolName,
@@ -395,7 +395,7 @@ const profiles = await StaffProfile.find({ site: university._id })
 //             : '';
 
 //           worksheet.addRow({
-//             changeType: 'REMOVED',
+//             changeType: 'r', // r = removed
 //             changeDate: changeDate,
 //             ipedsId: ipedsId,
 //             school: schoolName,
@@ -423,10 +423,18 @@ const profiles = await StaffProfile.find({ site: university._id })
 
 //           // Extract change details
 //           let changeDetails = '';
+//           let codes = new Set();
 //           if (updatedStaff.diffs) {
 //             const diffFields = Object.keys(updatedStaff.diffs);
 //             changeDetails = diffFields.map(field => {
 //               const diff = updatedStaff.diffs[field];
+//               
+//               // Map codes
+//               if (field === 'title' || field === 'name') codes.add('j');
+//               if (field === 'emails') codes.add('e');
+//               if (field === 'phones') codes.add('#');
+//               if (field === 'categories') codes.add('a');
+//               
 //               return `${field}: ${diff.before || 'N/A'} → ${diff.after || 'N/A'}`;
 //             }).join('; ');
 //           }
@@ -437,8 +445,11 @@ const profiles = await StaffProfile.find({ site: university._id })
 //             ? currentCategories.join(', ')
 //             : '';
 
+//           // For updates not mapping to specific codes, default to 'a' if it's generic
+//           const finalCode = codes.size > 0 ? Array.from(codes).join('') : 'a';
+//
 //           worksheet.addRow({
-//             changeType: 'UPDATED',
+//             changeType: finalCode,
 //             changeDate: changeDate,
 //             ipedsId: ipedsId,
 //             school: schoolName,
@@ -466,16 +477,12 @@ const profiles = await StaffProfile.find({ site: university._id })
 //       // Color code rows based on change type
 //       let color = 'FFFFFFFF'; // Default white
       
-//       switch (changeType) {
-//         case 'ADDED':
-//           color = 'FFE8F5E9'; // Light green
-//           break;
-//         case 'REMOVED':
-//           color = 'FFFCE4EC'; // Light red
-//           break;
-//         case 'UPDATED':
-//           color = 'FFF3E5F5'; // Light purple
-//           break;
+//       if (changeType === 'n') {
+//         color = 'FFE8F5E9'; // Light green
+//       } else if (changeType === 'r') {
+//         color = 'FFFCE4EC'; // Light red
+//       } else if (/[jae#]/.test(changeType)) {
+//         color = 'FFF3E5F5'; // Light purple
 //       }
 
 //       row.fill = {
@@ -749,7 +756,7 @@ async generateChangesExport() {
           const sportCode = getSportCode(addedStaff);
 
           worksheet.addRow({
-            changeType: 'ADDED',
+            changeType: 'n', // n = new person
             changeDate: changeDate,
             ipedsId: ipedsId,
             school: schoolName,
@@ -775,7 +782,7 @@ async generateChangesExport() {
           const sportCode = getSportCode(removedStaff);
 
           worksheet.addRow({
-            changeType: 'REMOVED',
+            changeType: 'r', // r = removed
             changeDate: changeDate,
             ipedsId: ipedsId,
             school: schoolName,
@@ -807,10 +814,18 @@ async generateChangesExport() {
 
           // Extract change details from diffs
           let changeDetails = '';
+          let codes = new Set();
           if (updatedStaff.diffs) {
             const diffFields = Object.keys(updatedStaff.diffs);
             changeDetails = diffFields.map(field => {
               const diff = updatedStaff.diffs[field];
+              
+              // Map codes based on fields
+              if (field === 'title' || field === 'name') codes.add('j');
+              if (field === 'emails') codes.add('e');
+              if (field === 'phones') codes.add('#');
+              if (field === 'categories') codes.add('a');
+              
               return `${field}: ${diff.before || 'N/A'} → ${diff.after || 'N/A'}`;
             }).join('; ');
           } else if (updatedStaff.before && updatedStaff.after) {
@@ -825,6 +840,12 @@ async generateChangesExport() {
               
               if (JSON.stringify(beforeVal) !== JSON.stringify(afterVal)) {
                 changedFields.push(field);
+                
+                // Map codes
+                if (field === 'title' || field === 'name') codes.add('j');
+                if (field === 'emails') codes.add('e');
+                if (field === 'phones') codes.add('#');
+                if (field === 'categories') codes.add('a');
               }
             });
             
@@ -833,8 +854,11 @@ async generateChangesExport() {
             }
           }
 
+          // For updates not mapping to specific codes, default to 'a' if it's generic
+          const finalCode = codes.size > 0 ? Array.from(codes).join('') : 'a';
+
           worksheet.addRow({
-            changeType: 'UPDATED',
+            changeType: finalCode,
             changeDate: changeDate,
             ipedsId: ipedsId,
             school: schoolName,
@@ -862,16 +886,12 @@ async generateChangesExport() {
       // Color code rows based on change type
       let color = 'FFFFFFFF'; // Default white
       
-      switch (changeType) {
-        case 'ADDED':
-          color = 'FFE8F5E9'; // Light green
-          break;
-        case 'REMOVED':
-          color = 'FFFCE4EC'; // Light red
-          break;
-        case 'UPDATED':
-          color = 'FFF3E5F5'; // Light purple
-          break;
+      if (changeType === 'n') {
+        color = 'FFE8F5E9'; // Light green for new
+      } else if (changeType === 'r') {
+        color = 'FFFCE4EC'; // Light red for removed
+      } else if (/[jae#]/.test(changeType)) {
+        color = 'FFF3E5F5'; // Light purple for updates
       }
 
       row.fill = {

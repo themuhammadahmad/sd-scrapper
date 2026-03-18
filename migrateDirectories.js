@@ -18,11 +18,11 @@ async function migrateDirectories() {
     console.log('✅ Connected to MongoDB', online);
 
     // Read your merged JSON file
-    const filePath = path.join(__dirname, 'public', 'data', 'fixed-directories-processed.json');
+    const filePath = path.join(__dirname, 'all_sports_websites.json');
     console.log(filePath)
     let directories = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-    
-    console.log(`📋 Found ${directories.length} directories in fixed-directories-processed.json`);
+
+    console.log(`📋 Found ${directories.length} directories in all_sports_websites.json`);
 
     let imported = 0;
     let updated = 0;
@@ -50,10 +50,10 @@ async function migrateDirectories() {
               isActive: true
             }
           },
-          { 
-            upsert: true, 
+          {
+            upsert: true,
             new: true,
-            runValidators: true 
+            runValidators: true
           }
         );
 
@@ -62,10 +62,10 @@ async function migrateDirectories() {
           console.log(`✅ Imported: ${dir.schoolName || dir.baseUrl} (IPEDS: ${dir.ipeds || 'none'})`);
         } else {
           // Check if IPEDS or schoolName was updated
-          const wasUpdated = 
-            (result.ipeds !== (dir.ipeds || '')) || 
+          const wasUpdated =
+            (result.ipeds !== (dir.ipeds || '')) ||
             (result.schoolName !== (dir.schoolName || ''));
-          
+
           if (wasUpdated) {
             updated++;
             console.log(`🔄 Updated: ${dir.schoolName || dir.baseUrl} with IPEDS: ${dir.ipeds || 'none'}`);
@@ -79,19 +79,19 @@ async function migrateDirectories() {
         console.log(`❌ Error importing ${dir.staffDirectory}:`, error.message);
       }
     }
-    
+
     console.log(`\n🎉 Migration complete!`);
     console.log(`📊 Results: ${imported} imported, ${updated} updated, ${skipped} skipped, ${errors} errors`);
-    
+
     // Get statistics
     const totalInDB = await StaffDirectory.countDocuments();
     const withIpeds = await StaffDirectory.countDocuments({ ipeds: { $ne: '' } });
     const withoutIpeds = await StaffDirectory.countDocuments({ ipeds: '' });
-    
+
     console.log(`📈 Total directories in database: ${totalInDB}`);
     console.log(`🎓 With IPEDS data: ${withIpeds}`);
     console.log(`❓ Without IPEDS data: ${withoutIpeds}`);
-    
+
     process.exit(0);
   } catch (error) {
     console.error('❌ Migration failed:', error);
