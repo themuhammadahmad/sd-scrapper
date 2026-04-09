@@ -62,7 +62,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
   try {
     // const res = await fetch(staffDirectory);
         const res = await fetch(
-      "https://athletics.baypath.edu/information/directory/index",
+        staffDirectory,
       {
         agent,
         headers: {
@@ -79,6 +79,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
     }
     
     html = await res.text();
+    console.log(html)
     console.log(`✅ Fetch successful for ${staffDirectory}`);
   } catch (e) {
     console.log(`⚠️ Fetch failed for ${staffDirectory}, trying puppeteer...`);

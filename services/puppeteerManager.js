@@ -5,7 +5,11 @@ import os from "os";
 
 import { HttpsProxyAgent } from "https-proxy-agent";  // ADD THIS LINE
 
-const PROXY_URL = "http://jithtuch:nsxpdxhissv1@31.59.20.176:6754";  // ADD THIS LINE
+// const PROXY_URL = "http://jithtuch:nsxpdxhissv1@31.59.20.176:6754"; 
+
+const PROXY_URL = "http://jithtuch:nsxpdxhissv1@31.59.20.176:6754";
+const PROXY_SERVER = "http://31.59.20.176:6754";
+
 
 class PuppeteerManager {
   constructor() {
@@ -142,8 +146,7 @@ class PuppeteerManager {
           '--disable-skia-runtime-opts',
           '--disable-composited-antialiasing',
           `--js-flags="--max-old-space-size=128"`,  // Limit V8 memory
-            `--js-flags="--max-old-space-size=128"`,
-  `--proxy-server=http://31.59.20.176:6754`  // ADD THIS LINE
+ `--proxy-server=http://31.59.20.176:6754`,
         ],
         ignoreHTTPSErrors: true,
         defaultViewport: {
@@ -312,12 +315,14 @@ async fetchWithPuppeteer(url) {
   try {
     const browser = await this.initializeBrowser();
     
-    // Create new page
-    page = await browser.newPage();
-    await page.authenticate({ username: 'jithtuch', password: 'nsxpdxhissv1' });
-    
-    // Generate a unique ID for this page (FIXED VERSION)
-    const pageId = `page_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+page = await browser.newPage();
+await page.authenticate({ username: 'jithtuch', password: 'nsxpdxhissv1' });
+
+// ✅ ADD THIS DELAY
+await new Promise(resolve => setTimeout(resolve, 2000));
+
+// Then continue with the rest
+const pageId = `page_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     this.pageCreationTimes.set(pageId, Date.now());
     
     // Set memory-efficient settings
@@ -343,7 +348,7 @@ async fetchWithPuppeteer(url) {
     try {
       await page.goto(url, { 
         waitUntil: 'domcontentloaded',
-        timeout: 30000,
+      timeout: 60000, 
         referer: 'https://www.google.com/'
       });
       
