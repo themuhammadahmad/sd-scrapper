@@ -3,6 +3,10 @@ import puppeteer from "puppeteer-core";
 import { execSync } from "child_process";
 import os from "os";
 
+import { HttpsProxyAgent } from "https-proxy-agent";  // ADD THIS LINE
+
+const PROXY_URL = "http://jithtuch:nsxpdxhissv1@31.59.20.176:6754";  // ADD THIS LINE
+
 class PuppeteerManager {
   constructor() {
     this.browser = null;
@@ -137,7 +141,9 @@ class PuppeteerManager {
           '--disable-partial-raster',
           '--disable-skia-runtime-opts',
           '--disable-composited-antialiasing',
-          `--js-flags="--max-old-space-size=128"`  // Limit V8 memory
+          `--js-flags="--max-old-space-size=128"`,  // Limit V8 memory
+            `--js-flags="--max-old-space-size=128"`,
+  `--proxy-server=http://31.59.20.176:6754`  // ADD THIS LINE
         ],
         ignoreHTTPSErrors: true,
         defaultViewport: {
@@ -308,6 +314,7 @@ async fetchWithPuppeteer(url) {
     
     // Create new page
     page = await browser.newPage();
+    await page.authenticate({ username: 'jithtuch', password: 'nsxpdxhissv1' });
     
     // Generate a unique ID for this page (FIXED VERSION)
     const pageId = `page_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
