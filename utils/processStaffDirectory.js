@@ -61,12 +61,17 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
 
   try {
     // const res = await fetch(staffDirectory);
-        const res = await fetch("https://api.ipify.org?format=json", {
-      agent,
-      headers: {
-        "Accept-Language": "en-CA,en;q=0.9"
+        const res = await fetch(
+      "https://athletics.baypath.edu/information/directory/index",
+      {
+        agent,
+        headers: {
+          "Accept-Language": "en-CA,en;q=0.9",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
+        }
       }
-    });
+    );
     
     if (!res.ok) {
       console.log(`⚠️ HTTP ${res.status} for ${staffDirectory}, trying puppeteer...`);

@@ -63,12 +63,12 @@ app.use(session({
     }
 }));
 
-import { requireAuth, requireAuthAPI } from "./middleware/auth.js"
+import {requireAuth, requireAuthAPI} from "./middleware/auth.js"
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/', changeRoutes);
-app.use('/api/exports', requireAuth, exportRoutes);
+app.use('/api/exports', requireAuth,exportRoutes);
 app.use('/api', searchRoutes);
 app.use('/css', express.static(join(__dirname, 'public/css')));
 app.use('/js', express.static(join(__dirname, 'public/js')));
@@ -76,49 +76,49 @@ app.use('/js', express.static(join(__dirname, 'public/js')));
 
 // Route to check monthly scheduling status
 app.get("/api/monthly-scheduling-status", requireAuthAPI, (req, res) => {
-    try {
-        const status = schedulerService.getMonthlySchedulingStatus();
-        res.json({
-            success: true,
-            ...status
-        });
-    } catch (error) {
-        console.error('Error getting monthly scheduling status:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message
-        });
-    }
+  try {
+    const status = schedulerService.getMonthlySchedulingStatus();
+    res.json({
+      success: true,
+      ...status
+    });
+  } catch (error) {
+    console.error('Error getting monthly scheduling status:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
 });
 
 // In your Express app
 app.get('/export-dashboard', (req, res) => {
-    res.sendFile(join(__dirname, "public", "export-dashboard.html"));
+  res.sendFile(join(__dirname, "public", "export-dashboard.html"));
 });
 // API Routes for manual export
 app.get('/api/exports/trigger', async (req, res) => {
-    try {
-        console.log('📤 Manual export triggered via API');
-        const result = await exportScheduler.triggerManualExport();
-
-        res.json({
-            success: true,
-            message: 'Export triggered successfully',
-            data: result
-        });
-    } catch (error) {
-        console.error('Error triggering export:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to trigger export',
-            error: error.message
-        });
-    }
+  try {
+    console.log('📤 Manual export triggered via API');
+    const result = await exportScheduler.triggerManualExport();
+    
+    res.json({
+      success: true,
+      message: 'Export triggered successfully',
+      data: result
+    });
+  } catch (error) {
+    console.error('Error triggering export:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to trigger export',
+      error: error.message
+    });
+  }
 });
 
 // Serve the main HTML file on root route - PROTECTED
 app.get("/", requireAuth, (req, res) => {
-
+    
     res.sendFile(join(__dirname, "public", "index2.html"));
 });
 // Serve HTML pages
@@ -185,72 +185,72 @@ app.post("/scrape-now", requireAuthAPI, async (req, res) => {
 // In your route file
 import puppeteerManager from './services/puppeteerManager.js';
 app.get("/browser-stats", requireAuthAPI, (req, res) => {
-    res.json(puppeteerManager.getStats());
+  res.json(puppeteerManager.getStats());
 });
 // Route to scrape a single site by ID
 app.post("/scrape-site/:siteId", requireAuthAPI, async (req, res) => {
-    try {
-        const siteId = req.params.siteId;
-
-        // Get scheduler status
-        const schedulerStatus = schedulerService.getStatus();
-
-        // If scheduler is running, wait or queue the request
-        if (schedulerStatus.isRunning) {
-            console.log(`⏳ Scheduler is busy, waiting to scrape site: ${siteId}`);
-
-            // Option 1: Queue the request
-            return res.status(429).json({
-                message: 'Scraping in progress. Please try again in a few minutes.',
-                estimatedWait: '2-3 minutes'
-            });
-
-            // Option 2: Add to queue (more complex implementation)
-        }
-
-        // Find the site and proceed with scraping
-        const site = await Site.findById(siteId);
-        if (!site) {
-            return res.status(404).json({ error: "Site not found" });
-        }
-
-        // Get browser stats for monitoring
-        const browserStats = puppeteerManager.getStats();
-        console.log('Browser stats before scraping:', browserStats);
-
-        // Scrape the single site
-        const staffDirectory = await StaffDirectory.findOne({
-            baseUrl: site.baseUrl
-        });
-
-        const result = await processStaffDirectory(
-            site.baseUrl,
-            site.staffDirectory,
-            staffDirectory?.successfulParser || null
-        );
-
-        // Clean up browser if no other requests
-        if (puppeteerManager.activeRequests === 0) {
-            setTimeout(() => puppeteerManager.closeBrowser(), 3000);
-        }
-
-        if (result.success) {
-            res.json({
-                success: true,
-                message: `Successfully scraped ${site.baseUrl}`,
-                staffCount: result.staffCount
-            });
-        } else {
-            res.status(500).json({
-                success: false,
-                error: `Failed to scrape ${site.baseUrl}`
-            });
-        }
-
-    } catch (error) {
-        console.error('Error scraping single site:', error);
-        res.status(500).json({ error: error.message });
+  try {
+    const siteId = req.params.siteId;
+    
+    // Get scheduler status
+    const schedulerStatus = schedulerService.getStatus();
+    
+    // If scheduler is running, wait or queue the request
+    if (schedulerStatus.isRunning) {
+      console.log(`⏳ Scheduler is busy, waiting to scrape site: ${siteId}`);
+      
+      // Option 1: Queue the request
+      return res.status(429).json({ 
+        message: 'Scraping in progress. Please try again in a few minutes.',
+        estimatedWait: '2-3 minutes'
+      });
+      
+      // Option 2: Add to queue (more complex implementation)
     }
+
+    // Find the site and proceed with scraping
+    const site = await Site.findById(siteId);
+    if (!site) {
+      return res.status(404).json({ error: "Site not found" });
+    }
+
+    // Get browser stats for monitoring
+    const browserStats = puppeteerManager.getStats();
+    console.log('Browser stats before scraping:', browserStats);
+
+    // Scrape the single site
+    const staffDirectory = await StaffDirectory.findOne({ 
+      baseUrl: site.baseUrl 
+    });
+
+    const result = await processStaffDirectory(
+      site.baseUrl,
+      site.staffDirectory,
+      staffDirectory?.successfulParser || null
+    );
+
+    // Clean up browser if no other requests
+    if (puppeteerManager.activeRequests === 0) {
+      setTimeout(() => puppeteerManager.closeBrowser(), 3000);
+    }
+
+    if (result.success) {
+      res.json({ 
+        success: true, 
+        message: `Successfully scraped ${site.baseUrl}`,
+        staffCount: result.staffCount
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        error: `Failed to scrape ${site.baseUrl}` 
+      });
+    }
+
+  } catch (error) {
+    console.error('Error scraping single site:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 
@@ -263,7 +263,7 @@ app.get('/check-directories', requireAuthAPI, async (req, res) => {
 app.post('/import', requireAuthAPI, async (req, res) => {
     try {
         const { urls } = req.body;
-
+        
         if (!urls || !Array.isArray(urls)) {
             return res.status(400).json({ error: 'URLs array is required' });
         }
@@ -279,17 +279,17 @@ app.post('/:id/reset-parser', requireAuthAPI, async (req, res) => {
     try {
         const directory = await StaffDirectory.findByIdAndUpdate(
             req.params.id,
-            {
+            { 
                 successfulParser: null,
-                parserFailedLastTime: false
+                parserFailedLastTime: false 
             },
             { new: true }
         );
-
-        res.json({
-            success: true,
+        
+        res.json({ 
+            success: true, 
             message: 'Parser reset successfully',
-            directory
+            directory 
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -354,7 +354,7 @@ app.get("/sites", requireAuthAPI, async (req, res) => {
 app.get("/failed-directories", requireAuthAPI, async (req, res) => {
     try {
         const failedDirs = await FailedDirectory.find().sort({ lastAttempt: -1 });
-
+        
         res.json({
             count: failedDirs.length,
             failedDirectories: failedDirs.map(dir => ({
@@ -383,7 +383,7 @@ app.get("/site-by-url", requireAuthAPI, async (req, res) => {
         }
 
         const site = await Site.findOne({ baseUrl: url });
-
+        
         if (site) {
             res.json({ success: true, site });
         } else {
@@ -399,25 +399,25 @@ app.get("/site-by-url", requireAuthAPI, async (req, res) => {
 app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
     try {
         const { baseUrl, staffDirectory } = req.body;
-
+        
         if (!baseUrl || !staffDirectory) {
-            return res.status(400).json({
-                success: false,
-                error: "baseUrl and staffDirectory are required"
+            return res.status(400).json({ 
+                success: false, 
+                error: "baseUrl and staffDirectory are required" 
             });
         }
 
         console.log(`🔧 Retrying failed site: ${baseUrl}`);
-
+        
         // First, remove from failed directories if it exists
         await FailedDirectory.findOneAndDelete({ staffDirectory });
-
+        
         // Try scraping with no known parser (null)
         const result = await processStaffDirectory(baseUrl, staffDirectory, null);
 
         if (result.success) {
-            res.json({
-                success: true,
+            res.json({ 
+                success: true, 
                 message: `Successfully scraped ${baseUrl}`,
                 staffCount: result.staffCount,
                 baseUrl: baseUrl
@@ -436,16 +436,16 @@ app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
                 },
                 { upsert: true, new: true }
             );
-
-            res.status(500).json({
-                success: false,
-                error: `Failed to scrape ${baseUrl}: No data extracted`
+            
+            res.status(500).json({ 
+                success: false, 
+                error: `Failed to scrape ${baseUrl}: No data extracted` 
             });
         }
 
     } catch (error) {
         console.error('Error scraping failed site:', error);
-
+        
         // Add to failed directories with error - use findOneAndUpdate
         try {
             await FailedDirectory.findOneAndUpdate(
@@ -463,10 +463,10 @@ app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
         } catch (dbError) {
             console.error('Error updating failed directory:', dbError);
         }
-
-        res.status(500).json({
-            success: false,
-            error: error.message
+        
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
         });
     }
 });
@@ -477,19 +477,19 @@ app.post("/scrape-failed-site", requireAuthAPI, async (req, res) => {
 app.delete("/failed-directories/:id", requireAuthAPI, async (req, res) => {
     try {
         const failedId = req.params.id;
-
+        
         const result = await FailedDirectory.findByIdAndDelete(failedId);
-
+        
         if (result) {
-            res.json({
-                success: true,
+            res.json({ 
+                success: true, 
                 message: "Failed directory removed",
                 deletedId: failedId
             });
         } else {
-            res.status(404).json({
-                success: false,
-                error: "Failed directory not found"
+            res.status(404).json({ 
+                success: false, 
+                error: "Failed directory not found" 
             });
         }
     } catch (error) {
@@ -501,10 +501,10 @@ app.delete("/failed-directories/:id", requireAuthAPI, async (req, res) => {
 app.post("/scrape-all-failed", requireAuthAPI, async (req, res) => {
     try {
         console.log('🔄 Starting bulk scrape of all failed directories');
-
+        
         // Fetch all failed directories
         const failedDirs = await FailedDirectory.find().sort({ lastAttempt: 1 }); // Oldest first
-
+        
         if (failedDirs.length === 0) {
             return res.json({
                 success: true,
@@ -513,7 +513,7 @@ app.post("/scrape-all-failed", requireAuthAPI, async (req, res) => {
                 processed: 0
             });
         }
-
+        
         // Check if scheduler is already running
         const schedulerStatus = schedulerService.getStatus();
         if (schedulerStatus.isRunning) {
@@ -522,22 +522,22 @@ app.post("/scrape-all-failed", requireAuthAPI, async (req, res) => {
                 error: "Scheduler is already running. Please wait for current process to complete."
             });
         }
-
+        
         // Start processing failed directories
         const result = await schedulerService.scrapeFailedDirectories(failedDirs);
-
+        
         res.json({
             success: true,
             message: `Started scraping ${failedDirs.length} failed directories`,
             total: failedDirs.length,
             details: result
         });
-
+        
     } catch (error) {
         console.error('Error starting bulk scrape:', error);
-        res.status(500).json({
-            success: false,
-            error: error.message
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
         });
     }
 });
@@ -545,10 +545,10 @@ app.post("/scrape-all-failed", requireAuthAPI, async (req, res) => {
 // Optional: Add status endpoint for failed directory scraping
 app.get("/scrape-all-failed/status", requireAuthAPI, (req, res) => {
     const status = schedulerService.getStatus();
-    const failedDirStatus = schedulerService.getFailedDirStatus ?
-        schedulerService.getFailedDirStatus() :
+    const failedDirStatus = schedulerService.getFailedDirStatus ? 
+        schedulerService.getFailedDirStatus() : 
         { isProcessingFailed: false };
-
+    
     res.json({
         ...status,
         ...failedDirStatus
@@ -558,7 +558,7 @@ app.get("/scrape-all-failed/status", requireAuthAPI, (req, res) => {
 app.delete("/failed-directories", requireAuthAPI, async (req, res) => {
     try {
         const result = await FailedDirectory.deleteMany({});
-        res.json({
+        res.json({ 
             message: "All failed directories cleared",
             deletedCount: result.deletedCount
         });
@@ -576,7 +576,7 @@ app.get("/site/:siteId/snapshot", requireAuthAPI, async (req, res) => {
 
         const snapshot = await Snapshot.findById(site.latestSnapshot)
             .populate('site');
-
+        
         if (!snapshot) {
             return res.status(404).json({ error: "No snapshot found for this site" });
         }
@@ -665,7 +665,7 @@ app.get("/site/:siteId/snapshots", requireAuthAPI, async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-});
+});  
 
 app.get("/changes", requireAuth, (req, res) => {
     res.sendFile(join(__dirname, "public", "changes.html"));
@@ -674,7 +674,7 @@ app.get("/changes", requireAuth, (req, res) => {
 app.get('/test-change-detection', requireAuthAPI, async (req, res) => {
     try {
         const { siteId } = req.query;
-
+        
         if (!siteId) {
             return res.status(400).json({
                 success: false,
@@ -683,9 +683,9 @@ app.get('/test-change-detection', requireAuthAPI, async (req, res) => {
         }
 
         const testResults = await createTestSnapshots(siteId);
-
+        
         res.json(testResults);
-
+        
     } catch (error) {
         console.error('Error in test endpoint:', error);
         res.status(500).json({
@@ -708,15 +708,15 @@ app.use((req, res) => {
 });
 
 
-let mongoStr = "mongodb://127.0.0.1:27017/universities";
+    let mongoStr = "mongodb://127.0.0.1:27017/universities";
 // Always use the environment variable (no development flag needed)
-const MONGODB_URI = mongoStr || process.env.MONGODB_URI;
+const MONGODB_URI =   process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-    console.error("❌ MONGODB_URI environment variable is required!");
-    process.exit(1);
+  console.error("❌ MONGODB_URI environment variable is required!");
+  process.exit(1);
 }
-console.log(MONGODB_URI)
+console.log("🫀" , MONGODB_URI)
 // Enhanced connection options with auto-reconnect
 mongoose.connect(MONGODB_URI, {
 
@@ -728,17 +728,17 @@ mongoose.connect(MONGODB_URI, {
     retryWrites: true,
     retryReads: true
 })
-    .then(() => {
-        console.log("✅ Connected to MongoDB Atlas");
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on http://localhost:${PORT}`);
-        });
-    })
-    .catch((err) => {
-        console.error("❌ MongoDB connection error:", err.message);
-        console.log("💡 Tip: Check if your Atlas IP whitelist includes your server IP");
-        process.exit(1); // Exit if can't connect initially
+.then(() => {
+    console.log("✅ Connected to MongoDB Atlas", MONGODB_URI);
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
+})
+.catch((err) => {
+    console.error("❌ MongoDB connection error:", err.message);
+    console.log("💡 Tip: Check if your Atlas IP whitelist includes your server IP");
+    process.exit(1); // Exit if can't connect initially
+});
 
 // Add auto-reconnect event listeners
 mongoose.connection.on('disconnected', () => {
@@ -761,9 +761,9 @@ mongoose.connection.on('disconnected', async () => {
     if (reconnectAttempts < maxReconnectAttempts) {
         reconnectAttempts++;
         const delay = Math.min(1000 * reconnectAttempts, 30000); // Max 30 second delay
-
-        console.log(`🔄 Reconnecting in ${delay / 1000} seconds (attempt ${reconnectAttempts})...`);
-
+        
+        console.log(`🔄 Reconnecting in ${delay/1000} seconds (attempt ${reconnectAttempts})...`);
+        
         setTimeout(async () => {
             try {
                 await mongoose.connect(MONGODB_URI, {
