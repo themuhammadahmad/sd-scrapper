@@ -3,12 +3,12 @@ import puppeteer from "puppeteer-core";
 import { execSync } from "child_process";
 import os from "os";
 
-import { HttpsProxyAgent } from "https-proxy-agent";  // ADD THIS LINE
+// import { HttpsProxyAgent } from "https-proxy-agent";  // ADD THIS LINE
 
 // const PROXY_URL = "http://jithtuch:nsxpdxhissv1@31.59.20.176:6754"; 
 
-const PROXY_URL = "http://jithtuch:nsxpdxhissv1@31.59.20.176:6754";
-const PROXY_SERVER = "http://31.59.20.176:6754";
+// const PROXY_URL = "http://jithtuch:nsxpdxhissv1@31.59.20.176:6754";
+// const PROXY_SERVER = "http://31.59.20.176:6754";
 
 
 class PuppeteerManager {
@@ -146,7 +146,7 @@ class PuppeteerManager {
           '--disable-skia-runtime-opts',
           '--disable-composited-antialiasing',
           `--js-flags="--max-old-space-size=128"`,  // Limit V8 memory
- `--proxy-server=http://31.59.20.176:6754`,
+ // `--proxy-server=http://31.59.20.176:6754`,
         ],
         ignoreHTTPSErrors: true,
         defaultViewport: {
@@ -316,7 +316,7 @@ async fetchWithPuppeteer(url) {
     const browser = await this.initializeBrowser();
     
 page = await browser.newPage();
-await page.authenticate({ username: 'jithtuch', password: 'nsxpdxhissv1' });
+// await page.authenticate({ username: 'jithtuch', password: 'nsxpdxhissv1' });
 
 // ✅ ADD THIS DELAY
 await new Promise(resolve => setTimeout(resolve, 2000));
