@@ -17,34 +17,34 @@ let sadf = "with pupeteer ✅";
 // Add this helper function at the top
 // Add this helper function at the top
 function detectCloudflare(html) {
-    if (!html) return false;
-    
-    const lowerHtml = html.toLowerCase();
-    
-    const cloudflareIndicators = [
-        'cloudflare',
-        'cf-ray',
-        '__cfuid',
-        'ddos-guard',
-        'security check',
-        'please stand by',
-        'verifying you are human',
-        'checking your browser',
-        'jschl_vc',
-        'jschl_answer',
-        'captcha-bypass',
-        'ray id',
-        'just a moment'
-    ];
-    
-    for (const indicator of cloudflareIndicators) {
-        if (lowerHtml.includes(indicator)) {
-            console.log(`⚠️ Cloudflare detected: ${indicator}`);
-            return true;
-        }
+  if (!html) return false;
+
+  const lowerHtml = html.toLowerCase();
+
+  const cloudflareIndicators = [
+    'cloudflare',
+    'cf-ray',
+    '__cfuid',
+    'ddos-guard',
+    'security check',
+    'please stand by',
+    'verifying you are human',
+    'checking your browser',
+    'jschl_vc',
+    'jschl_answer',
+    'captcha-bypass',
+    'ray id',
+    'just a moment'
+  ];
+
+  for (const indicator of cloudflareIndicators) {
+    if (lowerHtml.includes(indicator)) {
+      console.log(`⚠️ Cloudflare detected: ${indicator}`);
+      return true;
     }
-    
-    return false;
+  }
+
+  return false;
 }
 import { HttpsProxyAgent } from "https-proxy-agent";
 
@@ -61,8 +61,8 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
 
   try {
     // const res = await fetch(staffDirectory);
-        const res = await fetch(
-        staffDirectory,
+    const res = await fetch(
+      staffDirectory,
       {
         agent,
         headers: {
@@ -72,14 +72,14 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
         }
       }
     );
-    
+
     if (!res.ok) {
       console.log(`⚠️ HTTP ${res.status} for ${staffDirectory}, trying puppeteer...`);
       throw new Error(`HTTP ${res.status}`);
     }
-    
+
     html = await res.text();
-    console.log(html)
+
     console.log(`✅ Fetch successful for ${staffDirectory}`);
   } catch (e) {
     console.log(`⚠️ Fetch failed for ${staffDirectory}, trying puppeteer...`);
@@ -87,10 +87,10 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
     try {
       console.log("🔄 Using puppeteer due to fetch failure...");
       html = await puppeteerParser(staffDirectory);
-    
+
       usedPuppeteer = true;
     } catch (puppeteerError) {
- console.log("PUPPETEER-DID-NOT-WORK ❌");
+      console.log("PUPPETEER-DID-NOT-WORK ❌");
       // Both fetch and puppeteer failed - DON'T THROW, just record and continue
       await FailedDirectory.findOneAndUpdate(
         { staffDirectory },
@@ -104,7 +104,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
         },
         { upsert: true, new: true }
       );
-      
+
       // CRITICAL: Return error object instead of throwing
       return {
         snapshot: null,
@@ -114,7 +114,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
         usedParser: null,
         error: `Complete fetch failure for ${staffDirectory}`
       };
-    
+
     }
   }
 
@@ -128,7 +128,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
       // Dynamically import the parser
       const parserModule = await import(`../parsers/${knownParser}.js`);
       parsedStaff = await parserModule.default(html, staffDirectory);
-      
+
       if (parsedStaff.staff && parsedStaff.staff.length > 0) {
         console.log(`✅ Known parser ${knownParser} worked! Found ${parsedStaff.staff.length} staff`);
         usedParser = knownParser;
@@ -157,7 +157,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
       console.log("🔄 Using puppeteer due to no data from fetch...");
       const puppeteerHtml = await puppeteerParser(staffDirectory);
       usedPuppeteer = true;
-      
+
       // Try parsing again with puppeteer HTML
       if (knownParser) {
         // Try known parser first with puppeteer HTML
@@ -177,9 +177,9 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
         parsedStaff = await runParsersWithNames(puppeteerHtml, staffDirectory);
         usedParser = parsedStaff.parserName;
       }
-      
+
       html = puppeteerHtml; // Update html for snapshot creation
-      
+
       if (parsedStaff.staff && parsedStaff.staff.length > 0) {
         console.log(`✅ Puppeteer successfully extracted ${parsedStaff.staff.length} staff members`);
       } else {
@@ -265,7 +265,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
     if (!categoriesMap.has(categoryName)) {
       categoriesMap.set(categoryName, []);
     }
-    
+
     categoriesMap.get(categoryName).push(person);
   });
 
@@ -296,37 +296,37 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
     usedPuppeteer // Track if puppeteer was used for this snapshot
   });
 
-// 4. Upsert StaffProfiles
-for (const category of categories) {
-  for (const member of category.members) {
-    // Get all categories this person belongs to
-    const personCategories = categories
-      .filter(cat => cat.members.some(m => m.fingerprint === member.fingerprint))
-      .map(cat => cat.name);
-    
-    await StaffProfile.findOneAndUpdate(
-      { fingerprint: member.fingerprint },
-      {
-        site: site._id,
-        profileUrl: member.profileUrl,
-        canonicalName: member.name,
-        emails: member.emails,
-        phones: member.phones,
-        // NEW: Add categories field
-        categories: personCategories,
-        lastSeenAt: new Date(),
-        lastSnapshot: snapshot._id,
-        raw: member.raw,
-        ...(member.firstSeenAt ? {} : { firstSeenAt: new Date() }),
-      },
-      {
-        upsert: true,
-        new: true,
-        setDefaultsOnInsert: true
-      }
-    );
+  // 4. Upsert StaffProfiles
+  for (const category of categories) {
+    for (const member of category.members) {
+      // Get all categories this person belongs to
+      const personCategories = categories
+        .filter(cat => cat.members.some(m => m.fingerprint === member.fingerprint))
+        .map(cat => cat.name);
+
+      await StaffProfile.findOneAndUpdate(
+        { fingerprint: member.fingerprint },
+        {
+          site: site._id,
+          profileUrl: member.profileUrl,
+          canonicalName: member.name,
+          emails: member.emails,
+          phones: member.phones,
+          // NEW: Add categories field
+          categories: personCategories,
+          lastSeenAt: new Date(),
+          lastSnapshot: snapshot._id,
+          raw: member.raw,
+          ...(member.firstSeenAt ? {} : { firstSeenAt: new Date() }),
+        },
+        {
+          upsert: true,
+          new: true,
+          setDefaultsOnInsert: true
+        }
+      );
+    }
   }
-}
 
   // 5. Compare with last snapshot → log changes
   let previousSnapshot = null;
@@ -378,36 +378,36 @@ for (const category of categories) {
 
 // ========== ADD THIS NEW FUNCTION AT THE BOTTOM OF THE FILE ==========
 async function runParsersWithNames(html, url) {
-const parsers = [
-  // Specific parsers first (they have strong identifiers)
-  { name: 'sidearmParser', fn: (await import('../parsers/sidearmParser.js')).default },
-  { name: 'sidearmModernParser', fn: (await import('../parsers/sidearmModernParser.js')).default },
-  { name: 'cardBasedParser', fn: (await import('../parsers/cardBasedParser.js')).default },
-  { name: 'staffDirectoryParser', fn: (await import('../parsers/staffDirectoryGroupParser.js')).default },
-  { name: 'h1TableCategoryParser', fn: (await import('../parsers/h1TableCategoryParser.js')).default },
-  { name: 'h2TableCategoryParser', fn: (await import('../parsers/h2TableCategoryParser.js')).default },
-  { name: 'drupalStaffDirectoryParser', fn: (await import('../parsers/drupalStaffDirectoryParser.js')).default },
-  { name: 'bobcatsTableParser', fn: (await import('../parsers/bobcatsTableParser.js')).default },
-  { name: 'vvcTableParser', fn: (await import('../parsers/vvcTableParser.js')).default },
-  { name: 'albanyDirectoryParser', fn: (await import('../parsers/albanyDirectoryParser.js')).default },
-  { name: 'drupalPersonParser', fn: (await import('../parsers/drupalPersonParser.js')).default },
-  { name: 'tableSeparatorParser', fn: (await import('../parsers/tableSeparatorParser.js')).default },
-  { name: 'subtitleCategoryParse', fn: (await import('../parsers/subtitleCategoryParse.js')).default },
-  { name: 'multiTbodyParser', fn: (await import('../parsers/multiTbodyParser.js')).default },
-  { name: 'spTeamProParser', fn: (await import('../parsers/spTeamProParser.js')).default },
-  { name: 'diviTeamMemberParser', fn: (await import('../parsers/diviTeamMemberParser.js')).default },
-  // { name: 'IndStaffParser', fn: (await import('../parsers/IndStaffParser.js')).default },
-  { name: 'staffContainerParser', fn: (await import('../parsers/staffContainerParser.js')).default },
-  { name: 'rfTeamParser', fn: (await import('../parsers/rfTeamParser.js')).default },
-  { name: 'tablePressParser', fn: (await import('../parsers/tablePressParser.js')).default },
-  { name: 'coachCardParser', fn: (await import('../parsers/coachCardParser.js')).default },
-  { name: 'separateTableParser', fn: (await import('../parsers/separateTableParser.js')).default },
-  { name: 'sectionStaffDirectoryParser', fn: (await import('../parsers/sectionStaffDirectoryParser.js')).default },
-  
-  // Generic parsers last (fallbacks)
-  { name: 'genericTableParser', fn: (await import('../parsers/genericTableParser.js')).default },
-  { name: 'heuristicsParser', fn: (await import('../parsers/heuristicsParser.js')).default },
-];
+  const parsers = [
+    // Specific parsers first (they have strong identifiers)
+    { name: 'sidearmParser', fn: (await import('../parsers/sidearmParser.js')).default },
+    { name: 'sidearmModernParser', fn: (await import('../parsers/sidearmModernParser.js')).default },
+    { name: 'cardBasedParser', fn: (await import('../parsers/cardBasedParser.js')).default },
+    { name: 'staffDirectoryParser', fn: (await import('../parsers/staffDirectoryGroupParser.js')).default },
+    { name: 'h1TableCategoryParser', fn: (await import('../parsers/h1TableCategoryParser.js')).default },
+    { name: 'h2TableCategoryParser', fn: (await import('../parsers/h2TableCategoryParser.js')).default },
+    { name: 'drupalStaffDirectoryParser', fn: (await import('../parsers/drupalStaffDirectoryParser.js')).default },
+    { name: 'bobcatsTableParser', fn: (await import('../parsers/bobcatsTableParser.js')).default },
+    { name: 'vvcTableParser', fn: (await import('../parsers/vvcTableParser.js')).default },
+    { name: 'albanyDirectoryParser', fn: (await import('../parsers/albanyDirectoryParser.js')).default },
+    { name: 'drupalPersonParser', fn: (await import('../parsers/drupalPersonParser.js')).default },
+    { name: 'tableSeparatorParser', fn: (await import('../parsers/tableSeparatorParser.js')).default },
+    { name: 'subtitleCategoryParse', fn: (await import('../parsers/subtitleCategoryParse.js')).default },
+    { name: 'multiTbodyParser', fn: (await import('../parsers/multiTbodyParser.js')).default },
+    { name: 'spTeamProParser', fn: (await import('../parsers/spTeamProParser.js')).default },
+    { name: 'diviTeamMemberParser', fn: (await import('../parsers/diviTeamMemberParser.js')).default },
+    // { name: 'IndStaffParser', fn: (await import('../parsers/IndStaffParser.js')).default },
+    { name: 'staffContainerParser', fn: (await import('../parsers/staffContainerParser.js')).default },
+    { name: 'rfTeamParser', fn: (await import('../parsers/rfTeamParser.js')).default },
+    { name: 'tablePressParser', fn: (await import('../parsers/tablePressParser.js')).default },
+    { name: 'coachCardParser', fn: (await import('../parsers/coachCardParser.js')).default },
+    { name: 'separateTableParser', fn: (await import('../parsers/separateTableParser.js')).default },
+    { name: 'sectionStaffDirectoryParser', fn: (await import('../parsers/sectionStaffDirectoryParser.js')).default },
+
+    // Generic parsers last (fallbacks)
+    { name: 'genericTableParser', fn: (await import('../parsers/genericTableParser.js')).default },
+    { name: 'heuristicsParser', fn: (await import('../parsers/heuristicsParser.js')).default },
+  ];
 
   for (const parser of parsers) {
     try {
@@ -424,7 +424,7 @@ const parsers = [
       console.log(`❌ Parser ${parser.name} failed:`, err.message);
     }
   }
-  
+
   return { staff: [], parserName: null };
 }
 
@@ -443,24 +443,24 @@ sadf = "no pupeteer ❌";
 
 //   try {
 //     const res = await fetch(staffDirectory);
-    
+
 //     if (!res.ok) {
 //       console.log(`⚠️ HTTP ${res.status} for ${staffDirectory}`);
 //       // Commented out Puppeteer fallback
 //       // console.log(`⚠️ HTTP ${res.status} for ${staffDirectory}, trying puppeteer...`);
 //       // throw new Error(`HTTP ${res.status}`);
-      
+
 //       // Instead of throwing, just mark as failed and continue
 //       fetchFailed = true;
 //       throw new Error(`HTTP ${res.status} - Fetch failed`);
 //     }
-    
+
 //     html = await res.text();
 //     console.log(`✅ Fetch successful for ${staffDirectory}`);
 //   } catch (e) {
 //     console.log(`⚠️ Fetch failed for ${staffDirectory}`);
 //     fetchFailed = true;
-    
+
 //     // Commented out Puppeteer fallback
 //     /*
 //     try {
@@ -484,7 +484,7 @@ sadf = "no pupeteer ❌";
 //       throw new Error(`Complete fetch failure for ${staffDirectory}`);
 //     }
 //     */
-    
+
 //     // Just save to failed directories without Puppeteer attempt
 //     await FailedDirectory.findOneAndUpdate(
 //       { staffDirectory },
@@ -513,11 +513,11 @@ sadf = "no pupeteer ❌";
 //       console.log("🔄 Using puppeteer due to no data from fetch...");
 //       const puppeteerHtml = await puppeteerParser(staffDirectory);
 //       usedPuppeteer = true;
-      
+
 //       // Try parsing again with puppeteer HTML
 //       parsedStaff = await runParsers(puppeteerHtml, staffDirectory);
 //       html = puppeteerHtml; // Update html for snapshot creation
-      
+
 //       if (parsedStaff.staff && parsedStaff.staff.length > 0) {
 //         console.log(`✅ Puppeteer successfully extracted ${parsedStaff.staff.length} staff members`);
 //       } else {
@@ -583,7 +583,7 @@ sadf = "no pupeteer ❌";
 //     if (!categoriesMap.has(categoryName)) {
 //       categoriesMap.set(categoryName, []);
 //     }
-    
+
 //     categoriesMap.get(categoryName).push(person);
 //   });
 
