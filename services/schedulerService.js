@@ -74,10 +74,22 @@ class SchedulerService {
 
       console.log(`📋 Found ${directories.length} directories to process from database`);
 
-      // Get current month and year for comparison
-      const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth();
+      // Get NY time helper
+      const getNYTime = (dateObj) => {
+        const formatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            year: 'numeric',
+            month: 'numeric' // gives 1-12
+        });
+        const parts = formatter.formatToParts(dateObj);
+        return {
+            month: parseInt(parts.find(p => p.type === 'month').value, 10),
+            year: parseInt(parts.find(p => p.type === 'year').value, 10)
+        };
+      };
+
+      // Get current month and year in New York Time for comparison
+      const { year: currentYear, month: currentMonth } = getNYTime(new Date());
 
       // Filter out directories that were already processed this month
       const directoriesToProcess = directories.filter(directory => {
@@ -85,15 +97,19 @@ class SchedulerService {
           return true;
         }
 
-        const lastProcessed = new Date(directory.lastProcessedAt);
-        const lastYear = lastProcessed.getFullYear();
-        const lastMonth = lastProcessed.getMonth();
+        const { year: lastYear, month: lastMonth } = getNYTime(new Date(directory.lastProcessedAt));
 
         const wasProcessedThisMonth = (lastYear === currentYear && lastMonth === currentMonth);
         return !wasProcessedThisMonth;
       });
 
       console.log(`🔄 Filtered to ${directoriesToProcess.length} directories to process (skipping ${directories.length - directoriesToProcess.length} already processed this month)`);
+
+      // Prevent redundant manual runs if the automatic cycle has already completed everything
+      if (directoriesToProcess.length === 0) {
+        console.log(`✅ All active directories have already been processed for this month (${currentMonth}/${currentYear} NY Time). Skipping cycle.`);
+        return; // Exits the try block, hits finally block, and properly shuts down
+      }
 
       let delay = 600;
 
