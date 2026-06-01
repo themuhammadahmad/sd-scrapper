@@ -786,7 +786,7 @@ if (!MONGODB_URI) {
 }
 console.log("🫀" , MONGODB_URI)
 // Enhanced connection options with auto-reconnect
-mongoose.connect("mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht", {
+mongoose.connect(MONGODB_URI, {
  tls: true,                          // ← ADD THIS
     tlsAllowInvalidCertificates: true,  // ← ADD THIS (for development)
     serverSelectionTimeoutMS: 30000,  // 30 seconds timeout
