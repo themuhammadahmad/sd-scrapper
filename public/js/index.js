@@ -54,6 +54,68 @@ async function scrapSingleSite(siteId, siteUrl, event) {
     }
 }
 
+async function resetAndDeleteScrapeData(siteId, baseUrl, event) {
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    const message = `Are you sure you want to delete ALL scraping history (snapshots, profiles, and change logs) and reset the successful parser for "${baseUrl}"?\n\nThis cannot be undone!`;
+    if (!confirm(message)) {
+        return;
+    }
+
+    const button = event?.target;
+    const originalText = button?.textContent;
+    
+    if (button) {
+        button.disabled = true;
+        button.textContent = '⏳ Clearing...';
+        button.classList.add('loading');
+    }
+
+    const status = document.getElementById('status');
+    status.innerHTML = `🔄 Clearing all data for ${baseUrl}...`;
+
+    try {
+        const response = await fetch(`/api/site/${siteId}/reset-all`, {
+            method: 'POST'
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+            status.innerHTML = `✅ Successfully reset ${baseUrl}: Deleted ${result.deletedSnapshotsCount} snaps, ${result.deletedProfilesCount} profiles, and reset parser.`;
+            
+            // Refresh the site list to update "Last scraped: Never" and update UI
+            setTimeout(() => {
+                fetchSites(currentPage, currentSearch);
+                // Also clear currently displayed snapshot or change history if it belongs to this site
+                const snapshotData = document.getElementById('snapshotData');
+                const changeHistory = document.getElementById('changeHistory');
+                if (snapshotData && snapshotData.innerHTML.includes(baseUrl)) {
+                    snapshotData.innerHTML = '';
+                }
+                if (changeHistory && changeHistory.innerHTML.includes(baseUrl)) {
+                    changeHistory.innerHTML = '';
+                }
+            }, 1500);
+            
+        } else {
+            status.innerHTML = `❌ Failed to reset ${baseUrl}: ${result.error}`;
+        }
+
+    } catch (error) {
+        status.innerHTML = `❌ Error resetting ${baseUrl}: ${error.message}`;
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText || '🗑️ Reset & Clear';
+            button.classList.remove('loading');
+        }
+    }
+}
+
 async function triggerScraping() {
     const startBtn = document.getElementById('startBtn');
     const stopBtn = document.getElementById('stopBtn');
@@ -345,6 +407,10 @@ siteDiv.innerHTML = `
             <button class="btn-scrap-site btn-small btn-primary" 
                     onclick="scrapSingleSite('${site._id}', '${site.baseUrl}', event)">
                 🔄 Scrap Now
+            </button>
+            <button class="btn-delete-data btn-small" 
+                    onclick="resetAndDeleteScrapeData('${site._id}', '${site.baseUrl}', event)">
+                🗑️ Reset & Clear
             </button>
             <span style="font-size: 12px; color: #666;">
                 Last scraped: ${site.lastScrapedAt ? new Date(site.lastScrapedAt).toLocaleString() : 'Never'}

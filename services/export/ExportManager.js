@@ -50,10 +50,20 @@ async getLatestChangesExport() {
       return null;
     }
 
-    // Check if file exists
-    const exists = await fs.pathExists(exportFile.filePath);
+    // Check if file exists in root (for local testing)
+    const localPath = path.join(process.cwd(), exportFile.filename);
+    let exists = await fs.pathExists(localPath);
+    
+    if (exists) {
+      exportFile.filePath = localPath; // Override for local download
+    } else {
+      // Fallback to original path
+      exists = await fs.pathExists(exportFile.filePath);
+    }
+
     if (!exists) {
-      throw new Error('Changes export file not found on disk');
+      console.warn(`Changes export file record found but physical file is missing: ${exportFile.filePath} (also checked local root)`);
+      return null;
     }
 
     return exportFile;
@@ -426,10 +436,20 @@ async _generateChangesExportInternal(options = {}) {
         return null;
       }
 
-      // Check if file exists
-      const exists = await fs.pathExists(exportFile.filePath);
+      // Check if file exists in root (for local testing)
+      const localPath = path.join(process.cwd(), exportFile.filename);
+      let exists = await fs.pathExists(localPath);
+      
+      if (exists) {
+        exportFile.filePath = localPath; // Override for local download
+      } else {
+        // Fallback to original path
+        exists = await fs.pathExists(exportFile.filePath);
+      }
+
       if (!exists) {
-        throw new Error('File not found on disk');
+        console.warn(`Full export file record found but physical file is missing: ${exportFile.filePath} (also checked local root)`);
+        return null;
       }
 
       return exportFile;
@@ -457,10 +477,19 @@ async _generateChangesExportInternal(options = {}) {
         throw new Error('Export file is no longer available');
       }
 
-      // Check if file exists
-      const exists = await fs.pathExists(exportFile.filePath);
+      // Check if file exists in root (for local testing)
+      const localPath = path.join(process.cwd(), exportFile.filename);
+      let exists = await fs.pathExists(localPath);
+      
+      if (exists) {
+        exportFile.filePath = localPath; // Override for local download
+      } else {
+        // Fallback to original path
+        exists = await fs.pathExists(exportFile.filePath);
+      }
+
       if (!exists) {
-        throw new Error('File not found on disk');
+        throw new Error('File not found on disk (checked local root as well)');
       }
 
       // Update download stats

@@ -32,7 +32,7 @@ exportScheduler.initialize();
 schedulerService.setExportScheduler(exportScheduler);
 
 
-schedulerService.triggerManualScraping();
+// schedulerService.triggerManualScraping();
 schedulerService.initializeMonthlyScheduling();
 
 
@@ -139,6 +139,15 @@ app.get('/signup', (req, res) => {
 // Serve the new changes dashboard page
 app.get("/changes", requireAuth, (req, res) => {
     res.sendFile(join(__dirname, "public", "changes.html"));
+});
+
+// Serve the detailed site history page
+app.get("/changes/site/:siteId", requireAuth, (req, res) => {
+    res.sendFile(join(__dirname, "public", "site-history.html"));
+});
+
+app.get("/diff-test", requireAuth, (req, res) => {
+    res.sendFile(join(__dirname, "public", "diff-viewer.html"));
 });
 
 // Protected route example
@@ -295,6 +304,65 @@ app.post('/:id/reset-parser', requireAuthAPI, async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+// Route to delete all snaps, profiles, changelogs, failed directory records and reset parser for a site
+app.post("/api/site/:siteId/reset-all", requireAuthAPI, async (req, res) => {
+  try {
+    const siteId = req.params.siteId;
+    
+    // Find the site
+    const site = await Site.findById(siteId);
+    if (!site) {
+      return res.status(404).json({ success: false, error: "Site not found" });
+    }
+
+    // 1. Delete all snapshots of that directory/site
+    const snapshotDeleteResult = await Snapshot.deleteMany({ site: site._id });
+    
+    // 2. Delete all profiles related to that site
+    const profileDeleteResult = await StaffProfile.deleteMany({ site: site._id });
+    
+    // 3. Delete all changelogs related to that site
+    const changeLogDeleteResult = await ChangeLog.deleteMany({ site: site._id });
+
+    // 4. Delete from failed directories if exists
+    await FailedDirectory.findOneAndDelete({ staffDirectory: site.staffDirectory });
+
+    // 5. Reset the successfulParser and parserFailedLastTime on StaffDirectory
+    const staffDir = await StaffDirectory.findOneAndUpdate(
+      { 
+        $or: [
+          { baseUrl: site.baseUrl },
+          { staffDirectory: site.staffDirectory }
+        ]
+      },
+      { 
+        successfulParser: null,
+        parserFailedLastTime: false 
+      },
+      { new: true }
+    );
+
+    // 6. Reset site scraping meta in Site document
+    site.latestSnapshot = null;
+    site.lastScrapedAt = null;
+    await site.save();
+
+    res.json({
+      success: true,
+      message: `Successfully reset and deleted all scraping data for ${site.baseUrl}`,
+      deletedSnapshotsCount: snapshotDeleteResult.deletedCount,
+      deletedProfilesCount: profileDeleteResult.deletedCount,
+      deletedChangeLogsCount: changeLogDeleteResult.deletedCount,
+      parserReset: !!staffDir
+    });
+
+  } catch (error) {
+    console.error('Error resetting site scrape data:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 
 app.post("/stop-scraping", requireAuthAPI, async (req, res) => {
     try {
@@ -718,8 +786,9 @@ if (!MONGODB_URI) {
 }
 console.log("🫀" , MONGODB_URI)
 // Enhanced connection options with auto-reconnect
-mongoose.connect(MONGODB_URI, {
-
+mongoose.connect("mongodb+srv://learnFirstAdmin:mT4aOUQ8IeZlGqf6@khareedofrokht.h4nje.mongodb.net/universities?retryWrites=true&w=majority&appName=khareedofrokht", {
+ tls: true,                          // ← ADD THIS
+    tlsAllowInvalidCertificates: true,  // ← ADD THIS (for development)
     serverSelectionTimeoutMS: 30000,  // 30 seconds timeout
     socketTimeoutMS: 45000,           // 45 seconds socket timeout
     maxPoolSize: 10,                  // Keep 10 connections ready
@@ -767,8 +836,15 @@ mongoose.connection.on('disconnected', async () => {
         setTimeout(async () => {
             try {
                 await mongoose.connect(MONGODB_URI, {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true
+                   tls: true,                          // ← ADD THIS
+    tlsAllowInvalidCertificates: true,  // ← ADD THIS (for development)
+    serverSelectionTimeoutMS: 30000,  // 30 seconds timeout
+    socketTimeoutMS: 45000,           // 45 seconds socket timeout
+    maxPoolSize: 10,                  // Keep 10 connections ready
+    minPoolSize: 2,                   // Minimum 2 connections
+    heartbeatFrequencyMS: 10000,      // Send heartbeat every 10 seconds
+    retryWrites: true,
+    retryReads: true
                 });
                 reconnectAttempts = 0; // Reset counter on success
                 console.log('✅ Reconnected successfully!');

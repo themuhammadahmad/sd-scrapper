@@ -1,0 +1,14 @@
+{
+  "school": "University of Southern California",
+  "ipeds": "123961",
+  "totalChanges": 6,
+  "byType": {
+    "added": 3,
+    "removed": 1,
+    "updated": 2
+  },
+  "missingNames": 0,
+  "namesWithFirstLast": 6,
+  "onlyFirstName": 0,
+  "issues": []
+}

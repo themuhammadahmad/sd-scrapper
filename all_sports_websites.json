@@ -1,4 +1,5 @@
-[{
+[
+  {
     "baseUrl": "https://www.baypath.edu/",
     "staffDirectory": "https://athletics.baypath.edu/information/directory/index",
     "ipeds": "164632",
@@ -1078,7 +1079,6 @@
     "collegeWebsite": "https://anderson.edu/",
     "sportsCode": "1"
   },
-  
   {
     "baseUrl": "https://www.bowdoin.edu/",
     "staffDirectory": "https://athletics.bowdoin.edu/staff-directory",

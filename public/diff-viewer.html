@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapshot Diff Viewer | Local Debug Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --header-bg: #1e293b;
+            --card-bg: #ffffff;
+            --added: #ecfdf5;
+            --added-text: #065f46;
+            --added-border: #10b981;
+            --removed: #fef2f2;
+            --removed-text: #991b1b;
+            --removed-border: #ef4444;
+            --updated: #eff6ff;
+            --updated-text: #1e40af;
+            --updated-border: #3b82f6;
+            --text-main: #334155;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .app-header {
+            background-color: var(--header-bg);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            z-index: 10;
+        }
+
+        .site-info h1 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .site-info p {
+            margin: 5px 0 0;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover { background: #2563eb; transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+        
+        button.secondary { background: #475569; }
+        button.secondary:hover { background: #334155; }
+
+        /* Split Pane */
+        .main-view {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            gap: 2px;
+            background-color: #e2e8f0;
+        }
+
+        .pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg);
+            overflow: hidden;
+        }
+
+        .pane-header {
+            padding: 12px 20px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+
+        .pane-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* Cards */
+        .staff-card {
+            background: var(--card-bg);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .staff-card:hover { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+
+        .staff-name { font-weight: 700; font-size: 1rem; color: #1e293b; margin-bottom: 4px; }
+        .staff-title { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 8px; }
+        
+        .meta-row { display: flex; gap: 15px; font-size: 0.75rem; color: #94a3b8; }
+        .meta-row i { margin-right: 4px; }
+
+        /* Diff States */
+        .card-added { background-color: var(--added); border-color: var(--added-border); }
+        .card-added::before { content: 'ADDED'; position: absolute; top: 10px; right: 10px; font-size: 0.65rem; font-weight: 800; color: var(--added-text); padding: 2px 6px; background: white; border-radius: 4px; }
+
+        .card-removed { background-color: var(--removed); border-color: var(--removed-border); opacity: 0.8; }
+        .card-removed::before { content: 'REMOVED'; position: absolute; top: 10px; right: 10px; font-size: 0.65rem; font-weight: 800; color: var(--removed-text); padding: 2px 6px; background: white; border-radius: 4px; }
+
+        .card-updated { background-color: var(--updated); border-color: var(--updated-border); }
+        
+        .diff-tag {
+            display: inline-block;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-family: 'Fira Code', monospace;
+            margin-top: 8px;
+            color: #4b5563;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            display: none;
+        }
+
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div style="font-weight: 600; color: #1e293b;">Loading Random Site Change...</div>
+    </div>
+
+    <header class="app-header">
+        <div class="site-info">
+            <h1 id="siteName">Select a site to compare</h1>
+            <p id="siteMeta">Snapshot Comparison Tool</p>
+        </div>
+        <div class="controls">
+            <button onclick="fetchRandomChange()">
+                <i class="fas fa-random"></i> Pick Random Site
+            </button>
+            <button class="secondary" onclick="window.location.href='/changes'">
+                <i class="fas fa-home"></i> Dashboard
+            </button>
+        </div>
+    </header>
+
+    <main class="main-view">
+        <!-- Before Pane -->
+        <section class="pane">
+            <div class="pane-header">
+                <span><i class="fas fa-history"></i> BEFORE</span>
+                <span id="beforeDate">---</span>
+            </div>
+            <div class="pane-content" id="beforeContent">
+                <div style="text-align: center; color: #94a3b8; margin-top: 50px;">
+                    <i class="fas fa-arrow-up" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                    <p>Click "Pick Random Site" to start</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- After Pane -->
+        <section class="pane">
+            <div class="pane-header">
+                <span><i class="fas fa-bolt"></i> AFTER</span>
+                <span id="afterDate">---</span>
+            </div>
+            <div class="pane-content" id="afterContent">
+                <div style="text-align: center; color: #94a3b8; margin-top: 50px;">
+                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                    <p>Comparing live database snapshots</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        async function fetchRandomChange() {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = 'flex';
+
+            try {
+                // Get siteId from URL if present
+                const urlParams = new URLSearchParams(window.location.search);
+                const siteId = urlParams.get('siteId');
+                const apiUrl = siteId ? `/api/debug/random-change?siteId=${siteId}` : '/api/debug/random-change';
+
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    overlay.style.display = 'none';
+                    return;
+                }
+
+                // [LOUD LOGGING FOR USER]
+                console.log("%c--- SNAPSHOT COMPARISON DATA ---", "color: #667eea; font-size: 16px; font-weight: bold;");
+                console.log("BEFORE SNAPSHOT:", data.fromSnapshot);
+                console.log("AFTER SNAPSHOT:", data.toSnapshot);
+                console.log("CHANGE LOG RECORD:", data);
+                console.log("%c---------------------------------", "color: #667eea;");
+
+                renderDiff(data);
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Failed to fetch data. Make sure server is running.');
+            } finally {
+                overlay.style.display = 'none';
+            }
+        }
+
+        function copyJSON(type) {
+            const data = type === 'before' ? window.lastFromSnap : window.lastToSnap;
+            navigator.clipboard.writeText(JSON.stringify(data, null, 2)).then(() => {
+                alert('Copied ' + type + ' snapshot to clipboard!');
+            });
+        }
+
+        function renderDiff(change) {
+            const { site, fromSnapshot, toSnapshot, added, removed, updated } = change;
+            
+            // Store for copying
+            window.lastFromSnap = fromSnapshot;
+            window.lastToSnap = toSnapshot;
+
+            // Update Header
+            document.getElementById('siteName').textContent = site.baseUrl;
+            document.getElementById('siteMeta').textContent = `ID: ${site._id} | Directory: ${site.staffDirectory}`;
+            
+            const beforeHeader = document.querySelector('.pane:nth-child(1) .pane-header');
+            const afterHeader = document.querySelector('.pane:nth-child(2) .pane-header');
+
+            beforeHeader.innerHTML = `
+                <span><i class="fas fa-history"></i> BEFORE (${new Date(fromSnapshot.snapshotDate).toLocaleTimeString()})</span>
+                <button onclick="copyJSON('before')" style="padding: 2px 8px; font-size: 0.7rem; background: #475569;">Copy JSON</button>
+            `;
+
+            afterHeader.innerHTML = `
+                <span><i class="fas fa-bolt"></i> AFTER (${new Date(toSnapshot.snapshotDate).toLocaleTimeString()})</span>
+                <button onclick="copyJSON('after')" style="padding: 2px 8px; font-size: 0.7rem; background: #475569;">Copy JSON</button>
+            `;
+
+            const beforeContainer = document.getElementById('beforeContent');
+            const afterContainer = document.getElementById('afterContent');
+            
+            beforeContainer.innerHTML = '';
+            afterContainer.innerHTML = '';
+
+            // Flatten all members from snapshots
+            const beforeMembers = [];
+            fromSnapshot.categories.forEach(cat => {
+                cat.members.forEach(m => beforeMembers.push({...m, category: cat.name}));
+            });
+
+            const afterMembers = [];
+            toSnapshot.categories.forEach(cat => {
+                cat.members.forEach(m => afterMembers.push({...m, category: cat.name}));
+            });
+
+            // Track IDs for highlighting
+            const addedFingerprints = new Set(added.map(m => m.fingerprint));
+            const removedFingerprints = new Set(removed.map(m => m.fingerprint));
+            const updatedFingerprints = new Map(updated.map(u => [u.fingerprint, u.diffs]));
+
+            // Render Before Pane
+            beforeMembers.forEach(member => {
+                const isRemoved = removedFingerprints.has(member.fingerprint);
+                const isUpdated = updatedFingerprints.has(member.fingerprint);
+                
+                const card = createStaffCard(member, {
+                    removed: isRemoved,
+                    updated: isUpdated,
+                    diffs: updatedFingerprints.get(member.fingerprint)
+                });
+                beforeContainer.appendChild(card);
+            });
+
+            // Render After Pane
+            afterMembers.forEach(member => {
+                const isAdded = addedFingerprints.has(member.fingerprint);
+                const isUpdated = updatedFingerprints.has(member.fingerprint);
+                
+                const card = createStaffCard(member, {
+                    added: isAdded,
+                    updated: isUpdated,
+                    diffs: updatedFingerprints.get(member.fingerprint)
+                });
+                afterContainer.appendChild(card);
+            });
+        }
+
+        function createStaffCard(member, state) {
+            const div = document.createElement('div');
+            div.className = 'staff-card';
+            
+            if (state.added) div.classList.add('card-added');
+            if (state.removed) div.classList.add('card-removed');
+            if (state.updated) div.classList.add('card-updated');
+
+            let diffHtml = '';
+            if (state.updated && state.diffs) {
+                const changedFields = Object.keys(state.diffs).join(', ');
+                diffHtml = `<div class="diff-tag"><i class="fas fa-sync"></i> Changed: ${changedFields}</div>`;
+            }
+
+            // [NEW] Deep detail for debugging
+            const rawData = JSON.stringify(member, null, 2);
+
+            div.innerHTML = `
+                <div class="staff-name">${member.name || 'No Name'}</div>
+                <div class="staff-title">${member.title || 'No Title'}</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-family: 'Fira Code', monospace; margin: 8px 0; background: #f1f5f9; padding: 4px; border-radius: 4px; border: 1px solid #e2e8f0; overflow-x: auto;">
+                    ${member.fingerprint}
+                </div>
+                <div class="meta-row">
+                    <span><i class="fas fa-tags"></i> ${member.category}</span>
+                    <span><i class="fas fa-envelope"></i> ${member.emails ? member.emails.length : 0}</span>
+                </div>
+                ${diffHtml}
+            `;
+
+            return div;
+        }
+
+        // Load one automatically
+        window.onload = fetchRandomChange;
+    </script>
+</body>
+</html>

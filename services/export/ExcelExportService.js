@@ -18,6 +18,63 @@ export class ExcelExportService {
     fs.ensureDirSync(this.exportDir);
   }
 
+   /**
+   * Check if a string looks like a name rather than a position title
+   */
+  isNameLikeString(str, nameForComparison = '') {
+    if (!str) return false;
+    
+    // Common position keywords that indicate it's actually a title
+    const positionKeywords = [
+      'coach', 'head', 'assistant', 'director', 'manager', 'coordinator',
+      'trainer', 'analyst', 'specialist', 'consultant', 'officer',
+      'administrator', 'advisor', 'counselor', 'professor', 'instructor',
+      'teacher', 'staff', 'associate', 'senior', 'junior', 'assistant',
+      'volunteer', 'intern', 'graduate', 'fellow', 'resident'
+    ];
+    
+    // If string contains position keywords, it's likely a real title
+    const lowerStr = str.toLowerCase();
+    for (const keyword of positionKeywords) {
+      if (lowerStr.includes(keyword)) {
+        return false;
+      }
+    }
+    
+    // If string is provided and matches the person's name, it's likely a name
+    if (nameForComparison && str === nameForComparison) {
+      return true;
+    }
+    
+    // If string has no spaces, it might be a name
+    if (!str.includes(' ') && str.length < 30) {
+      return true;
+    }
+    
+    // Check if string looks like a name (all letters, proper case pattern)
+    const namePattern = /^[A-Z][a-z]+(?:\s[A-Z][a-z]+)*$/;
+    if (namePattern.test(str)) {
+      const lowerStr = str.toLowerCase();
+      const positionIndicators = ['of', 'for', 'and', '&', 'in', 'to'];
+      let hasPositionIndicator = false;
+      for (const indicator of positionIndicators) {
+        if (lowerStr.includes(` ${indicator} `)) {
+          hasPositionIndicator = true;
+          break;
+        }
+      }
+      
+      if (hasPositionIndicator) {
+        return false;
+      }
+      
+      return true;
+    }
+    
+    return false;
+  }
+
+
   /**
    * Get domain name from URL for school column
    */
@@ -57,11 +114,14 @@ export class ExcelExportService {
   async generateFullExport() {
     const directories = await StaffDirectory.find().lean();
 
-    // Create quick lookup: baseUrl → ipeds
-    const ipedsMap = new Map();
+    // Create quick lookup: baseUrl → { ipeds, schoolName }
+    const directoryMap = new Map();
     directories.forEach(dir => {
       if (dir.baseUrl) {
-        ipedsMap.set(dir.baseUrl, dir.ipeds || '');
+        directoryMap.set(dir.baseUrl, {
+          ipeds: dir.ipeds || '',
+          schoolName: dir.schoolName || ''
+        });
       }
     });
 
@@ -112,10 +172,10 @@ export class ExcelExportService {
       for (const university of universities) {
         console.log(`📊 Processing ${this.extractSchoolName(university)}...`);
 
-     // Get profiles for this university
-const profiles = await StaffProfile.find({ site: university._id })
-  .select('canonicalName emails phones fingerprint lastSeenAt updatedAt profileUrl raw title categories') // ✅ ADD 'categories' here
-  .lean();
+        // Get profiles for this university
+        const profiles = await StaffProfile.find({ site: university._id })
+          .select('canonicalName emails phones fingerprint lastSeenAt updatedAt profileUrl raw title categories') // ✅ ADD 'categories' here
+          .lean();
 
         console.log(`   Found ${profiles.length} profiles`);
 
@@ -144,8 +204,10 @@ const profiles = await StaffProfile.find({ site: university._id })
             profile.title ||
             '(General Contact)';
 
-          // Get IPEDS using baseUrl
-          const ipedsId = ipedsMap.get(university.baseUrl) || '';
+          // Get directory info using baseUrl
+          const dirInfo = directoryMap.get(university.baseUrl) || {};
+          const ipedsId = dirInfo.ipeds || '';
+          const schoolName = dirInfo.schoolName || this.extractSchoolName(university);
 
           // Join categories for sport code
           const sportCode = Array.isArray(profile.categories)
@@ -154,10 +216,10 @@ const profiles = await StaffProfile.find({ site: university._id })
 
           // Add row matching template format
           worksheet.addRow({
-            ipedsId: ipedsId || '', // Leave blank as we don't have this data
-            school: this.extractSchoolName(university),
+            ipedsId: ipedsId || '',
+            school: schoolName,
             uniqueId: profile.fingerprint || '',
-            sportCode: sportCode || '', // Leave blank for now
+            sportCode: sportCode || '',
             firstName: firstName,
             lastName: lastName,
             position: position,
@@ -222,745 +284,819 @@ const profiles = await StaffProfile.find({ site: university._id })
       throw error;
     }
   }
-/**
- * Generate Excel file containing only changed staff profiles (full export)
- */
-// async generateChangesExport() {
-//   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-//   const filename = `staff-changes-${timestamp}.xlsx`;
-//   const filePath = path.join(this.exportDir, filename);
+  /**
+   * Generate Excel file containing only changed staff profiles (full export)
+   */
+  // async generateChangesExport() {
+  //   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  //   const filename = `staff-changes-${timestamp}.xlsx`;
+  //   const filePath = path.join(this.exportDir, filename);
 
-//   console.log(`🔄 Generating changes export: ${filename}`);
+  //   console.log(`🔄 Generating changes export: ${filename}`);
 
-//   try {
-//       // Get all change logs
-//     let changeLogs = await ChangeLog.find({}).populate('site fromSnapshot toSnapshot')
-//       .sort({ createdAt: -1 })
-//       .lean();
+  //   try {
+  //       // Get all change logs
+  //     let changeLogs = await ChangeLog.find({}).populate('site fromSnapshot toSnapshot')
+  //       .sort({ createdAt: -1 })
+  //       .lean();
 
-//     console.log(`📊 Found ${changeLogs.length} change records`);
+  //     console.log(`📊 Found ${changeLogs.length} change records`);
 
-//     // Check if there are any changes at all
-//     let totalChanges = 0;
-//     for (const changeLog of changeLogs) {
-//       totalChanges += (changeLog.added?.length || 0) + 
-//                      (changeLog.removed?.length || 0) + 
-//                      (changeLog.updated?.length || 0);
-//     }
+  //     // Check if there are any changes at all
+  //     let totalChanges = 0;
+  //     for (const changeLog of changeLogs) {
+  //       totalChanges += (changeLog.added?.length || 0) + 
+  //                      (changeLog.removed?.length || 0) + 
+  //                      (changeLog.updated?.length || 0);
+  //     }
 
-//      if (totalChanges === 0) {
-//       console.log('⚠️ No changes found to export');
-      
-//       // Create a minimal workbook with a message
-//       const workbook = new ExcelJS.Workbook();
-//       workbook.creator = 'University Directory System - Changes Export';
-//       workbook.created = new Date();
+  //      if (totalChanges === 0) {
+  //       console.log('⚠️ No changes found to export');
 
-//       const worksheet = workbook.addWorksheet('No Changes');
-      
-//       // Add message
-//       worksheet.addRow(['No changes detected']);
-//       worksheet.addRow(['There are no recorded changes in the system yet.']);
-//       worksheet.addRow(['Start scraping directories to track changes over time.']);
-      
-//       await workbook.xlsx.writeFile(filePath);
-      
-//       const stats = await fs.stat(filePath);
-      
-//       return {
-//         filename,
-//         filePath,
-//         recordCount: 0,
-//         fileSize: stats.size,
-//         generatedAt: new Date(),
-//         summary: {
-//           changeLogs: changeLogs.length,
-//           added: 0,
-//           removed: 0,
-//           updated: 0,
-//           total: 0,
-//           message: 'No changes found'
-//         }
-//       };
-//     }
+  //       // Create a minimal workbook with a message
+  //       const workbook = new ExcelJS.Workbook();
+  //       workbook.creator = 'University Directory System - Changes Export';
+  //       workbook.created = new Date();
+
+  //       const worksheet = workbook.addWorksheet('No Changes');
+
+  //       // Add message
+  //       worksheet.addRow(['No changes detected']);
+  //       worksheet.addRow(['There are no recorded changes in the system yet.']);
+  //       worksheet.addRow(['Start scraping directories to track changes over time.']);
+
+  //       await workbook.xlsx.writeFile(filePath);
+
+  //       const stats = await fs.stat(filePath);
+
+  //       return {
+  //         filename,
+  //         filePath,
+  //         recordCount: 0,
+  //         fileSize: stats.size,
+  //         generatedAt: new Date(),
+  //         summary: {
+  //           changeLogs: changeLogs.length,
+  //           added: 0,
+  //           removed: 0,
+  //           updated: 0,
+  //           total: 0,
+  //           message: 'No changes found'
+  //         }
+  //       };
+  //     }
 
 
-//     const workbook = new ExcelJS.Workbook();
-//     workbook.creator = 'University Directory System - Changes Export';
-//     workbook.created = new Date();
+  //     const workbook = new ExcelJS.Workbook();
+  //     workbook.creator = 'University Directory System - Changes Export';
+  //     workbook.created = new Date();
 
-//     const worksheet = workbook.addWorksheet('Changed Staff');
+  //     const worksheet = workbook.addWorksheet('Changed Staff');
 
-//     // Columns for changes export
-//     worksheet.columns = [
-//       { header: 'Change Type', key: 'changeType', width: 15 },
-//       { header: 'Change Date', key: 'changeDate', width: 20 },
-//       { header: 'IPEDS/NCES ID', key: 'ipedsId', width: 15 },
-//       { header: 'School', key: 'school', width: 30 },
-//       { header: 'Unique ID', key: 'uniqueId', width: 20 },
-//       { header: 'Sport code', key: 'sportCode', width: 20 },
-//       { header: 'First name', key: 'firstName', width: 20 },
-//       { header: 'Last name', key: 'lastName', width: 20 },
-//       { header: 'Position', key: 'position', width: 25 },
-//       { header: 'Email address', key: 'email', width: 30 },
-//       { header: 'Phone number', key: 'phone', width: 20 },
-//       { header: 'Change Details', key: 'changeDetails', width: 40 },
-//       { header: 'Snapshot Period', key: 'snapshotPeriod', width: 30 }
-//     ];
+  //     // Columns for changes export
+  //     worksheet.columns = [
+  //       { header: 'Change Type', key: 'changeType', width: 15 },
+  //       { header: 'Change Date', key: 'changeDate', width: 20 },
+  //       { header: 'IPEDS/NCES ID', key: 'ipedsId', width: 15 },
+  //       { header: 'School', key: 'school', width: 30 },
+  //       { header: 'Unique ID', key: 'uniqueId', width: 20 },
+  //       { header: 'Sport code', key: 'sportCode', width: 20 },
+  //       { header: 'First name', key: 'firstName', width: 20 },
+  //       { header: 'Last name', key: 'lastName', width: 20 },
+  //       { header: 'Position', key: 'position', width: 25 },
+  //       { header: 'Email address', key: 'email', width: 30 },
+  //       { header: 'Phone number', key: 'phone', width: 20 },
+  //       { header: 'Change Details', key: 'changeDetails', width: 40 },
+  //       { header: 'Snapshot Period', key: 'snapshotPeriod', width: 30 }
+  //     ];
 
-//     // Style the header row
-//     const headerRow = worksheet.getRow(1);
-//     headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
-//     headerRow.fill = {
-//       type: 'pattern',
-//       pattern: 'solid',
-//       fgColor: { argb: 'FF4CAF50' } // Green for changes
-//     };
+  //     // Style the header row
+  //     const headerRow = worksheet.getRow(1);
+  //     headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  //     headerRow.fill = {
+  //       type: 'pattern',
+  //       pattern: 'solid',
+  //       fgColor: { argb: 'FF4CAF50' } // Green for changes
+  //     };
 
-//     // Get all change logs (no date filters for full export)
-//      changeLogs = await ChangeLog.find({})
-//       .populate('site fromSnapshot toSnapshot')
-//       .sort({ createdAt: -1 })
-//       .lean();
+  //     // Get all change logs (no date filters for full export)
+  //      changeLogs = await ChangeLog.find({})
+  //       .populate('site fromSnapshot toSnapshot')
+  //       .sort({ createdAt: -1 })
+  //       .lean();
 
-//     console.log(`📊 Found ${changeLogs.length} change records`);
+  //     console.log(`📊 Found ${changeLogs.length} change records`);
 
-//     // Get directories for IPEDS mapping
-//     const directories = await StaffDirectory.find().lean();
-//     const ipedsMap = new Map();
-//     directories.forEach(dir => {
-//       if (dir.baseUrl) {
-//         ipedsMap.set(dir.baseUrl, dir.ipeds || '');
-//       }
-//     });
+  //     // Get directories for IPEDS mapping
+  //     const directories = await StaffDirectory.find().lean();
+  //     const ipedsMap = new Map();
+  //     directories.forEach(dir => {
+  //       if (dir.baseUrl) {
+  //         ipedsMap.set(dir.baseUrl, dir.ipeds || '');
+  //       }
+  //     });
 
-//     let totalRecords = 0;
+  //     let totalRecords = 0;
 
-//     // Process each change log
-//     for (const changeLog of changeLogs) {
-//       const site = changeLog.site;
-//       if (!site) continue;
+  //     // Process each change log
+  //     for (const changeLog of changeLogs) {
+  //       const site = changeLog.site;
+  //       if (!site) continue;
 
-//       const schoolName = this.extractSchoolName(site);
-//       const ipedsId = ipedsMap.get(site.baseUrl) || '';
+  //       const schoolName = this.extractSchoolName(site);
+  //       const ipedsId = ipedsMap.get(site.baseUrl) || '';
 
-//       // Format snapshot period
-//       const snapshotPeriod = changeLog.fromSnapshot && changeLog.toSnapshot 
-//         ? `${new Date(changeLog.fromSnapshot.snapshotDate).toLocaleDateString()} → ${new Date(changeLog.toSnapshot.snapshotDate).toLocaleDateString()}`
-//         : 'N/A';
+  //       // Format snapshot period
+  //       const snapshotPeriod = changeLog.fromSnapshot && changeLog.toSnapshot 
+  //         ? `${new Date(changeLog.fromSnapshot.snapshotDate).toLocaleDateString()} → ${new Date(changeLog.toSnapshot.snapshotDate).toLocaleDateString()}`
+  //         : 'N/A';
 
-//       const changeDate = new Date(changeLog.createdAt);
+  //       const changeDate = new Date(changeLog.createdAt);
 
-//       // Process ADDED staff
-//       if (changeLog.added && changeLog.added.length > 0) {
-//         for (const addedStaff of changeLog.added) {
-//           const nameParts = (addedStaff.name || '').trim().split(' ');
-//           const firstName = nameParts[0] || '';
-//           const lastName = nameParts.slice(1).join(' ') || '';
+  //       // Process ADDED staff
+  //       if (changeLog.added && changeLog.added.length > 0) {
+  //         for (const addedStaff of changeLog.added) {
+  //           const nameParts = (addedStaff.name || '').trim().split(' ');
+  //           const firstName = nameParts[0] || '';
+  //           const lastName = nameParts.slice(1).join(' ') || '';
 
-//           // Get categories for sport code
-//           const sportCode = Array.isArray(addedStaff.categories) 
-//             ? addedStaff.categories.join(', ')
-//             : '';
+  //           // Get categories for sport code
+  //           const sportCode = Array.isArray(addedStaff.categories) 
+  //             ? addedStaff.categories.join(', ')
+  //             : '';
 
-//           worksheet.addRow({
-//             changeType: 'n', // n = new person
-//             changeDate: changeDate,
-//             ipedsId: ipedsId,
-//             school: schoolName,
-//             uniqueId: addedStaff.fingerprint || '',
-//             sportCode: sportCode,
-//             firstName: firstName,
-//             lastName: lastName,
-//             position: addedStaff.data?.title || addedStaff.data?.raw?.title || '',
-//             email: Array.isArray(addedStaff.data?.emails) ? addedStaff.data.emails[0] : '',
-//             phone: Array.isArray(addedStaff.data?.phones) ? addedStaff.data.phones[0] : '',
-//             changeDetails: `Added to ${addedStaff.categories?.join(', ') || 'default'} category`,
-//             snapshotPeriod: snapshotPeriod
-//           });
+  //           worksheet.addRow({
+  //             changeType: 'n', // n = new person
+  //             changeDate: changeDate,
+  //             ipedsId: ipedsId,
+  //             school: schoolName,
+  //             uniqueId: addedStaff.fingerprint || '',
+  //             sportCode: sportCode,
+  //             firstName: firstName,
+  //             lastName: lastName,
+  //             position: addedStaff.data?.title || addedStaff.data?.raw?.title || '',
+  //             email: Array.isArray(addedStaff.data?.emails) ? addedStaff.data.emails[0] : '',
+  //             phone: Array.isArray(addedStaff.data?.phones) ? addedStaff.data.phones[0] : '',
+  //             changeDetails: `Added to ${addedStaff.categories?.join(', ') || 'default'} category`,
+  //             snapshotPeriod: snapshotPeriod
+  //           });
 
-//           totalRecords++;
-//         }
-//       }
+  //           totalRecords++;
+  //         }
+  //       }
 
-//       // Process REMOVED staff
-//       if (changeLog.removed && changeLog.removed.length > 0) {
-//         for (const removedStaff of changeLog.removed) {
-//           const nameParts = (removedStaff.name || '').trim().split(' ');
-//           const firstName = nameParts[0] || '';
-//           const lastName = nameParts.slice(1).join(' ') || '';
+  //       // Process REMOVED staff
+  //       if (changeLog.removed && changeLog.removed.length > 0) {
+  //         for (const removedStaff of changeLog.removed) {
+  //           const nameParts = (removedStaff.name || '').trim().split(' ');
+  //           const firstName = nameParts[0] || '';
+  //           const lastName = nameParts.slice(1).join(' ') || '';
 
-//           const sportCode = Array.isArray(removedStaff.categories) 
-//             ? removedStaff.categories.join(', ')
-//             : '';
+  //           const sportCode = Array.isArray(removedStaff.categories) 
+  //             ? removedStaff.categories.join(', ')
+  //             : '';
 
-//           worksheet.addRow({
-//             changeType: 'r', // r = removed
-//             changeDate: changeDate,
-//             ipedsId: ipedsId,
-//             school: schoolName,
-//             uniqueId: removedStaff.fingerprint || '',
-//             sportCode: sportCode,
-//             firstName: firstName,
-//             lastName: lastName,
-//             position: removedStaff.data?.title || removedStaff.data?.raw?.title || '',
-//             email: Array.isArray(removedStaff.data?.emails) ? removedStaff.data.emails[0] : '',
-//             phone: Array.isArray(removedStaff.data?.phones) ? removedStaff.data.phones[0] : '',
-//             changeDetails: `Removed from ${removedStaff.categories?.join(', ') || 'default'} category`,
-//             snapshotPeriod: snapshotPeriod
-//           });
+  //           worksheet.addRow({
+  //             changeType: 'r', // r = removed
+  //             changeDate: changeDate,
+  //             ipedsId: ipedsId,
+  //             school: schoolName,
+  //             uniqueId: removedStaff.fingerprint || '',
+  //             sportCode: sportCode,
+  //             firstName: firstName,
+  //             lastName: lastName,
+  //             position: removedStaff.data?.title || removedStaff.data?.raw?.title || '',
+  //             email: Array.isArray(removedStaff.data?.emails) ? removedStaff.data.emails[0] : '',
+  //             phone: Array.isArray(removedStaff.data?.phones) ? removedStaff.data.phones[0] : '',
+  //             changeDetails: `Removed from ${removedStaff.categories?.join(', ') || 'default'} category`,
+  //             snapshotPeriod: snapshotPeriod
+  //           });
 
-//           totalRecords++;
-//         }
-//       }
+  //           totalRecords++;
+  //         }
+  //       }
 
-//       // Process UPDATED staff
-//       if (changeLog.updated && changeLog.updated.length > 0) {
-//         for (const updatedStaff of changeLog.updated) {
-//           const nameParts = (updatedStaff.name || '').trim().split(' ');
-//           const firstName = nameParts[0] || '';
-//           const lastName = nameParts.slice(1).join(' ') || '';
+  //       // Process UPDATED staff
+  //       if (changeLog.updated && changeLog.updated.length > 0) {
+  //         for (const updatedStaff of changeLog.updated) {
+  //           const nameParts = (updatedStaff.name || '').trim().split(' ');
+  //           const firstName = nameParts[0] || '';
+  //           const lastName = nameParts.slice(1).join(' ') || '';
 
-//           // Extract change details
-//           let changeDetails = '';
-//           let codes = new Set();
-//           if (updatedStaff.diffs) {
-//             const diffFields = Object.keys(updatedStaff.diffs);
-//             changeDetails = diffFields.map(field => {
-//               const diff = updatedStaff.diffs[field];
-//               
-//               // Map codes
-//               if (field === 'title' || field === 'name') codes.add('j');
-//               if (field === 'emails') codes.add('e');
-//               if (field === 'phones') codes.add('#');
-//               if (field === 'categories') codes.add('a');
-//               
-//               return `${field}: ${diff.before || 'N/A'} → ${diff.after || 'N/A'}`;
-//             }).join('; ');
-//           }
+  //           // Extract change details
+  //           let changeDetails = '';
+  //           let codes = new Set();
+  //           if (updatedStaff.diffs) {
+  //             const diffFields = Object.keys(updatedStaff.diffs);
+  //             changeDetails = diffFields.map(field => {
+  //               const diff = updatedStaff.diffs[field];
+  //               
+  //               // Map codes
+  //               if (field === 'title' || field === 'name') codes.add('j');
+  //               if (field === 'emails') codes.add('e');
+  //               if (field === 'phones') codes.add('#');
+  //               if (field === 'categories') codes.add('a');
+  //               
+  //               return `${field}: ${diff.before || 'N/A'} → ${diff.after || 'N/A'}`;
+  //             }).join('; ');
+  //           }
 
-//           // Get sport code from current categories
-//           const currentCategories = updatedStaff.after?.categories || updatedStaff.categories;
-//           const sportCode = Array.isArray(currentCategories) 
-//             ? currentCategories.join(', ')
-//             : '';
+  //           // Get sport code from current categories
+  //           const currentCategories = updatedStaff.after?.categories || updatedStaff.categories;
+  //           const sportCode = Array.isArray(currentCategories) 
+  //             ? currentCategories.join(', ')
+  //             : '';
 
-//           // For updates not mapping to specific codes, default to 'a' if it's generic
-//           const finalCode = codes.size > 0 ? Array.from(codes).join('') : 'a';
-//
-//           worksheet.addRow({
-//             changeType: finalCode,
-//             changeDate: changeDate,
-//             ipedsId: ipedsId,
-//             school: schoolName,
-//             uniqueId: updatedStaff.fingerprint || '',
-//             sportCode: sportCode,
-//             firstName: firstName,
-//             lastName: lastName,
-//             position: updatedStaff.after?.title || updatedStaff.after?.raw?.title || '',
-//             email: Array.isArray(updatedStaff.after?.emails) ? updatedStaff.after.emails[0] : '',
-//             phone: Array.isArray(updatedStaff.after?.phones) ? updatedStaff.after.phones[0] : '',
-//             changeDetails: changeDetails || 'Details not available',
-//             snapshotPeriod: snapshotPeriod
-//           });
+  //           // For updates not mapping to specific codes, default to 'a' if it's generic
+  //           const finalCode = codes.size > 0 ? Array.from(codes).join('') : 'a';
+  //
+  //           worksheet.addRow({
+  //             changeType: finalCode,
+  //             changeDate: changeDate,
+  //             ipedsId: ipedsId,
+  //             school: schoolName,
+  //             uniqueId: updatedStaff.fingerprint || '',
+  //             sportCode: sportCode,
+  //             firstName: firstName,
+  //             lastName: lastName,
+  //             position: updatedStaff.after?.title || updatedStaff.after?.raw?.title || '',
+  //             email: Array.isArray(updatedStaff.after?.emails) ? updatedStaff.after.emails[0] : '',
+  //             phone: Array.isArray(updatedStaff.after?.phones) ? updatedStaff.after.phones[0] : '',
+  //             changeDetails: changeDetails || 'Details not available',
+  //             snapshotPeriod: snapshotPeriod
+  //           });
 
-//           totalRecords++;
-//         }
-//       }
-//     }
+  //           totalRecords++;
+  //         }
+  //       }
+  //     }
 
-//     // Apply conditional formatting based on change type
-//     for (let i = 2; i <= worksheet.rowCount; i++) {
-//       const row = worksheet.getRow(i);
-//       const changeType = row.getCell('A').value; // Change Type column
+  //     // Apply conditional formatting based on change type
+  //     for (let i = 2; i <= worksheet.rowCount; i++) {
+  //       const row = worksheet.getRow(i);
+  //       const changeType = row.getCell('A').value; // Change Type column
 
-//       // Color code rows based on change type
-//       let color = 'FFFFFFFF'; // Default white
-      
-//       if (changeType === 'n') {
-//         color = 'FFE8F5E9'; // Light green
-//       } else if (changeType === 'r') {
-//         color = 'FFFCE4EC'; // Light red
-//       } else if (/[jae#]/.test(changeType)) {
-//         color = 'FFF3E5F5'; // Light purple
-//       }
+  //       // Color code rows based on change type
+  //       let color = 'FFFFFFFF'; // Default white
 
-//       row.fill = {
-//         type: 'pattern',
-//         pattern: 'solid',
-//         fgColor: { argb: color }
-//       };
-//     }
+  //       if (changeType === 'n') {
+  //         color = 'FFE8F5E9'; // Light green
+  //       } else if (changeType === 'r') {
+  //         color = 'FFFCE4EC'; // Light red
+  //       } else if (/[jae#]/.test(changeType)) {
+  //         color = 'FFF3E5F5'; // Light purple
+  //       }
 
-//     // Format date column
-//     worksheet.getColumn('changeDate').numFmt = 'yyyy-mm-dd hh:mm:ss';
+  //       row.fill = {
+  //         type: 'pattern',
+  //         pattern: 'solid',
+  //         fgColor: { argb: color }
+  //       };
+  //     }
 
-//     // Auto-fit columns
-//     worksheet.columns.forEach(column => {
-//       if (column.key === 'changeDetails' || column.key === 'snapshotPeriod') {
-//         column.width = 40; // Wider for details
-//       } else if (column.width) {
-//         column.width = Math.max(column.width, column.header.length + 2);
-//       }
-//     });
+  //     // Format date column
+  //     worksheet.getColumn('changeDate').numFmt = 'yyyy-mm-dd hh:mm:ss';
 
-//     // Add a summary worksheet
-//     const summarySheet = workbook.addWorksheet('Summary');
-    
-//     // Summary stats
-//     const addedCount = changeLogs.reduce((sum, log) => sum + (log.added?.length || 0), 0);
-//     const removedCount = changeLogs.reduce((sum, log) => sum + (log.removed?.length || 0), 0);
-//     const updatedCount = changeLogs.reduce((sum, log) => sum + (log.updated?.length || 0), 0);
-    
-//     summarySheet.columns = [
-//       { header: 'Metric', key: 'metric', width: 25 },
-//       { header: 'Value', key: 'value', width: 20 }
-//     ];
+  //     // Auto-fit columns
+  //     worksheet.columns.forEach(column => {
+  //       if (column.key === 'changeDetails' || column.key === 'snapshotPeriod') {
+  //         column.width = 40; // Wider for details
+  //       } else if (column.width) {
+  //         column.width = Math.max(column.width, column.header.length + 2);
+  //       }
+  //     });
 
-//     summarySheet.addRow({ metric: 'Total Change Records', value: changeLogs.length });
-//     summarySheet.addRow({ metric: 'Staff Added', value: addedCount });
-//     summarySheet.addRow({ metric: 'Staff Removed', value: removedCount });
-//     summarySheet.addRow({ metric: 'Staff Updated', value: updatedCount });
-//     summarySheet.addRow({ metric: 'Total Changed Staff', value: totalRecords });
-//     summarySheet.addRow({ metric: 'Export Generated', value: new Date().toLocaleString() });
+  //     // Add a summary worksheet
+  //     const summarySheet = workbook.addWorksheet('Summary');
 
-//     // Save the workbook
-//     await workbook.xlsx.writeFile(filePath);
+  //     // Summary stats
+  //     const addedCount = changeLogs.reduce((sum, log) => sum + (log.added?.length || 0), 0);
+  //     const removedCount = changeLogs.reduce((sum, log) => sum + (log.removed?.length || 0), 0);
+  //     const updatedCount = changeLogs.reduce((sum, log) => sum + (log.updated?.length || 0), 0);
 
-//     // Get file stats
-//     const stats = await fs.stat(filePath);
+  //     summarySheet.columns = [
+  //       { header: 'Metric', key: 'metric', width: 25 },
+  //       { header: 'Value', key: 'value', width: 20 }
+  //     ];
 
-//     console.log(`✅ Changes export created: ${filename} (${totalRecords} changed staff records)`);
+  //     summarySheet.addRow({ metric: 'Total Change Records', value: changeLogs.length });
+  //     summarySheet.addRow({ metric: 'Staff Added', value: addedCount });
+  //     summarySheet.addRow({ metric: 'Staff Removed', value: removedCount });
+  //     summarySheet.addRow({ metric: 'Staff Updated', value: updatedCount });
+  //     summarySheet.addRow({ metric: 'Total Changed Staff', value: totalRecords });
+  //     summarySheet.addRow({ metric: 'Export Generated', value: new Date().toLocaleString() });
 
-//     return {
-//       filename,
-//       filePath,
-//       recordCount: totalRecords,
-//       fileSize: stats.size,
-//       generatedAt: new Date(),
-//       summary: {
-//         changeLogs: changeLogs.length,
-//         added: addedCount,
-//         removed: removedCount,
-//         updated: updatedCount,
-//         total: totalRecords
-//       }
-//     };
+  //     // Save the workbook
+  //     await workbook.xlsx.writeFile(filePath);
 
-//   } catch (error) {
-//     console.error('❌ Error generating changes export:', error);
-//     throw error;
-//   }
-// }
-async generateChangesExport() {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const filename = `staff-changes-${timestamp}.xlsx`;
-  const filePath = path.join(this.exportDir, filename);
+  //     // Get file stats
+  //     const stats = await fs.stat(filePath);
 
-  console.log(`🔄 Generating changes export: ${filename}`);
+  //     console.log(`✅ Changes export created: ${filename} (${totalRecords} changed staff records)`);
 
-  try {
-    // Get all change logs
-    let changeLogs = await ChangeLog.find({})
-      .populate('site fromSnapshot toSnapshot')
-      .sort({ createdAt: -1 })
-      .lean();
+  //     return {
+  //       filename,
+  //       filePath,
+  //       recordCount: totalRecords,
+  //       fileSize: stats.size,
+  //       generatedAt: new Date(),
+  //       summary: {
+  //         changeLogs: changeLogs.length,
+  //         added: addedCount,
+  //         removed: removedCount,
+  //         updated: updatedCount,
+  //         total: totalRecords
+  //       }
+  //     };
 
-    console.log(`📊 Found ${changeLogs.length} change records`);
+  //   } catch (error) {
+  //     console.error('❌ Error generating changes export:', error);
+  //     throw error;
+  //   }
+  // }
+  async generateChangesExport() {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `staff-changes-${timestamp}.xlsx`;
+    const filePath = path.join(this.exportDir, filename);
 
-    // Check if there are any changes at all
-    let totalChanges = 0;
-    for (const changeLog of changeLogs) {
-      totalChanges += (changeLog.added?.length || 0) + 
-                     (changeLog.removed?.length || 0) + 
-                     (changeLog.updated?.length || 0);
-    }
+    console.log(`🔄 Generating changes export: ${filename}`);
 
-    if (totalChanges === 0) {
-      console.log('⚠️ No changes found to export');
-      
-      // Create a minimal workbook with a message
+    try {
+      // Get all change logs
+      let changeLogs = await ChangeLog.find({})
+        .populate('site')
+        .populate('fromSnapshot', 'snapshotDate')
+        .populate('toSnapshot', 'snapshotDate')
+        .sort({ createdAt: -1 })
+        .lean();
+
+      console.log(`📊 Found ${changeLogs.length} change records`);
+
+      // Check if there are any changes at all
+      let totalChanges = 0;
+      for (const changeLog of changeLogs) {
+        const added = changeLog.added || changeLog.details?.added || [];
+        const removed = changeLog.removed || changeLog.details?.removed || [];
+        const updated = changeLog.updated || changeLog.details?.updated || [];
+        totalChanges += added.length + removed.length + updated.length;
+      }
+
+      if (totalChanges === 0) {
+        console.log('⚠️ No changes found to export');
+
+        // Create a minimal workbook with a message
+        const workbook = new ExcelJS.Workbook();
+        workbook.creator = 'University Directory System - Changes Export';
+        workbook.created = new Date();
+
+        const worksheet = workbook.addWorksheet('No Changes');
+
+        // Add message
+        worksheet.addRow(['No changes detected']);
+        worksheet.addRow(['There are no recorded changes in the system yet.']);
+        worksheet.addRow(['Start scraping directories to track changes over time.']);
+
+        await workbook.xlsx.writeFile(filePath);
+
+        const stats = await fs.stat(filePath);
+
+        return {
+          filename,
+          filePath,
+          recordCount: 0,
+          fileSize: stats.size,
+          generatedAt: new Date(),
+          summary: {
+            changeLogs: changeLogs.length,
+            added: 0,
+            removed: 0,
+            updated: 0,
+            total: 0,
+            message: 'No changes found'
+          }
+        };
+      }
+
       const workbook = new ExcelJS.Workbook();
       workbook.creator = 'University Directory System - Changes Export';
       workbook.created = new Date();
 
-      const worksheet = workbook.addWorksheet('No Changes');
-      
-      // Add message
-      worksheet.addRow(['No changes detected']);
-      worksheet.addRow(['There are no recorded changes in the system yet.']);
-      worksheet.addRow(['Start scraping directories to track changes over time.']);
-      
+      const worksheet = workbook.addWorksheet('Changed Staff');
+
+      // Columns for changes export
+      worksheet.columns = [
+        { header: 'Change Type', key: 'changeType', width: 15 },
+        { header: 'Change Date', key: 'changeDate', width: 20 },
+        { header: 'IPEDS/NCES ID', key: 'ipedsId', width: 15 },
+        { header: 'School', key: 'school', width: 30 },
+        { header: 'Unique ID', key: 'uniqueId', width: 20 },
+        { header: 'Sport code', key: 'sportCode', width: 20 },
+        { header: 'First name', key: 'firstName', width: 20 },
+        { header: 'Last name', key: 'lastName', width: 20 },
+        { header: 'Position', key: 'position', width: 25 },
+        { header: 'Email address', key: 'email', width: 30 },
+        { header: 'Phone number', key: 'phone', width: 20 },
+        { header: 'Change Details', key: 'changeDetails', width: 40 },
+        { header: 'Snapshot Period', key: 'snapshotPeriod', width: 30 },
+        { header: 'Full Name', key: 'fullName', width: 25 }
+      ];
+
+      // Style the header row
+      const headerRow = worksheet.getRow(1);
+      headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+      headerRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF4CAF50' } // Green for changes
+      };
+
+      // Get directories for mapping
+      const directories = await StaffDirectory.find().lean();
+
+      // Create quick lookup: baseUrl → { ipeds, schoolName }
+      const directoryMap = new Map();
+      directories.forEach(dir => {
+        if (dir.baseUrl) {
+          directoryMap.set(dir.baseUrl, {
+            ipeds: dir.ipeds || '',
+            schoolName: dir.schoolName || ''
+          });
+        }
+      });
+
+      let totalRecords = 0;
+
+      // Helper function to extract name parts
+      const extractNameParts = (staffRecord) => {
+        // Try to get name from different possible locations
+        let fullName = '';
+
+        // Priority 1: Direct name property
+        if (staffRecord.name) {
+          fullName = staffRecord.name;
+        }
+        // Priority 2: Name from data object
+        else if (staffRecord.data?.name) {
+          fullName = staffRecord.data.name;
+        }
+        // Priority 3: First/last from data object
+        else if (staffRecord.data?.firstName || staffRecord.data?.lastName) {
+          fullName = `${staffRecord.data.firstName || ''} ${staffRecord.data.lastName || ''}`.trim();
+        }
+        // Priority 4: First/last from raw data
+        else if (staffRecord.data?.raw?.firstName || staffRecord.data?.raw?.lastName) {
+          fullName = `${staffRecord.data.raw.firstName || ''} ${staffRecord.data.raw.lastName || ''}`.trim();
+        }
+
+        const nameParts = fullName.trim().split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+
+        return { firstName, lastName, fullName };
+      };
+
+// Helper function to get position
+const getPosition = (staffRecord, changeType = '') => {
+  // Try multiple sources for position
+  let position = staffRecord.data?.title || 
+                 staffRecord.data?.raw?.title || 
+                 staffRecord.title || 
+                 '';
+  
+  // Get name for comparison
+  let fullName = '';
+  if (staffRecord.name) fullName = staffRecord.name;
+  else if (staffRecord.data?.name) fullName = staffRecord.data.name;
+  else if (staffRecord.data?.firstName || staffRecord.data?.lastName) {
+    fullName = `${staffRecord.data.firstName || ''} ${staffRecord.data.lastName || ''}`.trim();
+  }
+  else if (staffRecord.data?.raw?.firstName || staffRecord.data?.raw?.lastName) {
+    fullName = `${staffRecord.data.raw.firstName || ''} ${staffRecord.data.raw.lastName || ''}`.trim();
+  }
+  
+  // CRITICAL FIX: For position changes (j), ALWAYS show the position even if it seems invalid
+  // Because the change itself is meaningful
+  if (changeType === 'j' || (changeType && changeType.includes('j'))) {
+    // For position changes, return whatever we have, even if empty
+    // This indicates the position was cleared or changed to empty
+    return position || '(Position removed/cleared)';
+  }
+  
+  // For non-change records (added, removed, or other updates), apply filtering
+  // Clean position - if it's just the name or empty, return empty string
+  if (!position || position.trim() === '') {
+    return '';
+  }
+  
+  // Remove "Coach" if it's just "Coach" with no real title
+  if (position.toLowerCase() === 'coach' && fullName) {
+    return '';
+  }
+  
+  // If position equals the person's name exactly, return empty
+  if (fullName && position === fullName) {
+    return '';
+  }
+  
+  // If position contains the name and nothing else substantial
+  if (fullName && position.includes(fullName) && position.replace(fullName, '').trim() === '') {
+    return '';
+  }
+  
+  return position;
+};
+
+      // Helper function to get email
+      const getEmail = (staffRecord) => {
+        if (Array.isArray(staffRecord.data?.emails) && staffRecord.data.emails.length > 0) {
+          return staffRecord.data.emails[0];
+        }
+        if (Array.isArray(staffRecord.emails) && staffRecord.emails.length > 0) {
+          return staffRecord.emails[0];
+        }
+        if (staffRecord.data?.email) {
+          return staffRecord.data.email;
+        }
+        if (staffRecord.raw?.email) {
+          return staffRecord.raw.email;
+        }
+        if (Array.isArray(staffRecord.raw?.emails) && staffRecord.raw.emails.length > 0) {
+          return staffRecord.raw.emails[0];
+        }
+        return '';
+      };
+
+      // Helper function to get phone
+      const getPhone = (staffRecord) => {
+        if (Array.isArray(staffRecord.data?.phones) && staffRecord.data.phones.length > 0) {
+          return staffRecord.data.phones[0];
+        }
+        if (Array.isArray(staffRecord.phones) && staffRecord.phones.length > 0) {
+          return staffRecord.phones[0];
+        }
+        if (staffRecord.data?.phone) {
+          return staffRecord.data.phone;
+        }
+        if (staffRecord.raw?.phone) {
+          return staffRecord.raw.phone;
+        }
+        if (Array.isArray(staffRecord.raw?.phones) && staffRecord.raw.phones.length > 0) {
+          return staffRecord.raw.phones[0];
+        }
+        return '';
+      };
+
+      // Helper function to get categories/sport codes
+      const getSportCode = (staffRecord) => {
+        const categories = staffRecord.categories || staffRecord.data?.categories;
+        if (Array.isArray(categories)) {
+          return categories.join(', ');
+        }
+        return '';
+      };
+
+      // Helper function to get fingerprint/unique ID
+      const getUniqueId = (staffRecord) => {
+        return staffRecord.fingerprint || staffRecord.data?.fingerprint || '';
+      };
+
+      // Process each change log
+      for (const changeLog of changeLogs) {
+        const site = changeLog.site;
+        if (!site) continue;
+
+        const dirInfo = directoryMap.get(site.baseUrl) || {};
+        const schoolName = dirInfo.schoolName || this.extractSchoolName(site);
+        const ipedsId = dirInfo.ipeds || '';
+
+        // Format snapshot period
+        const snapshotPeriod = changeLog.fromSnapshot && changeLog.toSnapshot
+          ? `${new Date(changeLog.fromSnapshot.snapshotDate).toLocaleDateString()} → ${new Date(changeLog.toSnapshot.snapshotDate).toLocaleDateString()}`
+          : 'N/A';
+
+        const changeDate = new Date(changeLog.createdAt);
+
+        // Process ADDED staff
+        const addedList = changeLog.added || changeLog.details?.added || [];
+        if (addedList.length > 0) {
+          for (const addedStaff of addedList) {
+            const { firstName, lastName, fullName } = extractNameParts(addedStaff);
+            const sportCode = getSportCode(addedStaff);
+
+            worksheet.addRow({
+              changeType: 'n', // n = new person
+              changeDate: changeDate,
+              ipedsId: ipedsId,
+              school: schoolName,
+              uniqueId: getUniqueId(addedStaff),
+              sportCode: sportCode,
+              fullName: fullName,
+              firstName: firstName,
+              lastName: lastName,
+              position: getPosition(addedStaff),
+              email: getEmail(addedStaff),
+              phone: getPhone(addedStaff),
+              changeDetails: `Added to ${sportCode || 'default'} category`,
+              snapshotPeriod: snapshotPeriod
+            });
+
+            totalRecords++;
+          }
+        }
+
+        // Process REMOVED staff
+        const removedList = changeLog.removed || changeLog.details?.removed || [];
+        if (removedList.length > 0) {
+          for (const removedStaff of removedList) {
+            const { firstName, lastName, fullName } = extractNameParts(removedStaff);
+            const sportCode = getSportCode(removedStaff);
+
+            worksheet.addRow({
+              changeType: 'r', // r = removed
+              changeDate: changeDate,
+              ipedsId: ipedsId,
+              school: schoolName,
+              uniqueId: getUniqueId(removedStaff),
+              sportCode: sportCode,
+              fullName: fullName,
+              firstName: firstName,
+              lastName: lastName,
+              position: getPosition(removedStaff),
+              email: getEmail(removedStaff),
+              phone: getPhone(removedStaff),
+              changeDetails: `Removed from ${sportCode || 'default'} category`,
+              snapshotPeriod: snapshotPeriod
+            });
+
+            totalRecords++;
+          }
+        }
+
+       // Process UPDATED staff
+const updatedList = changeLog.updated || changeLog.details?.updated || [];
+if (updatedList.length > 0) {
+  for (const updatedStaff of updatedList) {
+    // For UPDATED records, we need to check the structure
+    // It should have 'before' and 'after' properties
+
+    let staffData = updatedStaff.after || updatedStaff; // Try 'after' first, then the object itself
+
+    const { firstName, lastName, fullName } = extractNameParts(staffData);
+    const sportCode = getSportCode(staffData);
+
+    // Extract change details from diffs
+    let changeDetails = '';
+    let codes = new Set();
+    if (updatedStaff.diffs) {
+      const diffFields = Object.keys(updatedStaff.diffs);
+      changeDetails = diffFields.map(field => {
+        const diff = updatedStaff.diffs[field];
+
+        // Map codes based on fields
+        if (field === 'title' || field === 'name') codes.add('j');
+        if (field === 'emails') codes.add('e');
+        if (field === 'phones') codes.add('#');
+        if (field === 'categories') codes.add('a');
+
+        return `${field}: ${diff.before || 'N/A'} → ${diff.after || 'N/A'}`;
+      }).join('; ');
+    } else if (updatedStaff.before && updatedStaff.after) {
+      // If no diffs but we have before/after, create a simple change message
+      const changedFields = [];
+
+      // Compare common fields
+      const fields = ['name', 'title', 'categories', 'emails', 'phones'];
+      fields.forEach(field => {
+        const beforeVal = updatedStaff.before[field] || updatedStaff.before.data?.[field];
+        const afterVal = updatedStaff.after[field] || updatedStaff.after.data?.[field];
+
+        if (JSON.stringify(beforeVal) !== JSON.stringify(afterVal)) {
+          changedFields.push(field);
+
+          // Map codes
+          if (field === 'title' || field === 'name') codes.add('j');
+          if (field === 'emails') codes.add('e');
+          if (field === 'phones') codes.add('#');
+          if (field === 'categories') codes.add('a');
+        }
+      });
+
+      if (changedFields.length > 0) {
+        changeDetails = `Updated fields: ${changedFields.join(', ')}`;
+      }
+    }
+
+    // For updates not mapping to specific codes, default to 'a' if it's generic
+    const finalCode = codes.size > 0 ? Array.from(codes).join('') : 'a';
+    
+    // CRITICAL FIX: Pass the change code to getPosition so it knows this is a position change
+    const changeTypeForPosition = codes.has('j') ? 'j' : finalCode;
+
+    worksheet.addRow({
+      changeType: finalCode,
+      changeDate: changeDate,
+      ipedsId: ipedsId,
+      school: schoolName,
+      uniqueId: getUniqueId(staffData),
+      sportCode: sportCode,
+      fullName: fullName,
+      firstName: firstName,
+      lastName: lastName,
+      position: getPosition(staffData, changeTypeForPosition), // Pass the change type
+      email: getEmail(staffData),
+      phone: getPhone(staffData),
+      changeDetails: changeDetails || 'Details not available',
+      snapshotPeriod: snapshotPeriod
+    });
+
+    totalRecords++;
+  }
+}
+      }
+
+      // Apply conditional formatting based on change type
+      for (let i = 2; i <= worksheet.rowCount; i++) {
+        const row = worksheet.getRow(i);
+        const changeType = row.getCell('A').value; // Change Type column
+
+        // Color code rows based on change type
+        let color = 'FFFFFFFF'; // Default white
+
+        if (changeType === 'n') {
+          color = 'FFE8F5E9'; // Light green for new
+        } else if (changeType === 'r') {
+          color = 'FFFCE4EC'; // Light red for removed
+        } else if (/[jae#]/.test(changeType)) {
+          color = 'FFF3E5F5'; // Light purple for updates
+        }
+
+        row.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: color }
+        };
+      }
+
+      // Format date column
+      worksheet.getColumn('changeDate').numFmt = 'yyyy-mm-dd hh:mm:ss';
+
+      // Auto-fit columns
+      worksheet.columns.forEach(column => {
+        if (column.key === 'changeDetails' || column.key === 'snapshotPeriod') {
+          column.width = 40; // Wider for details
+        } else if (column.width) {
+          column.width = Math.max(column.width, column.header.length + 2);
+        }
+      });
+
+      // Add a summary worksheet
+      const summarySheet = workbook.addWorksheet('Summary');
+
+      // Summary stats
+      const addedCount = changeLogs.reduce((sum, log) => sum + (log.added?.length || log.details?.added?.length || 0), 0);
+      const removedCount = changeLogs.reduce((sum, log) => sum + (log.removed?.length || log.details?.removed?.length || 0), 0);
+      const updatedCount = changeLogs.reduce((sum, log) => sum + (log.updated?.length || log.details?.updated?.length || 0), 0);
+
+      summarySheet.columns = [
+        { header: 'Metric', key: 'metric', width: 25 },
+        { header: 'Value', key: 'value', width: 20 }
+      ];
+
+      summarySheet.addRow({ metric: 'Total Change Records', value: changeLogs.length });
+      summarySheet.addRow({ metric: 'Staff Added', value: addedCount });
+      summarySheet.addRow({ metric: 'Staff Removed', value: removedCount });
+      summarySheet.addRow({ metric: 'Staff Updated', value: updatedCount });
+      summarySheet.addRow({ metric: 'Total Changed Staff', value: totalRecords });
+      summarySheet.addRow({ metric: 'Export Generated', value: new Date().toLocaleString() });
+
+      // Save the workbook
       await workbook.xlsx.writeFile(filePath);
-      
+
+      // Get file stats
       const stats = await fs.stat(filePath);
-      
+
+      console.log(`✅ Changes export created: ${filename} (${totalRecords} changed staff records)`);
+
       return {
         filename,
         filePath,
-        recordCount: 0,
+        recordCount: totalRecords,
         fileSize: stats.size,
         generatedAt: new Date(),
         summary: {
           changeLogs: changeLogs.length,
-          added: 0,
-          removed: 0,
-          updated: 0,
-          total: 0,
-          message: 'No changes found'
+          added: addedCount,
+          removed: removedCount,
+          updated: updatedCount,
+          total: totalRecords
         }
       };
+
+    } catch (error) {
+      console.error('❌ Error generating changes export:', error);
+      throw error;
     }
-
-    const workbook = new ExcelJS.Workbook();
-    workbook.creator = 'University Directory System - Changes Export';
-    workbook.created = new Date();
-
-    const worksheet = workbook.addWorksheet('Changed Staff');
-
-    // Columns for changes export
-    worksheet.columns = [
-      { header: 'Change Type', key: 'changeType', width: 15 },
-      { header: 'Change Date', key: 'changeDate', width: 20 },
-      { header: 'IPEDS/NCES ID', key: 'ipedsId', width: 15 },
-      { header: 'School', key: 'school', width: 30 },
-      { header: 'Unique ID', key: 'uniqueId', width: 20 },
-      { header: 'Sport code', key: 'sportCode', width: 20 },
-      { header: 'First name', key: 'firstName', width: 20 },
-      { header: 'Last name', key: 'lastName', width: 20 },
-      { header: 'Position', key: 'position', width: 25 },
-      { header: 'Email address', key: 'email', width: 30 },
-      { header: 'Phone number', key: 'phone', width: 20 },
-      { header: 'Change Details', key: 'changeDetails', width: 40 },
-      { header: 'Snapshot Period', key: 'snapshotPeriod', width: 30 }
-    ];
-
-    // Style the header row
-    const headerRow = worksheet.getRow(1);
-    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } };
-    headerRow.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF4CAF50' } // Green for changes
-    };
-
-    // Get directories for IPEDS mapping
-    const directories = await StaffDirectory.find().lean();
-    const ipedsMap = new Map();
-    directories.forEach(dir => {
-      if (dir.baseUrl) {
-        ipedsMap.set(dir.baseUrl, dir.ipeds || '');
-      }
-    });
-
-    let totalRecords = 0;
-
-    // Helper function to extract name parts
-    const extractNameParts = (staffRecord) => {
-      // Try to get name from different possible locations
-      let fullName = '';
-      
-      // Priority 1: Direct name property
-      if (staffRecord.name) {
-        fullName = staffRecord.name;
-      }
-      // Priority 2: Name from data object
-      else if (staffRecord.data?.name) {
-        fullName = staffRecord.data.name;
-      }
-      // Priority 3: First/last from data object
-      else if (staffRecord.data?.firstName || staffRecord.data?.lastName) {
-        fullName = `${staffRecord.data.firstName || ''} ${staffRecord.data.lastName || ''}`.trim();
-      }
-      // Priority 4: First/last from raw data
-      else if (staffRecord.data?.raw?.firstName || staffRecord.data?.raw?.lastName) {
-        fullName = `${staffRecord.data.raw.firstName || ''} ${staffRecord.data.raw.lastName || ''}`.trim();
-      }
-      
-      const nameParts = fullName.trim().split(' ');
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.slice(1).join(' ') || '';
-      
-      return { firstName, lastName, fullName };
-    };
-
-    // Helper function to get position
-    const getPosition = (staffRecord) => {
-      return staffRecord.data?.title || 
-             staffRecord.data?.raw?.title || 
-             staffRecord.title || 
-             '';
-    };
-
-    // Helper function to get email
-    const getEmail = (staffRecord) => {
-      if (Array.isArray(staffRecord.data?.emails) && staffRecord.data.emails.length > 0) {
-        return staffRecord.data.emails[0];
-      }
-      if (Array.isArray(staffRecord.emails) && staffRecord.emails.length > 0) {
-        return staffRecord.emails[0];
-      }
-      if (staffRecord.data?.email) {
-        return staffRecord.data.email;
-      }
-      return '';
-    };
-
-    // Helper function to get phone
-    const getPhone = (staffRecord) => {
-      if (Array.isArray(staffRecord.data?.phones) && staffRecord.data.phones.length > 0) {
-        return staffRecord.data.phones[0];
-      }
-      if (Array.isArray(staffRecord.phones) && staffRecord.phones.length > 0) {
-        return staffRecord.phones[0];
-      }
-      if (staffRecord.data?.phone) {
-        return staffRecord.data.phone;
-      }
-      return '';
-    };
-
-    // Helper function to get categories/sport codes
-    const getSportCode = (staffRecord) => {
-      const categories = staffRecord.categories || staffRecord.data?.categories;
-      if (Array.isArray(categories)) {
-        return categories.join(', ');
-      }
-      return '';
-    };
-
-    // Helper function to get fingerprint/unique ID
-    const getUniqueId = (staffRecord) => {
-      return staffRecord.fingerprint || staffRecord.data?.fingerprint || '';
-    };
-
-    // Process each change log
-    for (const changeLog of changeLogs) {
-      const site = changeLog.site;
-      if (!site) continue;
-
-      const schoolName = this.extractSchoolName(site);
-      const ipedsId = ipedsMap.get(site.baseUrl) || '';
-
-      // Format snapshot period
-      const snapshotPeriod = changeLog.fromSnapshot && changeLog.toSnapshot 
-        ? `${new Date(changeLog.fromSnapshot.snapshotDate).toLocaleDateString()} → ${new Date(changeLog.toSnapshot.snapshotDate).toLocaleDateString()}`
-        : 'N/A';
-
-      const changeDate = new Date(changeLog.createdAt);
-
-      // Process ADDED staff
-      if (changeLog.added && changeLog.added.length > 0) {
-        for (const addedStaff of changeLog.added) {
-          const { firstName, lastName } = extractNameParts(addedStaff);
-          const sportCode = getSportCode(addedStaff);
-
-          worksheet.addRow({
-            changeType: 'n', // n = new person
-            changeDate: changeDate,
-            ipedsId: ipedsId,
-            school: schoolName,
-            uniqueId: getUniqueId(addedStaff),
-            sportCode: sportCode,
-            firstName: firstName,
-            lastName: lastName,
-            position: getPosition(addedStaff),
-            email: getEmail(addedStaff),
-            phone: getPhone(addedStaff),
-            changeDetails: `Added to ${sportCode || 'default'} category`,
-            snapshotPeriod: snapshotPeriod
-          });
-
-          totalRecords++;
-        }
-      }
-
-      // Process REMOVED staff
-      if (changeLog.removed && changeLog.removed.length > 0) {
-        for (const removedStaff of changeLog.removed) {
-          const { firstName, lastName } = extractNameParts(removedStaff);
-          const sportCode = getSportCode(removedStaff);
-
-          worksheet.addRow({
-            changeType: 'r', // r = removed
-            changeDate: changeDate,
-            ipedsId: ipedsId,
-            school: schoolName,
-            uniqueId: getUniqueId(removedStaff),
-            sportCode: sportCode,
-            firstName: firstName,
-            lastName: lastName,
-            position: getPosition(removedStaff),
-            email: getEmail(removedStaff),
-            phone: getPhone(removedStaff),
-            changeDetails: `Removed from ${sportCode || 'default'} category`,
-            snapshotPeriod: snapshotPeriod
-          });
-
-          totalRecords++;
-        }
-      }
-
-      // Process UPDATED staff - FIXED VERSION
-      if (changeLog.updated && changeLog.updated.length > 0) {
-        for (const updatedStaff of changeLog.updated) {
-          // For UPDATED records, we need to check the structure
-          // It should have 'before' and 'after' properties
-          
-          let staffData = updatedStaff.after || updatedStaff; // Try 'after' first, then the object itself
-          
-          const { firstName, lastName } = extractNameParts(staffData);
-          const sportCode = getSportCode(staffData);
-
-          // Extract change details from diffs
-          let changeDetails = '';
-          let codes = new Set();
-          if (updatedStaff.diffs) {
-            const diffFields = Object.keys(updatedStaff.diffs);
-            changeDetails = diffFields.map(field => {
-              const diff = updatedStaff.diffs[field];
-              
-              // Map codes based on fields
-              if (field === 'title' || field === 'name') codes.add('j');
-              if (field === 'emails') codes.add('e');
-              if (field === 'phones') codes.add('#');
-              if (field === 'categories') codes.add('a');
-              
-              return `${field}: ${diff.before || 'N/A'} → ${diff.after || 'N/A'}`;
-            }).join('; ');
-          } else if (updatedStaff.before && updatedStaff.after) {
-            // If no diffs but we have before/after, create a simple change message
-            const changedFields = [];
-            
-            // Compare common fields
-            const fields = ['name', 'title', 'categories', 'emails', 'phones'];
-            fields.forEach(field => {
-              const beforeVal = updatedStaff.before[field] || updatedStaff.before.data?.[field];
-              const afterVal = updatedStaff.after[field] || updatedStaff.after.data?.[field];
-              
-              if (JSON.stringify(beforeVal) !== JSON.stringify(afterVal)) {
-                changedFields.push(field);
-                
-                // Map codes
-                if (field === 'title' || field === 'name') codes.add('j');
-                if (field === 'emails') codes.add('e');
-                if (field === 'phones') codes.add('#');
-                if (field === 'categories') codes.add('a');
-              }
-            });
-            
-            if (changedFields.length > 0) {
-              changeDetails = `Updated fields: ${changedFields.join(', ')}`;
-            }
-          }
-
-          // For updates not mapping to specific codes, default to 'a' if it's generic
-          const finalCode = codes.size > 0 ? Array.from(codes).join('') : 'a';
-
-          worksheet.addRow({
-            changeType: finalCode,
-            changeDate: changeDate,
-            ipedsId: ipedsId,
-            school: schoolName,
-            uniqueId: getUniqueId(staffData),
-            sportCode: sportCode,
-            firstName: firstName,
-            lastName: lastName,
-            position: getPosition(staffData),
-            email: getEmail(staffData),
-            phone: getPhone(staffData),
-            changeDetails: changeDetails || 'Details not available',
-            snapshotPeriod: snapshotPeriod
-          });
-
-          totalRecords++;
-        }
-      }
-    }
-
-    // Apply conditional formatting based on change type
-    for (let i = 2; i <= worksheet.rowCount; i++) {
-      const row = worksheet.getRow(i);
-      const changeType = row.getCell('A').value; // Change Type column
-
-      // Color code rows based on change type
-      let color = 'FFFFFFFF'; // Default white
-      
-      if (changeType === 'n') {
-        color = 'FFE8F5E9'; // Light green for new
-      } else if (changeType === 'r') {
-        color = 'FFFCE4EC'; // Light red for removed
-      } else if (/[jae#]/.test(changeType)) {
-        color = 'FFF3E5F5'; // Light purple for updates
-      }
-
-      row.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: color }
-      };
-    }
-
-    // Format date column
-    worksheet.getColumn('changeDate').numFmt = 'yyyy-mm-dd hh:mm:ss';
-
-    // Auto-fit columns
-    worksheet.columns.forEach(column => {
-      if (column.key === 'changeDetails' || column.key === 'snapshotPeriod') {
-        column.width = 40; // Wider for details
-      } else if (column.width) {
-        column.width = Math.max(column.width, column.header.length + 2);
-      }
-    });
-
-    // Add a summary worksheet
-    const summarySheet = workbook.addWorksheet('Summary');
-    
-    // Summary stats
-    const addedCount = changeLogs.reduce((sum, log) => sum + (log.added?.length || 0), 0);
-    const removedCount = changeLogs.reduce((sum, log) => sum + (log.removed?.length || 0), 0);
-    const updatedCount = changeLogs.reduce((sum, log) => sum + (log.updated?.length || 0), 0);
-    
-    summarySheet.columns = [
-      { header: 'Metric', key: 'metric', width: 25 },
-      { header: 'Value', key: 'value', width: 20 }
-    ];
-
-    summarySheet.addRow({ metric: 'Total Change Records', value: changeLogs.length });
-    summarySheet.addRow({ metric: 'Staff Added', value: addedCount });
-    summarySheet.addRow({ metric: 'Staff Removed', value: removedCount });
-    summarySheet.addRow({ metric: 'Staff Updated', value: updatedCount });
-    summarySheet.addRow({ metric: 'Total Changed Staff', value: totalRecords });
-    summarySheet.addRow({ metric: 'Export Generated', value: new Date().toLocaleString() });
-
-    // Save the workbook
-    await workbook.xlsx.writeFile(filePath);
-
-    // Get file stats
-    const stats = await fs.stat(filePath);
-
-    console.log(`✅ Changes export created: ${filename} (${totalRecords} changed staff records)`);
-
-    return {
-      filename,
-      filePath,
-      recordCount: totalRecords,
-      fileSize: stats.size,
-      generatedAt: new Date(),
-      summary: {
-        changeLogs: changeLogs.length,
-        added: addedCount,
-        removed: removedCount,
-        updated: updatedCount,
-        total: totalRecords
-      }
-    };
-
-  } catch (error) {
-    console.error('❌ Error generating changes export:', error);
-    throw error;
   }
-}
   /**
    * Generate export for single university (simple, not batched)
    */
@@ -971,11 +1107,10 @@ async generateChangesExport() {
       throw new Error('University not found');
     }
 
-    // Fetch StaffDirectory to get IPEDS
+    // Fetch StaffDirectory to get IPEDS and school name
     const directory = await StaffDirectory.findOne({ baseUrl: site.baseUrl }).lean();
     const ipedsId = directory?.ipeds || '';
-
-    const schoolName = this.extractSchoolName(site);
+    const schoolName = directory?.schoolName || this.extractSchoolName(site);
     const safeSchoolName = schoolName.replace(/[^a-z0-9]/gi, '-').toLowerCase();
     const timestamp = new Date().toISOString().split('T')[0];
     const filename = `staff-profiles-${safeSchoolName}-${timestamp}.xlsx`;
@@ -1034,7 +1169,12 @@ async generateChangesExport() {
         // Contact info
         const primaryEmail = profile.emails?.[0] || '';
         const primaryPhone = profile.phones?.[0] || '';
-        const position = profile.raw?.title || profile.title || '(General Contact)';
+        let position = '';
+        if (profile.raw?.title && !this.isNameLikeString(profile.raw.title, profile.canonicalName)) {
+          position = profile.raw.title;
+        } else if (profile.title && !this.isNameLikeString(profile.title, profile.canonicalName)) {
+          position = profile.title;
+        }
 
         // 🟡 FIX: Convert categories array to sport code string
         const sportCode = Array.isArray(profile.categories) && profile.categories.length > 0

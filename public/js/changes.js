@@ -1,4 +1,5 @@
-     // Global variables for pagination and search
+console.log("%c🚀 CHANGES.JS LOADED", "color: #667eea; font-size: 20px; font-weight: bold;");
+        // Global variables for pagination and search
         let currentPage = 1;
         let totalPages = 1;
         let currentSearch = '';
@@ -11,6 +12,75 @@
         const pagination = document.getElementById('pagination');
         const siteSearch = document.getElementById('siteSearch');
         const dashboardStats = document.getElementById('dashboardStats');
+
+        // Export Elements
+        const generateExportBtn = document.getElementById('generateExportBtn');
+        const downloadExportBtn = document.getElementById('downloadExportBtn');
+        const exportStatus = document.getElementById('exportStatus');
+
+        let exportPollingInterval = null;
+
+        // --- EXPORT LOGIC ---
+        async function checkExportStatus() {
+            try {
+                const response = await fetch('/api/export-changes/status');
+                const data = await response.json();
+
+                if (data.isGenerating) {
+                    exportStatus.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Generating export file...`;
+                    generateExportBtn.disabled = true;
+                    generateExportBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Generating...`;
+                    downloadExportBtn.style.display = 'none';
+                    
+                    // Start polling if not already
+                    if (!exportPollingInterval) {
+                        exportPollingInterval = setInterval(checkExportStatus, 3000);
+                    }
+                } else {
+                    // Stop polling
+                    if (exportPollingInterval) {
+                        clearInterval(exportPollingInterval);
+                        exportPollingInterval = null;
+                    }
+
+                    generateExportBtn.disabled = false;
+                    generateExportBtn.innerHTML = `<i class="fas fa-cog"></i> Generate New Export`;
+
+                    if (data.latest) {
+                        const date = new Date(data.latest.generatedAt).toLocaleString();
+                        exportStatus.innerHTML = `<i class="fas fa-check-circle" style="color: #4CAF50;"></i> Latest: <strong>${data.latest.filename}</strong> (Generated: ${date})`;
+                        downloadExportBtn.style.display = 'inline-block';
+                        downloadExportBtn.href = '/api/export-changes/download';
+                    } else {
+                        exportStatus.textContent = "No export file generated yet.";
+                        downloadExportBtn.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking export status:', error);
+            }
+        }
+
+        async function startExportGeneration() {
+            try {
+                generateExportBtn.disabled = true;
+                generateExportBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Starting...`;
+                
+                const response = await fetch('/api/export-changes/generate', { method: 'POST' });
+                const data = await response.json();
+
+                if (data.success) {
+                    checkExportStatus(); // Start polling
+                } else {
+                    alert(data.message || 'Failed to start export');
+                    checkExportStatus();
+                }
+            } catch (error) {
+                console.error('Error starting export:', error);
+                alert('Connection error');
+                checkExportStatus();
+            }
+        }
 
         // Expanded site tracking
         let expandedSiteId = null;
@@ -103,15 +173,14 @@
                             <i class="fas fa-history"></i> ${site.changeCount} recorded change${site.changeCount !== 1 ? 's' : ''}
                         </div>
                     </div>
-                    <div class="changes-details ${expandedSiteId === site._id ? 'expanded' : ''}" id="details-${site._id}">
-                        <!-- Details will be loaded when expanded -->
-                    </div>
+                    <div class="changes-details ${expandedSiteId === site._id ? 'expanded' : ''}" id="details-${site._id}"></div>
                 </div>
             `).join('');
         }
 
         // Toggle site details
         async function toggleSiteDetails(siteId) {
+            console.log(`🖱️ CLICKED SITE: ${siteId}`);
             const siteElement = document.querySelector(`[data-site-id="${siteId}"]`);
             const detailsElement = document.getElementById(`details-${siteId}`);
             const chevron = siteElement.querySelector('.fa-chevron-down, .fa-chevron-up');
@@ -128,12 +197,14 @@
             // Collapse previously expanded site
             if (expandedSiteId) {
                 const prevSite = document.querySelector(`[data-site-id="${expandedSiteId}"]`);
-                const prevDetails = document.getElementById(`details-${expandedSiteId}`);
-                const prevChevron = prevSite.querySelector('.fa-chevron-down, .fa-chevron-up');
-                
-                prevSite.classList.remove('expanded');
-                prevDetails.classList.remove('expanded');
-                prevChevron.className = 'fas fa-chevron-down';
+                if (prevSite) {
+                    const prevDetails = document.getElementById(`details-${expandedSiteId}`);
+                    const prevChevron = prevSite.querySelector('.fa-chevron-down, .fa-chevron-up');
+                    
+                    prevSite.classList.remove('expanded');
+                    prevDetails.classList.remove('expanded');
+                    prevChevron.className = 'fas fa-chevron-down';
+                }
             }
 
             // Expand new site
@@ -142,10 +213,8 @@
             detailsElement.classList.add('expanded');
             chevron.className = 'fas fa-chevron-up';
 
-            // Load details if not already loaded
-            if (!detailsElement.innerHTML.trim()) {
-                await loadSiteChangeDetails(siteId);
-            }
+            // Always load details if we are expanding
+            await loadSiteChangeDetails(siteId);
         }
 
         // Load detailed changes for a site
@@ -158,8 +227,16 @@
             `;
 
             try {
+                console.log(`🔍 Fetching details for site: ${siteId}`);
                 const response = await fetch(`/api/site-changes-details/${siteId}?limit=5`);
                 const data = await response.json();
+                console.log('📦 Received site details data:', data);
+                
+                if (data.changes && data.changes.length > 0) {
+                    console.table(data.changes);
+                } else {
+                    console.warn('⚠️ No change records found in the database for this site.');
+                }
 
                 if (!data.changes || data.changes.length === 0) {
                     detailsElement.innerHTML = `
@@ -259,8 +336,18 @@
                                     <div class="change-item">
                                         <div class="change-name">${person.name || 'Unknown'}</div>
                                         ${person.diffs ? `
-                                            <div class="change-categories" style="font-size: 0.8em; color: #666;">
-                                                Changes: ${Object.keys(person.diffs).join(', ')}
+                                            <div class="change-diffs" style="font-size: 0.85em; margin-top: 5px; background: #fff; padding: 8px; border-radius: 4px; border: 1px solid #eee;">
+                                                ${Object.entries(person.diffs).map(([field, diff]) => {
+                                                    const formatVal = (val) => Array.isArray(val) ? val.join(', ') : (val || 'Empty');
+                                                    return `
+                                                    <div style="margin-bottom: 4px;">
+                                                        <strong style="color: #555; text-transform: capitalize; display: inline-block; min-width: 70px;">${field}:</strong> 
+                                                        <span style="color: #d32f2f; text-decoration: line-through; background: #ffebee; padding: 1px 4px; border-radius: 2px;">${formatVal(diff.before)}</span> 
+                                                        <i class="fas fa-arrow-right" style="color: #999; font-size: 0.8em; margin: 0 4px;"></i> 
+                                                        <span style="color: #2e7d32; font-weight: 500; background: #e8f5e9; padding: 1px 4px; border-radius: 2px;">${formatVal(diff.after)}</span>
+                                                    </div>
+                                                    `;
+                                                }).join('')}
                                             </div>
                                         ` : ''}
                                     </div>
@@ -275,9 +362,9 @@
                 // Add "View All Changes" link
                 detailsElement.innerHTML += `
                     <div style="text-align: center; margin-top: 20px;">
-                        <a href="/site/${siteId}/changes" 
+                        <a href="/changes/site/${siteId}" 
                            style="display: inline-block; padding: 8px 16px; background: #667eea; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">
-                            <i class="fas fa-external-link-alt"></i> View All Changes
+                            <i class="fas fa-history"></i> View Full History Timeline
                         </a>
                     </div>
                 `;
@@ -364,7 +451,8 @@
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-     
+            generateExportBtn.addEventListener('click', startExportGeneration);
+            checkExportStatus();
             setupSearch();
             fetchChangedSites();
         });

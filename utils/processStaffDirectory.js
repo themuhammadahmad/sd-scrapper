@@ -328,38 +328,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
     }
   }
 
-  // 5. Compare with last snapshot → log changes
-  let previousSnapshot = null;
-  if (site.latestSnapshot) {
-    previousSnapshot = await Snapshot.findById(site.latestSnapshot);
-    if (previousSnapshot) {
-      // Use the profile-based change detection
-      const changes = await detectChangesUsingSnapshotMembers(previousSnapshot, snapshot, site._id);
-      // Add this right after the changes detection
-      console.log(`🔍 Change detection results:`, {
-        added: changes.added.length,
-        removed: changes.removed.length,
-        updated: changes.updated.length,
-        hasChanges: changes.added.length > 0 || changes.removed.length > 0 || changes.updated.length > 0
-      });
-      if (changes.added.length > 0 || changes.removed.length > 0 || changes.updated.length > 0) {
-        await ChangeLog.create({
-          site: site._id,
-          fromSnapshot: previousSnapshot._id,
-          toSnapshot: snapshot._id,
-          added: changes.added,
-          removed: changes.removed,
-          updated: changes.updated,
-        });
-
-        console.log(`📝 ChangeLog created: ${changes.added.length} added, ${changes.removed.length} removed, ${changes.updated.length} updated`);
-      } else {
-        console.log('✅ No changes detected since last snapshot');
-      }
-    }
-  }
-
-  // 6. UPDATE: Clean up old snapshots - Keep only latest 2
+  // 5. Cleanup old snapshots - Keep only latest 2
   await cleanupOldSnapshots(site._id, snapshot._id);
 
   // 7. Update Site metadata
@@ -401,6 +370,7 @@ async function runParsersWithNames(html, url) {
     { name: 'rfTeamParser', fn: (await import('../parsers/rfTeamParser.js')).default },
     { name: 'tablePressParser', fn: (await import('../parsers/tablePressParser.js')).default },
     { name: 'coachCardParser', fn: (await import('../parsers/coachCardParser.js')).default },
+    { name: 'USCSidearmParser.js', fn: (await import('../parsers/USCSidearmParser.js')).default },
     { name: 'separateTableParser', fn: (await import('../parsers/separateTableParser.js')).default },
     { name: 'sectionStaffDirectoryParser', fn: (await import('../parsers/sectionStaffDirectoryParser.js')).default },
 

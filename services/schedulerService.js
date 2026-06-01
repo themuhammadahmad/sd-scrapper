@@ -5,6 +5,7 @@ import puppeteerManager from '../fallback/puppeteerParser.js';
 import StaffDirectory from '../models/StaffDirectory.js';
 import FailedDirectory from '../models/FailedDirectory.js';
 import { ExportScheduler } from './export/ExportScheduler.js';
+import changeDetectionService from './changeDetectionService.js';
 
 class SchedulerService {
   constructor() {
@@ -218,11 +219,15 @@ class SchedulerService {
         console.log(`\n🎉 Scraping cycle completed!`);
         console.log(`📊 Results: ${this.successCount} successful, ${this.errorCount} failed`);
 
-        // ✅ Run export after successful scraping completion
+        // ✅ Run bulk change detection and export after successful scraping completion
         if (this.successCount > 0) {
+          console.log('🔄 Scraping finished. Rebuilding ChangeLogs for all sites...');
+          await changeDetectionService.reprocessAllChanges({ restart: true });
+          
+          console.log('📤 Rebuild complete. Starting final export...');
           await this.runExportIfNotInProgress();
         } else {
-          console.log('⚠️ No successful scrapes, skipping export');
+          console.log('⚠️ No successful scrapes, skipping change detection and export');
         }
       } else {
         console.log(`\n⏹️ Scraping stopped.`);
