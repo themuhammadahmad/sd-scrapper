@@ -46,12 +46,12 @@ function detectCloudflare(html) {
 
   return false;
 }
-// import { HttpsProxyAgent } from "https-proxy-agent";
+import { HttpsProxyAgent } from "https-proxy-agent";
 
 // ✅ Your Webshare proxy
-// const PROXY_URL = "http://jithtuch:nsxpdxhissv1@31.59.20.176:6754";
+const PROXY_URL = "http://jithtuch:nsxpdxhissv1@31.59.20.176:6754";
 
-// const agent = new HttpsProxyAgent(PROXY_URL);
+const agent = new HttpsProxyAgent(PROXY_URL);
 export default async function processStaffDirectory(baseUrl, staffDirectory, knownParser = null) {
   let html = null;
   let fetchFailed = false;
@@ -64,7 +64,7 @@ export default async function processStaffDirectory(baseUrl, staffDirectory, kno
     const res = await fetch(
       staffDirectory,
       {
-        // agent,
+        agent,
         headers: {
           "Accept-Language": "en-CA,en;q=0.9",
           "User-Agent":
@@ -373,6 +373,7 @@ async function runParsersWithNames(html, url) {
     { name: 'USCSidearmParser.js', fn: (await import('../parsers/USCSidearmParser.js')).default },
     { name: 'separateTableParser', fn: (await import('../parsers/separateTableParser.js')).default },
     { name: 'sectionStaffDirectoryParser', fn: (await import('../parsers/sectionStaffDirectoryParser.js')).default },
+    { name: 'rioGrandeParser.js', fn: (await import('../parsers/rioGrandeParser.js')).default },
 
     // Generic parsers last (fallbacks)
     { name: 'genericTableParser', fn: (await import('../parsers/genericTableParser.js')).default },
